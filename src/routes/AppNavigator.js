@@ -3,8 +3,9 @@ import SplashScreen from "../screens/SplashScreen";
 import SignInScreen from "../screens/SignInScreen";
 import SignUpScreen from "../screens/SignUpScreen";
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
+import HomeScreen from "../screens/HomeScreen";
 
 const AppNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -26,7 +27,15 @@ const AppNavigator = () => {
           name="SignUpScreen"
           component={SignUpScreen}
           option={{
-            title: "Plant World",
+            title: "HomeScreen",
+          }}
+        />
+        <Stack.Screen
+          options={{ headerShows: false }}
+          name="HomeScreen"
+          component={HomeScreen}
+          option={{
+            title: "HomeScreen",
           }}
         />
       </Stack.Navigator>

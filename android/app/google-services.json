@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "574427141742",
+    "project_id": "workerapp-825e9",
+    "storage_bucket": "workerapp-825e9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:574427141742:android:26cc4ae66d22d25ffef87f",
+        "android_client_info": {
+          "package_name": "com.workerbooking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkcHUECHviUXW74Fl6wnxbw02G6e-cW7U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

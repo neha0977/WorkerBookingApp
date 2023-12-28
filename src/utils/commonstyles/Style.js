@@ -5,4 +5,8 @@ export const STYLES = {
     justifyContent: "center",
     alignContent: "center",
   },
+  AppLogo:{
+    height:200,
+    width:200
+  }
 };

@@ -1,29 +1,21 @@
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React from "react";
-import { COLOR } from "../../utils/commonstyles/Color";
+import React from 'react';
+import {TouchableOpacity, Text} from 'react-native';
+import { COLOR } from '../../utils/commonstyles/Color';
 
-const CommonButton = ({ title, onClick }) => {
+const CommonButton = ({title, onPress = () => {}}) => {
   return (
     <TouchableOpacity
-      style={styles.btn}
-      onPress={() => {
-        onClick();
-      }}
-    >
-      <Text
-        style={{
-          color: "white",
-          fontSize: 15,
-          fontWeight: "500",
-          textAlign: "center",
-        }}
-      >
+      onPress={onPress}
+      activeOpacity={0.7}
+      style={{
+        height: 55,
+        width: '100%',
+        backgroundColor: COLOR.blue,
+        marginVertical: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+      <Text style={{color: COLOR.white, fontWeight: 'bold', fontSize: 18}}>
         {title}
       </Text>
     </TouchableOpacity>
@@ -31,17 +23,3 @@ const CommonButton = ({ title, onClick }) => {
 };
 
 export default CommonButton;
-
-const styles = StyleSheet.create({
-  btn: {
-    width: "95%",
-    height: 40,
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "center",
-    marginBottom: 20,
-    backgroundColor: COLOR.Green,
-    borderRadius: 4,
-    marginTop: "10%",
-  },
-});
