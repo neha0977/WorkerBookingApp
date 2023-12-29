@@ -68,9 +68,7 @@ export const signUp = async (input) => {
 export const signOut = async () => {
   try {
     await auth().signOut();
-    // Additional logic or actions after successful sign-out
   } catch (error) {
     console.error("Error signing out:", error);
-    // Handle error or show an error message to the user
   }
 };

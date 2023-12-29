@@ -1,7 +1,8 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, SafeAreaView } from "react-native";
 import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { STYLES } from "../utils/commonstyles/Style";
+
 const SplashScreen = () => {
   const navigation = useNavigation();
   useEffect(() => {
@@ -14,13 +15,13 @@ const SplashScreen = () => {
   }, []);
 
   return (
-    <View style={[STYLES.container,{alignItems:'center'}]}>
-    <Image source={require('../assets/AppLogo/logo.png')}
-    style={STYLES.AppLogo}/>
-    </View>
+    <SafeAreaView style={[STYLES.container, { alignItems: "center" }]}>
+      <Image
+        source={require("../assets/AppLogo/logo.png")}
+        style={STYLES.AppLogo}
+      />
+    </SafeAreaView>
   );
 };
 
 export default SplashScreen;
-
-const styles = StyleSheet.create({});

@@ -14,26 +14,34 @@ import { COLOR } from "../utils/commonstyles/Color";
 import Loader from "../components/common/Loader";
 import { useNavigation } from "@react-navigation/native";
 import { signIn } from "../utils/databaseHelper/FireBase";
+import { CONSTANTS } from "../utils/constants/StaticContent";
+import { STYLES } from "../utils/commonstyles/Style";
+
 const SignInScreen = () => {
   const navigation = useNavigation();
+
   const [inputs, setInputs] = React.useState({ email: "", password: "" });
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);
+
+  //validate user input function
   const validate = async () => {
     Keyboard.dismiss();
     let isValid = true;
     if (!inputs.email) {
-      handleError("Please input email", "email");
+      handleError(CONSTANTS.enter_email, "email");
       isValid = false;
     }
     if (!inputs.password) {
-      handleError("Please input password", "password");
+      handleError(CONSTANTS.enter_password, "password");
       isValid = false;
     }
     if (isValid) {
       login();
     }
   };
+
+  //login user function
   const login = () => {
     setLoading(true);
     setTimeout(() => {
@@ -47,60 +55,33 @@ const SignInScreen = () => {
           });
         }, 2000);
       } catch (error) {
-        Alert.alert("Error", "Something went wrong");
+        Alert.alert("Error", CONSTANTS.something_wrong);
       }
     }, 3000);
   };
 
-  //   const login = () => {
-  //     setLoading(true);
-  //     setTimeout(async () => {
-  //       setLoading(false);
-  //       let userData = await AsyncStorage.getItem("userData");
-  //       if (userData) {
-  //         userData = JSON.parse(userData);
-  //         if (
-  //           inputs.email == userData.email &&
-  //           inputs.password == userData.password
-  //         ) {
-  //           navigation.navigate("HomeScreen");
-  //           AsyncStorage.setItem(
-  //             "userData",
-  //             JSON.stringify({ ...userData, loggedIn: true })
-  //           );
-  //         } else {
-  //           ToastAndroid.show("Error", "Invalid Details", ToastAndroid.SHORT);
-  //         }
-  //       } else {
-  //         ToastAndroid.show("Error", "User does not exist", ToastAndroid.SHORT);
-  //       }
-  //     }, 3000);
-  //   };
-
+  // handle validation function
   const handleOnchange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
   };
 
+  // handle erroe in text inputs
   const handleError = (error, input) => {
     setErrors((prevState) => ({ ...prevState, [input]: error }));
   };
   return (
-    <SafeAreaView style={{ backgroundColor: COLOR.white, flex: 1 }}>
+    <SafeAreaView style={STYLES.mainContainer}>
       <Loader visible={loading} />
-      <View style={{ paddingTop: 50, paddingHorizontal: 20 }}>
-        <Text style={{ color: COLOR.black, fontSize: 40, fontWeight: "bold" }}>
-          Log In
-        </Text>
-        <Text style={{ color: COLOR.grey, fontSize: 18, marginVertical: 10 }}>
-          Enter Your Details to Login
-        </Text>
-        <View style={{ marginVertical: 20 }}>
+      <View style={STYLES.logView}>
+        <Text style={STYLES.logText}>{CONSTANTS.log_in}</Text>
+        <Text style={STYLES.enterDataText}>{CONSTANTS.enter_data}</Text>
+        <View style={STYLES.inputView}>
           <CommonTextInput
             onChangeText={(text) => handleOnchange(text, "email")}
             onFocus={() => handleError(null, "email")}
             iconName="email-outline"
             label="Email"
-            placeholder="Enter your email address"
+            placeholder={CONSTANTS.place_email}
             error={errors.email}
           />
           <CommonTextInput
@@ -108,19 +89,14 @@ const SignInScreen = () => {
             onFocus={() => handleError(null, "password")}
             iconName="lock-outline"
             label="Password"
-            placeholder="Enter your password"
+            placeholder={CONSTANTS.place_password}
             error={errors.password}
             password
           />
-          <CommonButton title="Log In" onPress={validate} />
+          <CommonButton title={CONSTANTS.log_in} onPress={validate} />
           <Text
             onPress={() => navigation.navigate("SignUpScreen")}
-            style={{
-              color: COLOR.black,
-              fontWeight: "bold",
-              textAlign: "center",
-              fontSize: 16,
-            }}
+            style={STYLES.btbLogText}
           >
             Don't have account ?Register
           </Text>
