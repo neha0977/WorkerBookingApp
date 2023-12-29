@@ -22,7 +22,7 @@ const CommonTextInput = ({
             borderColor: error
               ? COLOR.red
               : isFocused
-              ? COLOR.darkBlue
+              ? COLOR.Primary_Color
               : COLOR.light,
             alignItems: "center",
           },
@@ -30,7 +30,7 @@ const CommonTextInput = ({
       >
         <MaterialCommunityIcons
           name={iconName}
-          style={{ color: COLOR.darkBlue, fontSize: 22, marginRight: 10 }}
+          style={{ color: COLOR.Primary_Color, fontSize: 22, marginRight: 10 }}
         />
         {/* <Icon
           name={iconName}
@@ -51,7 +51,7 @@ const CommonTextInput = ({
           <MaterialCommunityIcons
             onPress={() => setHidePassword(!hidePassword)}
             name={hidePassword ? "eye-outline" : "eye-off-outline"}
-            style={{ color: COLOR.darkBlue, fontSize: 22 }}
+            style={{ color: COLOR.Primary_Color, fontSize: 22 }}
           />
           // <Icon
           //   onPress={() => setHidePassword(!hidePassword)}

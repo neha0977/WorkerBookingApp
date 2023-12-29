@@ -8,12 +8,13 @@ const CommonButton = ({title, onPress = () => {}}) => {
       onPress={onPress}
       activeOpacity={0.7}
       style={{
-        height: 55,
+        height: 50,
         width: '100%',
-        backgroundColor: COLOR.blue,
+        backgroundColor: COLOR.Primary_Color,
         marginVertical: 20,
         justifyContent: 'center',
         alignItems: 'center',
+        borderRadius:10
       }}>
       <Text style={{color: COLOR.white, fontWeight: 'bold', fontSize: 18}}>
         {title}

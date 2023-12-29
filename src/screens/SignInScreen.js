@@ -98,7 +98,7 @@ const SignInScreen = () => {
             onPress={() => navigation.navigate("SignUpScreen")}
             style={STYLES.btbLogText}
           >
-            Don't have account ?Register
+            Don't have account? Register
           </Text>
         </View>
       </View>
