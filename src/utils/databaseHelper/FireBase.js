@@ -11,8 +11,11 @@ export const signIn = async (input) => {
       email.trim(),
       password
     );
+    console.log(authResult.user.uid)
+    const id = authResult.user.uid
+    AsyncStorage.setItem("userid", id);
     ToastAndroid.show("User login successfully!", ToastAndroid.SHORT);
-    AsyncStorage.setItem("userid", response.user.uid);
+    
   } catch (error) {
     if (error.code === "auth/invalid-email")
       ToastAndroid.show("That email address is invalid!", ToastAndroid.SHORT);
@@ -70,5 +73,42 @@ export const signOut = async () => {
     await auth().signOut();
   } catch (error) {
     console.error("Error signing out:", error);
+  }
+};
+
+
+const appointmentCollection = firestore().collection('appointments');
+export const bookAppointment = async (userId, providerId, date) => {
+  try {
+    await appointmentCollection.add({
+      userId,
+      providerId,
+      date,
+      status: 'pending',
+    });
+    console.log('Appointment booked successfully');
+  } catch (error) {
+    console.error('Error booking appointment:', error);
+    throw error;
+  }
+};
+
+export const cancelAppointment = async (appointmentId) => {
+  try {
+    await appointmentCollection.doc(appointmentId).delete();
+    console.log('Appointment canceled successfully');
+  } catch (error) {
+    console.error('Error canceling appointment:', error);
+    throw error;
+  }
+};
+
+export const getAppointmentsByUser = async (userId) => {
+  try {
+    const snapshot = await appointmentCollection.where('userId', '==', userId).get();
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    console.error('Error fetching appointments:', error);
+    throw error;
   }
 };
