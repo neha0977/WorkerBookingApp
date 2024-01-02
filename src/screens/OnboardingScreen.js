@@ -23,7 +23,7 @@ const data = [
     _id: "1",
     title: "Play The Beat",
     description: "Most beginner producers learn make creating by simple beats.",
-    img: require("../assets/AppLogo/logo.png"),
+    img: require("../assets/AppLogo/logotwo.png"),
   },
   {
     _id: "2",
@@ -112,11 +112,10 @@ const OnboardingScreen = ({ navigation }) => {
           <TouchableOpacity onPress={handleSkipToEnd}>
             <Text
               style={{
-                fontSize: 18,
-                color: COLOR.black,
+                fontSize: 15,
+                color: COLOR.Primary_Color,
                 opacity: currentPage == data.length - 1 ? 0 : 1,
-              }}
-            >
+              }} >
               Skip
             </Text>
           </TouchableOpacity>
@@ -145,8 +144,8 @@ const OnboardingScreen = ({ navigation }) => {
                 <View
                   key={index}
                   style={{
-                    width: 10,
-                    height: 10,
+                    width: 20,
+                    height: 3,
                     borderRadius: 5,
                     backgroundColor:
                       index == currentPage
@@ -168,46 +167,47 @@ const OnboardingScreen = ({ navigation }) => {
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
-                width: 60,
-                height: 60,
+                width: 38,
+                height: 38,
                 borderRadius: 30,
                 backgroundColor: COLOR.Primary_Color,
               }}
-              activeOpacity={0.8}
+              activeOpacity={0.1}
             >
-              <MaterialCommunityIcons
+            <MaterialCommunityIcons
+                name="chevron-right"
+                style={{ fontSize: 25, color: COLOR.white }}
+              />
+              {/* <MaterialCommunityIcons
                 name="chevron-right"
                 style={{ fontSize: 18, color: COLOR.white, opacity: 0.3 }}
               />
-              <MaterialCommunityIcons
-                name="chevron-right"
-                style={{ fontSize: 25, color: COLOR.white, marginLeft: -15 }}
-              />
+               */}
             </TouchableOpacity>
           ) : (
             // Get Started Button
             <TouchableOpacity
               style={{
                 paddingHorizontal: SIZES.base * 2,
-                height: 60,
+                height: 45,
                 borderRadius: 30,
                 backgroundColor: COLOR.Primary_Color,
                 flexDirection: "row",
                 justifyContent: "center",
                 alignItems: "center",
               }}
-              onPress={() => navigation.navigate("SignInScreen")}
-            >
+              onPress={() => navigation.navigate("SignInScreen")} >
               <Text
                 style={{
                   color: COLOR.white,
-                  fontSize: 18,
+                  fontSize: 12,
                   marginLeft: SIZES.base,
+                  fontWeight:500
                 }}
               >
                 Get Started
               </Text>
-              <MaterialCommunityIcons
+              {/* <MaterialCommunityIcons
                 name="chevron-right"
                 style={{
                   fontSize: 18,
@@ -215,10 +215,10 @@ const OnboardingScreen = ({ navigation }) => {
                   opacity: 0.3,
                   marginLeft: SIZES.base,
                 }}
-              />
+              /> */}
               <MaterialCommunityIcons
                 name="chevron-right"
-                style={{ fontSize: 25, color: COLOR.white, marginLeft: -15 }}
+                style={{ fontSize: 25, color: COLOR.white, marginLeft: 2 }}
               />
             </TouchableOpacity>
           )}
@@ -252,20 +252,20 @@ const OnboardingScreen = ({ navigation }) => {
           style={{
             paddingHorizontal: SIZES.base * 4,
             marginVertical: SIZES.base * 4,
-          }}
-        >
+          }}>
           <Text
-            style={{ fontSize: 30, textAlign: "center", fontWeight: "bold" }}
-          >
+            style={{ fontSize: 23, textAlign: "center", fontWeight: "500",color:'black' }} >
             {item.title}
           </Text>
           <Text
             style={{
-              fontSize: 18,
+              fontSize: 13,
               opacity: 0.4,
               textAlign: "center",
               marginTop: 15,
               lineHeight: 28,
+              fontWeight:500,
+              color:COLOR.Primary_Color
             }}
           >
             {item.description}

@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import HomeScreen from "../screens/HomeScreen";
 import OnboardingScreen from "../screens/OnboardingScreen";
+import ForgotPassword from "../screens/ForgotPassword";
 import { COLOR } from "../utils/commonstyles/Color";
 
 const AppNavigator = () => {
@@ -49,6 +50,15 @@ const AppNavigator = () => {
             title: "HomeScreen",
           }}
         />
+        <Stack.Screen
+          options={{ headerShows: false }}
+          name="ForgotPassword"
+          component={HomeScreen}
+          option={{
+            title: "ForgotPassword",
+          }}
+        />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );

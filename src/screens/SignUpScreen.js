@@ -14,6 +14,7 @@ import Loader from "../components/common/Loader";
 import { useNavigation } from "@react-navigation/native";
 import { COLOR } from "../utils/commonstyles/Color";
 import { signUp } from "../utils/databaseHelper/FireBase";
+import { STYLES } from "../utils/commonstyles/Style";
 const SignUpScreen = () => {
   const navigation = useNavigation();
   const [inputs, setInputs] = React.useState({
@@ -133,17 +134,20 @@ const SignUpScreen = () => {
             password
           />
           <CommonButton title="Register" onPress={validate} />
+          <View style={{flexDirection:'row',justifyContent:'center'}}>
           <Text
             onPress={() => navigation.navigate("SignInScreen")}
-            style={{
-              color: COLOR.black,
-              fontWeight: "bold",
-              textAlign: "center",
-              fontSize: 16,
-            }}
-          >
-            Already have account ?Login
+            style={[STYLES.btbLogText,{fontWeight:'regular'}]} >
+            Already have an account ?
           </Text>
+
+          <Text
+            onPress={() => navigation.navigate("SignUpScreen")}
+            style={[STYLES.btbLogText,{marginLeft:5,color:COLOR.Primary_Color,fontWeight:'500'}]}>
+            Login
+          </Text>
+          </View>
+        
         </View>
       </ScrollView>
     </SafeAreaView>

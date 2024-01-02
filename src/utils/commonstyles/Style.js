@@ -9,18 +9,36 @@ export const STYLES = {
   },
   AppLogo: {
     height: 200,
-    width: 200,
+    width: '100%',
+    resizeMode:'contain',
+    paddingTop:'5%'
   },
   //Sign In screen design
-  mainContainer: { backgroundColor: COLOR.white, flex: 1 },
-  logView: { paddingTop: 50, paddingHorizontal: 20 },
-  logText: { color: COLOR.black, fontSize: 40, fontWeight: "bold" },
-  enterDataText: { color: COLOR.grey, fontSize: 18, marginVertical: 10 },
-  inputView: { marginVertical: 20 },
+  mainContainer: {
+    backgroundColor: COLOR.white,
+    flex: 1
+  },
+  logView: {
+    paddingTop: 15,
+    paddingHorizontal: 20,
+  },
+  logText: {
+    color: COLOR.black,
+    fontSize: 28,
+    fontWeight: "bold"
+  },
+  enterDataText: {
+    color: COLOR.grey,
+    fontSize: 15,
+    marginVertical: 2
+  },
+  inputView: {
+    marginVertical: 20
+  },
   btbLogText: {
     color: COLOR.black,
     fontWeight: "bold",
     textAlign: "center",
-    fontSize: 16,
+    fontSize: 15,
   },
 };

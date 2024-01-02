@@ -8,7 +8,7 @@ const CommonButton = ({title, onPress = () => {}}) => {
       onPress={onPress}
       activeOpacity={0.7}
       style={{
-        height: 50,
+        height: 45,
         width: '100%',
         backgroundColor: COLOR.Primary_Color,
         marginVertical: 20,
@@ -16,7 +16,7 @@ const CommonButton = ({title, onPress = () => {}}) => {
         alignItems: 'center',
         borderRadius:10
       }}>
-      <Text style={{color: COLOR.white, fontWeight: 'bold', fontSize: 18}}>
+      <Text style={{color: COLOR.white, fontWeight: 'bold', fontSize: 15}}>
         {title}
       </Text>
     </TouchableOpacity>

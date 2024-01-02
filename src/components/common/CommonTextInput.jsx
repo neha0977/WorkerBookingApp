@@ -71,16 +71,17 @@ const CommonTextInput = ({
 
 const style = StyleSheet.create({
   label: {
-    marginVertical: 5,
+    marginVertical: 1,
     fontSize: 14,
-    color: COLOR.grey,
+    color: COLOR.black,
   },
   inputContainer: {
-    height: 55,
+    height: 45,
     backgroundColor: COLOR.light,
     flexDirection: "row",
     paddingHorizontal: 15,
     borderWidth: 0.5,
+    borderRadius:7
   },
 });
 
