@@ -19,16 +19,17 @@ const AppNavigator = () => {
           headerShown: false,
         }}
       >
+          <Stack.Screen
+          options={{ headerShown: false }}
+          name="SplashScreen"
+          component={SplashScreen}
+        />
         <Stack.Screen
           name="OnboardingScreen"
           component={OnboardingScreen}
           options={{ headerShows: false }}
         />
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name="SplashScreen"
-          component={SplashScreen}
-        />
+      
         <Stack.Screen
           options={{ headerShows: false }}
           name="SignInScreen"
