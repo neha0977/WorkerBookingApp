@@ -76,11 +76,12 @@ const style = StyleSheet.create({
     color: COLOR.grey,
   },
   inputContainer: {
-    height: 55,
+    height: 50,
     backgroundColor: COLOR.light,
     flexDirection: "row",
     paddingHorizontal: 15,
     borderWidth: 0.5,
+    borderRadius:10
   },
 });
 
