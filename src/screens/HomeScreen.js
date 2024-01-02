@@ -77,11 +77,13 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React from "react";
 import { STYLES } from "../utils/commonstyles/Style";
 import { IMAGES, getImageFromURL } from "../resources/images";
 import { COLOR } from "../utils/commonstyles/Color";
+import CommonHeader from "../components/common/CommonHeader";
 const catogeryList = [
   {
     id: 0,
@@ -104,22 +106,27 @@ const catogeryList = [
     image: getImageFromURL(IMAGES.SALOON),
   },
   {
-    id: 3,
+    id: 4,
+    name: "Plumbing",
+    image: getImageFromURL(IMAGES.PLUMBING),
+  },
+  {
+    id: 5,
     name: "see all",
     image: "",
   },
-  // {
-  //   id: 4,
-  //   name: "cleaning",
-  //   image: getImageFromURL(IMAGES.CLEANING),
-  // },
 ];
-const HomeScreen = () => {
+const popularServices = [
+  { id: 0, title: "Wall Painting", subTitle: "Painter", image: "" },
+  { id: 1, title: "Salon For Men", subTitle: "Barber", image: "" },
+];
+const HomeScreen = ({ navigation }) => {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+      <CommonHeader title={"Home"} />
+      {/* Category View */}
       <View style={{ alignItems: "center" }}>
         <FlatList
-          style={{ marginTop: 10 }}
           data={catogeryList}
           numColumns={4}
           horizontal={false}
@@ -127,73 +134,123 @@ const HomeScreen = () => {
           keyExtractor={(item, index) => index}
           renderItem={({ item }) => {
             return (
-              <View style={{ alignItems: "center" }}>
-                {/* {item.image !== undefined ? ( */}
-                <TouchableOpacity
-                  style={{
-                    alignItems: "center",
-                    borderWidth: 1,
-                    borderRadius: 20,
-                    borderColor: "#F0F0F0",
-                    backgroundColor: "white",
-                    width: Platform.OS === "android" ? 78 : 90,
-                    height: Platform.OS === "android" ? 78 : 90,
-                    margin: 5,
-                    padding: 10,
-                  }}
-                  //  onPress={onMorePressed_Brand}
-                >
-                  {item.image !== "" ? (
-                    <Image
-                      source={item.image}
-                      resizeMode={"contain"}
-                      style={{
-                        width: "70%",
-                        height: "70%",
-                      }}
-                    />
-                  ) : (
-                    <Text>{item.name}</Text>
-                  )}
-                  {item.image == "" ? (
-                    ""
-                  ) : (
-                    <Text
-                      style={{
-                        fontSize: 12,
-                        textAlign: "center",
-                        marginTop: 2,
-                      }}
-                    >
-                      {item.name}
-                    </Text>
-                  )}
-                </TouchableOpacity>
-                {/* ) : ( */}
-                {/* <TouchableOpacity
-                  style={{
-                    alignItems: "center",
-                    borderWidth: 1,
-                    borderRadius: 20,
-                    borderColor: "#F0F0F0",
-                    backgroundColor: "white",
-                    width: Platform.OS === "android" ? 78 : 90,
-                    height: Platform.OS === "android" ? 78 : 90,
-                    margin: 5,
-                    padding: 5,
-                  }}
-                  // onPress={onMorePressed}
-                >
-                  <Text style={{ fontWeight: "bold", color: "white" }}>
-                    {item.name}neha
+              <TouchableOpacity
+                style={{
+                  alignItems: "center",
+                  borderWidth: 1,
+                  borderRadius: 10,
+                  borderColor: "#F0F0F0",
+                  backgroundColor: "white",
+                  width: Platform.OS === "android" ? 75 : 90,
+                  height: Platform.OS === "android" ? 75 : 90,
+                  margin: 10,
+                  padding: 10,
+                  justifyContent: "center",
+                  elevation: 5,
+                }}
+                onPress={() => {
+                  if (item.image !== "") {
+                    Alert.alert("INFO PAGE");
+                  } else {
+                    navigation.navigate("AllCategories");
+                  }
+                }}
+              >
+                {item.image !== "" ? (
+                  <Image
+                    source={item.image}
+                    resizeMode={"contain"}
+                    style={{
+                      width: "70%",
+                      height: "70%",
+                    }}
+                  />
+                ) : (
+                  <Text style={{ textAlign: "center" }}>{item.name}</Text>
+                )}
+                {item.image == "" ? (
+                  ""
+                ) : (
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      textAlign: "center",
+                      marginTop: 4,
+                    }}
+                  >
+                    {item.name}
                   </Text>
-                </TouchableOpacity> */}
-                {/* )} */}
-              </View>
+                )}
+              </TouchableOpacity>
             );
           }}
         />
       </View>
+      {/* Popular services */}
+      {/* <View style={{ alignItems: "center" }}>
+        <FlatList
+          data={popularServices}
+          numColumns={2}
+          horizontal={false}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index) => index}
+          renderItem={({ item }) => {
+            return (
+              <TouchableOpacity
+                style={{
+                  alignItems: "center",
+                  borderWidth: 1,
+                  borderRadius: 10,
+                  borderColor: "#F0F0F0",
+                  backgroundColor: "white",
+                  width: Platform.OS === "android" ? 120 : 90,
+                  height: Platform.OS === "android" ? 120 : 90,
+                  margin: 5,
+                  padding: 15,
+                  justifyContent: "center",
+                  elevation: 5,
+                }}
+                onPress={() => {
+                  Alert.alert("INFO PAGE");
+                }}
+              >
+                <ImageBackground
+                  resizeMode={"cover"}
+                  source={item.image}
+                 // style={styles.image}
+                >
+                  <TouchableOpacity
+                    style={styles.remove}
+                    onPress={() => removeFromWishlist(item.id)}
+                  >
+                    <Image
+                      source={getImageFromURL(IMAGES.LIKE)}
+                      style={{ height: 15, width: 15, tintColor: "#FF7F7F" }}
+                    />
+                  </TouchableOpacity>
+                </ImageBackground>
+                <Image
+                  source={item.image}
+                  resizeMode={"contain"}
+                  style={{
+                    width: "95%",
+                    height: "95%",
+                  }}
+                />
+                <Text
+                  style={{
+                    fontSize: 12,
+                    textAlign: "center",
+                    marginTop: 4,
+                  }}
+                >
+                  {item.name}
+                </Text>
+              </TouchableOpacity>
+            );
+          }}
+        />
+      </View> */}
     </SafeAreaView>
   );
 };

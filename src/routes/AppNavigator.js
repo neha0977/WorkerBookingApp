@@ -9,6 +9,7 @@ import HomeScreen from "../screens/HomeScreen";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import ForgotPassword from "../screens/ForgotPassword";
 import { COLOR } from "../utils/commonstyles/Color";
+import AllCategories from "../screens/AllCategories";
 
 const AppNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -19,7 +20,7 @@ const AppNavigator = () => {
           headerShown: false,
         }}
       >
-          <Stack.Screen
+        <Stack.Screen
           options={{ headerShown: false }}
           name="SplashScreen"
           component={SplashScreen}
@@ -29,7 +30,7 @@ const AppNavigator = () => {
           component={OnboardingScreen}
           options={{ headerShows: false }}
         />
-      
+
         <Stack.Screen
           options={{ headerShows: false }}
           name="SignInScreen"
@@ -53,13 +54,12 @@ const AppNavigator = () => {
         />
         <Stack.Screen
           options={{ headerShows: false }}
-          name="ForgotPassword"
-          component={HomeScreen}
+          name="AllCategories"
+          component={AllCategories}
           option={{
-            title: "ForgotPassword",
+            title: "HomeScreen",
           }}
         />
-        
       </Stack.Navigator>
     </NavigationContainer>
   );

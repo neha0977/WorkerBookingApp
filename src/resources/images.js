@@ -11,6 +11,7 @@ export const IMAGES = {
   TRASHING: "TRASHING",
   WASHING_CLOTHES: "WASHING_CLOTHES",
   VEHICAL_WASH: "VEHICAL_WASH",
+  BACK_ICON:"BACK_ICON"
 };
 const getImage = (name) => {
   let iconName;
@@ -48,6 +49,9 @@ const getImage = (name) => {
     case IMAGES.TRASHING:
       iconName = require("../assets/img/trashing.png");
       break;
+      case IMAGES.BACK_ICON:
+        iconName = require("../assets/img/left.png");
+        break;
     default:
       break;
   }

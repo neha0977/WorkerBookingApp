@@ -10,3 +10,67 @@ export const CONSTANTS = {
   place_password:"Enter your password",
   
 };
+
+import { getImageFromURL ,IMAGES} from "../../resources/images";
+export const catogeryList = [
+  {
+    id: 0,
+    name: "Cleaning",
+    image: getImageFromURL(IMAGES.CLEANING),
+  },
+  {
+    id: 1,
+    name: "Reparing",
+    image: getImageFromURL(IMAGES.REPAIRING),
+  },
+  {
+    id: 2,
+    name: "Painting",
+    image: getImageFromURL(IMAGES.PAINTING),
+  },
+  {
+    id: 3,
+    name: "Saloon",
+    image: getImageFromURL(IMAGES.SALOON),
+  },
+  {
+    id: 4,
+    name: "Plumbing",
+    image: getImageFromURL(IMAGES.PLUMBING),
+  },
+  {
+    id: 5,
+    name: "Plumbing",
+    image: getImageFromURL(IMAGES.PLUMBING),
+  },
+  {
+    id: 6,
+    name: "Plumbing",
+    image: getImageFromURL(IMAGES.PLUMBING),
+  },
+  {
+    id: 7,
+    name: "Plumbing",
+    image: getImageFromURL(IMAGES.PLUMBING),
+  },
+  {
+    id: 8,
+    name: "Plumbing",
+    image: getImageFromURL(IMAGES.PLUMBING),
+  },
+  {
+    id: 9,
+    name: "Plumbing",
+    image: getImageFromURL(IMAGES.PLUMBING),
+  },
+  {
+    id: 10,
+    name: "Plumbing",
+    image: getImageFromURL(IMAGES.PLUMBING),
+  },
+  {
+    id: 11,
+    name: "Plumbing",
+    image: getImageFromURL(IMAGES.PLUMBING),
+  },
+];
