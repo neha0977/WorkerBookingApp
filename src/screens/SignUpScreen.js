@@ -88,8 +88,7 @@ const SignUpScreen = () => {
     <SafeAreaView style={{ backgroundColor: COLOR.white, flex: 1 }}>
       <Loader visible={loading} />
       <ScrollView
-        contentContainerStyle={{ paddingTop: 50, paddingHorizontal: 20 }}
-      >
+        contentContainerStyle={{ paddingTop: 50, paddingHorizontal: 20 }} >
         <Text style={{ color: COLOR.black, fontSize: 40, fontWeight: "bold" }}>
           Register
         </Text>
@@ -105,7 +104,6 @@ const SignUpScreen = () => {
             placeholder="Enter your email address"
             error={errors.email}
           />
-
           <CommonTextInput
             onChangeText={(text) => handleOnchange(text, "fullname")}
             onFocus={() => handleError(null, "fullname")}
@@ -114,7 +112,6 @@ const SignUpScreen = () => {
             placeholder="Enter your full name"
             error={errors.fullname}
           />
-
           <CommonTextInput
             keyboardType="numeric"
             onChangeText={(text) => handleOnchange(text, "phone")}
@@ -139,8 +136,7 @@ const SignUpScreen = () => {
             onPress={() => navigation.navigate("SignInScreen")}
             style={[STYLES.btbLogText,{fontWeight:'regular'}]} >
             Already have an account ?
-          </Text>
-
+          </Text> 
           <Text
             onPress={() => navigation.navigate("SignUpScreen")}
             style={[STYLES.btbLogText,{marginLeft:5,color:COLOR.Primary_Color,fontWeight:'500'}]}>
