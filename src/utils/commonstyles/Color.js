@@ -3,6 +3,7 @@ export const COLOR = {
   Secondary_Color: "#FA8128",
   Background_Color: "#FFFFFF",
   Text_Color: "#000000",
+  light_purple:"#FBFAFE",
   white: "#fff",
   black: "#000",
   blue: "#5D5FEE",

@@ -64,7 +64,7 @@ const SignInScreen = () => {
   const handleOnchange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
   };
-
+ 
   // handle erroe in text inputs
   const handleError = (error, input) => {
     setErrors((prevState) => ({ ...prevState, [input]: error }));    

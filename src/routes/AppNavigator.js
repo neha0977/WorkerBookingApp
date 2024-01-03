@@ -12,6 +12,7 @@ import { COLOR } from "../utils/commonstyles/Color";
 import AllCategories from "../screens/AllCategories";
 import PopularServices from "../screens/PopularServices";
 import SearchScreen from "../screens/SearchScreen";
+import ServiceDetailScreen from "../screens/ServiceDetailScreen";
 
 const AppNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -78,6 +79,15 @@ const AppNavigator = () => {
             title: "HomeScreen",
           }}
         />
+        <Stack.Screen
+          options={{ headerShows: false }}
+          name="ServiceDetailScreen"
+          component={ServiceDetailScreen}
+          option={{
+            title: "ServiceDetailScreen",
+          }}
+        />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );

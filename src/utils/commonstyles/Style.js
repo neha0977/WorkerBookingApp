@@ -44,7 +44,7 @@ export const STYLES = {
   containerForgotpass: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: COLOR.black,
+    backgroundColor: COLOR.light_purple,
     flexDirection: "column",
   },backbtnView: {
     width: 40,

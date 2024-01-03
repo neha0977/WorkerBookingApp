@@ -156,9 +156,8 @@ const HomeScreen = ({ navigation }) => {
           fontWeight: "500",
           marginStart: 10,
           marginTop: 10,
-        }}
-      >
-        {" "}
+        }}>
+        {" "}      
         Categories
       </Text>
 
@@ -187,7 +186,8 @@ const HomeScreen = ({ navigation }) => {
                 }}
                 onPress={() => {
                   if (item.image !== "") {
-                    Alert.alert("INFO PAGE");
+                    // Alert.alert("INFO PAGE");
+                    navigation.navigate("ServiceDetailScreen");
                   } else {
                     navigation.navigate("AllCategories");
                   }
