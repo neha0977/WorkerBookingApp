@@ -8,6 +8,10 @@ export const CONSTANTS = {
   enter_data: " Enter Your Details to Login",
   place_email: "Enter your email address",
   place_password:"Enter your password",
+  forget_password_main_text: "Forgot Password?",
+  forget_password_sub_text:
+  "Don’t worry you can re-create your password by using your email . Please enter your email to continue the process—",
+  forgot_button_text: "Forget Password",
   
 };
 

@@ -41,4 +41,33 @@ export const STYLES = {
     textAlign: "center",
     fontSize: 15,
   },
+  containerForgotpass: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: COLOR.black,
+    flexDirection: "column",
+  },backbtnView: {
+    width: 40,
+    height: 40,
+    position: "absolute",
+    top: 20,
+    left: 20,
+    backgroundColor: "white",
+    elevation: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
+  },  backicon: {
+    height: "50%",
+    width: "50%",
+  }, forgorPassText: {
+    fontSize: 20,
+    color: "#000",
+    marginHorizontal: "7%",
+    fontWeight: "500",
+  },forgotPassSubText: {
+    fontSize: 15,
+    marginHorizontal: "7%",
+    marginVertical: 10,
+  },
 };
