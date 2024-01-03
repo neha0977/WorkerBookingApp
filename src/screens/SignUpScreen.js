@@ -138,7 +138,7 @@ const SignUpScreen = () => {
             Already have an account ?
           </Text> 
           <Text
-            onPress={() => navigation.navigate("SignUpScreen")}
+            onPress={() => navigation.navigate("SignInScreen")}
             style={[STYLES.btbLogText,{marginLeft:5,color:COLOR.Primary_Color,fontWeight:'500'}]}>
             Login
           </Text>
