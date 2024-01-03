@@ -78,12 +78,15 @@ import {
   FlatList,
   TouchableOpacity,
   Alert,
+  ImageBackground,
+  ScrollView,
 } from "react-native";
 import React from "react";
 import { STYLES } from "../utils/commonstyles/Style";
 import { IMAGES, getImageFromURL } from "../resources/images";
 import { COLOR } from "../utils/commonstyles/Color";
 import CommonHeader from "../components/common/CommonHeader";
+import HomeHeader from "../components/common/HomeHeader";
 const catogeryList = [
   {
     id: 0,
@@ -116,15 +119,49 @@ const catogeryList = [
     image: "",
   },
 ];
+
 const popularServices = [
-  { id: 0, title: "Wall Painting", subTitle: "Painter", image: "" },
-  { id: 1, title: "Salon For Men", subTitle: "Barber", image: "" },
+  {
+    id: 0,
+    title: "Wall Painting",
+    subTitle: "Painter",
+    image: getImageFromURL(IMAGES.PAINTER),
+  },
+  {
+    id: 1,
+    title: "Salon For Men",
+    subTitle: "Barber",
+    image: getImageFromURL(IMAGES.BARBAR),
+  },
 ];
 const HomeScreen = ({ navigation }) => {
+  // get random color function useed in brand bg
+  const getRandomColor = () => {
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
-      <CommonHeader title={"Home"} />
+      <HomeHeader />
+
       {/* Category View */}
+      <Text
+        style={{
+          fontSize: 17,
+          color: COLOR.black,
+          fontWeight: "500",
+          marginStart: 10,
+          marginTop: 10,
+        }}
+      >
+        {" "}
+        Categories
+      </Text>
+
       <View style={{ alignItems: "center" }}>
         <FlatList
           data={catogeryList}
@@ -143,7 +180,7 @@ const HomeScreen = ({ navigation }) => {
                   backgroundColor: "white",
                   width: Platform.OS === "android" ? 75 : 90,
                   height: Platform.OS === "android" ? 75 : 90,
-                  margin: 10,
+                  margin: 13,
                   padding: 10,
                   justifyContent: "center",
                   elevation: 5,
@@ -166,7 +203,9 @@ const HomeScreen = ({ navigation }) => {
                     }}
                   />
                 ) : (
-                  <Text style={{ textAlign: "center" }}>{item.name}</Text>
+                  <Text style={{ textAlign: "center", color: COLOR.black }}>
+                    {item.name}
+                  </Text>
                 )}
                 {item.image == "" ? (
                   ""
@@ -176,6 +215,7 @@ const HomeScreen = ({ navigation }) => {
                       fontSize: 12,
                       textAlign: "center",
                       marginTop: 4,
+                      color: COLOR.black,
                     }}
                   >
                     {item.name}
@@ -187,70 +227,134 @@ const HomeScreen = ({ navigation }) => {
         />
       </View>
       {/* Popular services */}
-      {/* <View style={{ alignItems: "center" }}>
-        <FlatList
-          data={popularServices}
-          numColumns={2}
-          horizontal={false}
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item, index) => index}
-          renderItem={({ item }) => {
-            return (
-              <TouchableOpacity
+      <View
+        style={{
+          marginTop: "3%",
+        }}
+      >
+        <View style={{ marginHorizontal: 10 }}>
+          <View
+            style={{
+              justifyContent: "space-between",
+              flexDirection: "row",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 17,
+                color: COLOR.black,
+                fontWeight: "500",
+              }}
+            >
+              {" "}
+              Popular Services
+            </Text>
+            <TouchableOpacity
+              style={{ padding: 5, flexDirection: "row" }}
+              onPress={() => navigation.navigate("PopularServices")}
+            >
+              <Text
                 style={{
-                  alignItems: "center",
-                  borderWidth: 1,
-                  borderRadius: 10,
-                  borderColor: "#F0F0F0",
-                  backgroundColor: "white",
-                  width: Platform.OS === "android" ? 120 : 90,
-                  height: Platform.OS === "android" ? 120 : 90,
-                  margin: 5,
-                  padding: 15,
-                  justifyContent: "center",
-                  elevation: 5,
-                }}
-                onPress={() => {
-                  Alert.alert("INFO PAGE");
+                  fontSize: 12,
+                  color: "red",
+                  marginRight: 5,
+                  alignSelf: "center",
                 }}
               >
-                <ImageBackground
-                  resizeMode={"cover"}
-                  source={item.image}
-                 // style={styles.image}
-                >
-                  <TouchableOpacity
-                    style={styles.remove}
-                    onPress={() => removeFromWishlist(item.id)}
-                  >
-                    <Image
-                      source={getImageFromURL(IMAGES.LIKE)}
-                      style={{ height: 15, width: 15, tintColor: "#FF7F7F" }}
-                    />
-                  </TouchableOpacity>
-                </ImageBackground>
+                {" "}
+                See all{" "}
+              </Text>
+              <View
+                style={{
+                  width: 20,
+                  height: 20,
+                  backgroundColor: "#f0f0f0",
+                  borderColor: "#f0f0f0",
+                  borderWidth: 1,
+                  borderRadius: 40,
+                  marginRight: 16,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 <Image
-                  source={item.image}
-                  resizeMode={"contain"}
-                  style={{
-                    width: "95%",
-                    height: "95%",
-                  }}
+                  source={getImageFromURL(IMAGES.FORWORD_ICON)}
+                  style={{ width: 10, height: 10 }}
                 />
-                <Text
-                  style={{
-                    fontSize: 12,
-                    textAlign: "center",
-                    marginTop: 4,
-                  }}
-                >
-                  {item.name}
-                </Text>
-              </TouchableOpacity>
-            );
-          }}
-        />
-      </View> */}
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          <View>
+            <FlatList
+              data={popularServices}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, index) => index}
+              renderItem={({ item }) => {
+                return (
+                  <View
+                    style={{
+                      flex: 1,
+                      margin: 5,
+                      backgroundColor: "#f0f0f0",
+                      borderRadius: 8,
+                      backgroundColor: "#fff",
+                      shadowColor: "black",
+                      shadowOpacity: 0.3,
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowRadius: 10,
+                      elevation: 3,
+                      backgroundColor: "white",
+                    }}
+                  >
+                    <View
+                      style={{
+                        backgroundColor: getRandomColor(),
+                        width: 175,
+                        height: 60,
+                        borderRadius: 5,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        margin: 5,
+                      }}
+                    >
+                      <Image
+                        resizeMode="contain"
+                        source={item.image}
+                        style={{
+                          height: 50,
+                          width: 50,
+                        }}
+                      />
+                    </View>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        color: COLOR.black,
+                        fontWeight: "500",
+                        marginLeft: 5,
+                      }}
+                    >
+                      {item.title}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: COLOR.black,
+                        margin: 5,
+                        marginBottom: 5,
+                      }}
+                    >
+                      {item.subTitle}
+                    </Text>
+                  </View>
+                );
+              }}
+            />
+          </View>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };

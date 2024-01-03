@@ -100,6 +100,7 @@ const AllCategories = () => {
                   padding: 15,
                   justifyContent: "center",
                   elevation: 5,
+                  marginTop: 10,
                 }}
                 onPress={() => {
                   if (item.image !== "") {
@@ -109,31 +110,25 @@ const AllCategories = () => {
                   }
                 }}
               >
-                {item.image !== "" ? (
-                  <Image
-                    source={item.image}
-                    resizeMode={"contain"}
-                    style={{
-                      width: "95%",
-                      height: "95%",
-                    }}
-                  />
-                ) : (
-                  <Text style={{ textAlign: "center" }}>{item.name}</Text>
-                )}
-                {item.image == "" ? (
-                  ""
-                ) : (
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      textAlign: "center",
-                      marginTop: 4,
-                    }}
-                  >
-                    {item.name}
-                  </Text>
-                )}
+                <Image
+                  source={item.image}
+                  resizeMode={"contain"}
+                  style={{
+                    width: "95%",
+                    height: "95%",
+                  }}
+                />
+
+                <Text
+                  style={{
+                    fontSize: 12,
+                    textAlign: "center",
+                    marginTop: 4,
+                    color: COLOR.black,
+                  }}
+                >
+                  {item.name}
+                </Text>
               </TouchableOpacity>
             );
           }}

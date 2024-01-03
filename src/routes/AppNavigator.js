@@ -10,6 +10,8 @@ import OnboardingScreen from "../screens/OnboardingScreen";
 import ForgotPassword from "../screens/ForgotPassword";
 import { COLOR } from "../utils/commonstyles/Color";
 import AllCategories from "../screens/AllCategories";
+import PopularServices from "../screens/PopularServices";
+import SearchScreen from "../screens/SearchScreen";
 
 const AppNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -56,6 +58,22 @@ const AppNavigator = () => {
           options={{ headerShows: false }}
           name="AllCategories"
           component={AllCategories}
+          option={{
+            title: "HomeScreen",
+          }}
+        />
+        <Stack.Screen
+          options={{ headerShows: false }}
+          name="PopularServices"
+          component={PopularServices}
+          option={{
+            title: "HomeScreen",
+          }}
+        />
+        <Stack.Screen
+          options={{ headerShows: false }}
+          name="SearchScreen"
+          component={SearchScreen}
           option={{
             title: "HomeScreen",
           }}
