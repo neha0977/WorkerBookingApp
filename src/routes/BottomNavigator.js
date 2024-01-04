@@ -27,9 +27,13 @@ const BottomNavigator = () => {
         name="SearchScreen"
         component={SearchScreen}
         options={{
-          tabBarLabel: "Updates",
+          tabBarLabel: "Search",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="bell" color={color} size={26} />
+            <MaterialCommunityIcons
+              name="card-search-outline"
+              color={color}
+              size={26}
+            />
           ),
         }}
       />

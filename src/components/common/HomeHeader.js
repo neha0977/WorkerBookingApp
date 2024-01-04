@@ -10,6 +10,7 @@ import { COLOR } from "../../utils/commonstyles/Color";
 import { getImageFromURL, IMAGES } from "../../resources/images";
 import React from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import auth from "@react-native-firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 const HomeHeader = ({ location }) => {
@@ -48,35 +49,30 @@ const HomeHeader = ({ location }) => {
       <Image
         source={getImageFromURL(IMAGES.HOME_LOGO)}
         resizeMode="contain"
-        style={{ height: 50, width: 100 }}
+        style={{ height: 50, width: 100, top: 5 }}
       />
 
-      <View style={{ flexDirection: "row" }}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          alignSelf: "center",
+        }}
+      >
         <TouchableOpacity
           style={styles.notificationStyle}
-          onPress={() => navigation.navigate("SearchScreen")}
+          onPress={() => navigation.navigate("NotificationScreen")}
         >
-          <Image source={getImageFromURL(IMAGES.SEARCH)} style={styles.icon} />
+          <MaterialCommunityIcons name="bell" color={"black"} size={18} />
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.notificationStyle}
           onPress={() => handleLogout()}
         >
-          <Image
-            source={getImageFromURL(IMAGES.LOGOUT)}
-            style={{ width: 18, height: 18 }}
-          />
+          <MaterialCommunityIcons name="logout" color={"black"} size={18} />
         </TouchableOpacity>
-        {/* <TouchableOpacity
-          style={styles.notificationStyle}
-          onPress={() => navigation.navigate("Notifications")}
-        >
-          <Image
-            source={getImageFromURL(IMAGES.NOTIFICATION)}
-            style={styles.icon}
-          />
-        </TouchableOpacity> */}
       </View>
     </View>
   );
@@ -88,6 +84,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     height: 60,
     alignItems: "center",
+    // backgroundColor: '#EEE8F5',
     backgroundColor: COLOR.white,
     elevation: 1,
     borderColor: "grey",
@@ -102,6 +99,8 @@ const styles = StyleSheet.create({
     marginRight: 16,
     justifyContent: "center",
     alignItems: "center",
+    alignSelf: "center",
+    alignContent: "center",
   },
   profileStyle: {
     width: 30,

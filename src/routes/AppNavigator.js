@@ -16,6 +16,7 @@ import ServiceDetailScreen from "../screens/ServiceDetailScreen";
 
 import ProfileScreen from "../screens/ProfileScreen";
 import BottomNavigator from "./BottomNavigator";
+import NotificationScreen from "../screens/NotificationScreen";
 const AppNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
@@ -97,10 +98,18 @@ const AppNavigator = () => {
             title: "HomeScreen",
           }}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerShows: false }}
           name="ProfileScreen"
           component={ProfileScreen}
+          option={{
+            title: "HomeScreen",
+          }}
+        />
+        <Stack.Screen
+          options={{ headerShows: false }}
+          name="NotificationScreen"
+          component={NotificationScreen}
           option={{
             title: "HomeScreen",
           }}

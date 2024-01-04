@@ -10,23 +10,34 @@ import {
 import React, { useState } from "react";
 import { getImageFromURL, IMAGES } from "../resources/images";
 import { COLOR } from "../utils/commonstyles/Color";
+import CommonHeader from "../components/common/CommonHeader";
+import { Searchbar } from "react-native-paper";
 const SearchScreen = () => {
   const [searchText, setSearchText] = useState("");
+  const [searchQuery, setSearchQuery] = React.useState("");
+
+  const onChangeSearch = (query) => setSearchQuery(query);
   const handleSearch = () => {
     // Perform any action related to search (e.g., filtering data)
     onSearch(searchText);
   };
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <TouchableOpacity onPress={handleSearch} style={styles.input}>
-          <Image source={getImageFromURL(IMAGES.SEARCH)} style={styles.icon} />
-          <TextInput
-            placeholder="Search the entire shop or products.."
-            value={searchText}
-            onChangeText={(text) => setSearchText(text)}
-          />
-        </TouchableOpacity>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+      <CommonHeader title={"Search"} />
+      <View
+        style={{
+          width: "90%",
+          alignItems: "center",
+          flex: 1,
+          alignSelf: "center",
+          marginTop: "5%",
+        }}
+      >
+        <Searchbar
+          placeholder="Search"
+          onChangeText={onChangeSearch}
+          value={searchQuery}
+        />
       </View>
     </SafeAreaView>
   );
@@ -39,8 +50,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 8,
-    borderBottomLeftRadius: 15,
-    borderBottomRightRadius: 15,
     backgroundColor: COLOR.white,
   },
   input: {

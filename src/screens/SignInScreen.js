@@ -67,23 +67,27 @@ const SignInScreen = () => {
  
   // handle erroe in text inputs
   const handleError = (error, input) => {
-    setErrors((prevState) => ({ ...prevState, [input]: error }));    
+    setErrors((prevState) => ({ ...prevState, [input]: error }));
   };
   return (
     <SafeAreaView style={STYLES.mainContainer}>
       <Loader visible={loading} />
       <Image
         source={require("../assets/AppLogo/logotwo.png")}
-        style={[STYLES.AppLogo,{alignSelf:'center'}]}
+        style={[STYLES.AppLogo, { alignSelf: "center" }]}
       />
       <View style={STYLES.logView}>
-        <Text style={[STYLES.logText,{alignSelf:'center'}]}>{CONSTANTS.welcome_back}</Text>
-        <Text style={[STYLES.enterDataText,{alignSelf:'center'}]}>{CONSTANTS.enter_data}</Text>
+        <Text style={[STYLES.logText, { alignSelf: "center" }]}>
+          {CONSTANTS.welcome_back}
+        </Text>
+        <Text style={[STYLES.enterDataText, { alignSelf: "center" }]}>
+          {CONSTANTS.enter_data}
+        </Text>
         <View style={STYLES.inputView}>
-          <CommonTextInput              
+          <CommonTextInput
             onChangeText={(text) => handleOnchange(text, "email")}
             onFocus={() => handleError(null, "email")}
-            iconName="email-outline"                     
+            iconName="email-outline"
             label="Email"
             placeholder={CONSTANTS.place_email}
             error={errors.email}
@@ -97,24 +101,37 @@ const SignInScreen = () => {
             error={errors.password}
             password
           />
-           <Text
+          <Text
             onPress={() => navigation.navigate("ForgotPassword")}
-            style={[STYLES.btbLogText,{color:COLOR.Primary_Color,fontWeight:'500',fontSize:12}]}>
-            Forgot Password ?</Text>
-          <CommonButton title={CONSTANTS.log_in} onPress={validate} /> 
-          <View style={{flexDirection:'row',justifyContent:'center'}}>
-          <Text
-            onPress={() => navigation.navigate("SignUpScreen")}
-            style={[STYLES.btbLogText,{fontWeight:'regular'}]}>
-            Don't have account?
+            style={[
+              STYLES.btbLogText,
+              { color: COLOR.Primary_Color, fontWeight: "500", fontSize: 12 },
+            ]}
+          >
+            Forgot Password ?
           </Text>
-          <Text
-            onPress={() => navigation.navigate("SignUpScreen")}
-            style={[STYLES.btbLogText,{marginLeft:5,color:COLOR.Primary_Color,fontWeight:'500'}]}>
-            Register
-          </Text>
+          <CommonButton title={CONSTANTS.log_in} onPress={validate} />
+          <View style={{ flexDirection: "row", justifyContent: "center" }}>
+            <Text
+              onPress={() => navigation.navigate("SignUpScreen")}
+              style={[STYLES.btbLogText, { fontWeight: "regular" }]}
+            >
+              Don't have account?
+            </Text>
+            <Text
+              onPress={() => navigation.navigate("SignUpScreen")}
+              style={[
+                STYLES.btbLogText,
+                {
+                  marginLeft: 5,
+                  color: COLOR.Primary_Color,
+                  fontWeight: "500",
+                },
+              ]}
+            >
+              Register
+            </Text>
           </View>
-        
         </View>
       </View>
     </SafeAreaView>

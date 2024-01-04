@@ -14,16 +14,10 @@ import { COLOR } from "../../utils/commonstyles/Color";
 const CommonHeader = ({ title }) => {
   const navigation = useNavigation();
   return (
-    <SafeAreaView style={{backgroundColor:COLOR.white,}}>
-      <View
-        style={{
-          flexDirection: "row",
-          height:50
-        }}
-      >
+    <SafeAreaView style={{ backgroundColor: COLOR.white }}>
+      <View style={styles.container}>
         <TouchableOpacity
           style={{
-            padding: 10,
             width: "10%",
             alignItems: "center",
             justifyContent: "center",
@@ -56,8 +50,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     height: 60,
-    backgroundColor: COLOR.white,
-    justifyContent: "center",
+    backgroundColor: '#EEE8F5',
+    elevation: 1,
+    borderColor: "grey",
   },
   title: {
     fontSize: 13,

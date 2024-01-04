@@ -26,14 +26,6 @@ const SplashScreen = () => {
       }
     }, 2000);
   };
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     navigation.reset({
-  //       index: 0,
-  //       routes: [{ name: "SignInScreen" }],
-  //     });
-  //   }, 3000);
-  // }, []);
 
   return (
     <SafeAreaView style={[STYLES.container, { alignItems: "center" }]}>
