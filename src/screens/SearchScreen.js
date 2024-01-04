@@ -20,7 +20,6 @@ const SearchScreen = () => {
     <SafeAreaView>
       <View style={styles.container}>
         <TouchableOpacity onPress={handleSearch} style={styles.input}>
-          {/* You can use a search icon or any other indicator here */}
           <Image source={getImageFromURL(IMAGES.SEARCH)} style={styles.icon} />
           <TextInput
             placeholder="Search the entire shop or products.."
