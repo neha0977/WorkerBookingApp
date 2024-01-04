@@ -17,6 +17,7 @@ import ServiceDetailScreen from "../screens/ServiceDetailScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import BottomNavigator from "./BottomNavigator";
 import NotificationScreen from "../screens/NotificationScreen";
+import BookingScreen from "../screens/BookingScreen";
 const AppNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
@@ -110,6 +111,14 @@ const AppNavigator = () => {
           options={{ headerShows: false }}
           name="NotificationScreen"
           component={NotificationScreen}
+          option={{
+            title: "HomeScreen",
+          }}
+        />
+         <Stack.Screen
+          options={{ headerShows: false }}
+          name="BookingScreen"
+          component={BookingScreen}
           option={{
             title: "HomeScreen",
           }}

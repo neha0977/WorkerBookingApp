@@ -214,8 +214,9 @@ const HomeScreen = ({ navigation }) => {
           fontWeight: "500",
           marginStart: 10,
           marginTop: 10,
-        }}>
-        {" "}      
+        }}
+      >
+        {" "}
         Categories
       </Text>
 
@@ -415,6 +416,12 @@ const HomeScreen = ({ navigation }) => {
           </View>
         </View>
       </View>
+      <TouchableOpacity
+        // onPress={() => navigation.navigate("ServiceDetailScreen")}
+        onPress={()=>navigation.navigate('BookingScreen')}
+      >
+        <Text>details</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
