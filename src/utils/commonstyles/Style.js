@@ -69,5 +69,23 @@ export const STYLES = {
     fontSize: 15,
     marginHorizontal: "7%",
     marginVertical: 10,
+  },  dotContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 16,
+    left: 0,
+    right: 0,
+  }, slide: {
+    width: '100%',
+    height: 200, // Adjust the height as needed
+    justifyContent: 'center',
+    alignItems: 'center',
+  }, dot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    margin: 5,
   },
 };

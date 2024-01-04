@@ -77,11 +77,12 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
-  Alert,
+  Animated,
+  Dimensions,
   ImageBackground,
   ScrollView,
 } from "react-native";
-import React from "react";
+import React, { useState, useRef, useEffect } from 'react'
 import { STYLES } from "../utils/commonstyles/Style";
 import { IMAGES, getImageFromURL } from "../resources/images";
 import { COLOR } from "../utils/commonstyles/Color";
@@ -120,6 +121,8 @@ const catogeryList = [
   },
 ];
 
+
+
 const popularServices = [
   {
     id: 0,
@@ -135,7 +138,43 @@ const popularServices = [
   },
 ];
 const HomeScreen = ({ navigation }) => {
-  // get random color function useed in brand bg
+  const flatListRef = useRef(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const data = [
+    {
+      id: 1,
+      img: require('../assets/img/men.jpg'),
+    },
+    {
+      id: 2,
+      img: require('../assets/AppLogo/logo.png'),
+    }
+    // ,
+    // {
+    //   id: 3,
+    //   img: require('../assets/AppLogo/logo.png'),
+    // }
+  ]
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const nextIndex =
+        currentIndex === data.length - 1 ? 0 : currentIndex + 1;
+      flatListRef.current.scrollToIndex({ index: nextIndex }); 
+      setCurrentIndex(nextIndex);
+    }, 3000); // Adjust the interval as needed (in milliseconds)
+
+    return () => clearInterval(intervalId);
+  }, [currentIndex, data]);
+
+  const renderDot = (index) => (
+    <View
+      style={[
+        STYLES.dot,   
+        { backgroundColor: index === currentIndex ? COLOR.Primary_Color : 'gray' },
+      ]}
+    />
+  );
   const getRandomColor = () => {
     const letters = "0123456789ABCDEF";
     let color = "#";
@@ -144,11 +183,30 @@ const HomeScreen = ({ navigation }) => {
     }
     return color;
   };
+  const renderItem = ({ item }) => (
+    <View style={STYLES.slide}>
+    <Image style={{flex:1, width:'100%'}} source={item.img}>
+    </Image>
+    </View>
+  );
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <HomeHeader />
+      <View style={{flexDirection:'column'}}>
+    <FlatList
+        ref={flatListRef}
+        data={data}
+        renderItem={renderItem}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item) => item.id.toString()} />
+      <View style={STYLES.dotContainer}>
+        {data.map((_, index) => renderDot(index))}
+      </View>
+    </View>
 
-      {/* Category View */}
       <Text
         style={{
           fontSize: 17,
@@ -160,6 +218,8 @@ const HomeScreen = ({ navigation }) => {
         {" "}      
         Categories
       </Text>
+
+    
 
       <View style={{ alignItems: "center" }}>
         <FlatList
