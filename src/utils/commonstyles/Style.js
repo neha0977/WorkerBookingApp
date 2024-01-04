@@ -88,4 +88,10 @@ export const STYLES = {
     borderRadius: 5,
     margin: 5,
   },
+  paginationDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginHorizontal: 5,
+  },
 };

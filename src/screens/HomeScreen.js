@@ -88,6 +88,7 @@ import { IMAGES, getImageFromURL } from "../resources/images";
 import { COLOR } from "../utils/commonstyles/Color";
 import CommonHeader from "../components/common/CommonHeader";
 import HomeHeader from "../components/common/HomeHeader";
+const { width } = Dimensions.get('window');
 const catogeryList = [
   {
     id: 0,
@@ -120,9 +121,6 @@ const catogeryList = [
     image: "",
   },
 ];
-
-
-
 const popularServices = [
   {
     id: 0,
@@ -138,43 +136,25 @@ const popularServices = [
   },
 ];
 const HomeScreen = ({ navigation }) => {
+  const imageList = [
+    require('../assets/img/men.jpg'),
+    require('../assets/img/beauty_500KB.jpg'),
+    require('../assets/img/service_500KB.jpg'),
+    // Add more images as needed
+  ];
   const flatListRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const data = [
-    {
-      id: 1,
-      img: require('../assets/img/men.jpg'),
-    },
-    {
-      id: 2,
-      img: require('../assets/AppLogo/logo.png'),
-    }
-    // ,
-    // {
-    //   id: 3,
-    //   img: require('../assets/AppLogo/logo.png'),
-    // }
-  ]
-
+ 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      const nextIndex =
-        currentIndex === data.length - 1 ? 0 : currentIndex + 1;
-      flatListRef.current.scrollToIndex({ index: nextIndex }); 
-      setCurrentIndex(nextIndex);
-    }, 3000); // Adjust the interval as needed (in milliseconds)
+      const newIndex = (currentIndex + 1) % imageList.length;
+      setCurrentIndex(newIndex);
+      flatListRef.current.scrollToIndex({ animated: true, index: newIndex });
+    }, 3000);
 
     return () => clearInterval(intervalId);
-  }, [currentIndex, data]);
+  }, [currentIndex, imageList.length]);
 
-  const renderDot = (index) => (
-    <View
-      style={[
-        STYLES.dot,   
-        { backgroundColor: index === currentIndex ? COLOR.Primary_Color : 'gray' },
-      ]}
-    />
-  );
   const getRandomColor = () => {
     const letters = "0123456789ABCDEF";
     let color = "#";
@@ -183,28 +163,46 @@ const HomeScreen = ({ navigation }) => {
     }
     return color;
   };
-  const renderItem = ({ item }) => (
-    <View style={STYLES.slide}>
-    <Image style={{flex:1, width:'100%'}} source={item.img}>
-    </Image>
-    </View>
+  const renderItem = ({ item, index }) => (
+    <Image source={item} style={{width,
+      height: 200}} resizeMode="cover" />
+  );
+
+  const renderDot = (index) => (
+    <View
+      key={index}
+      style={{
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        marginHorizontal: 5,
+        backgroundColor: index === currentIndex ? COLOR.Primary_Color : '#D3D3D3',
+      }}
+    />
   );
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <HomeHeader />
       <View style={{flexDirection:'column'}}>
-    <FlatList
+      <>
+      <FlatList
         ref={flatListRef}
-        data={data}
+        data={imageList}
         renderItem={renderItem}
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
-        keyExtractor={(item) => item.id.toString()} />
-      <View style={STYLES.dotContainer}>
-        {data.map((_, index) => renderDot(index))}
+        onMomentumScrollEnd={(event) => {
+          const newIndex = Math.floor(event.nativeEvent.contentOffset.x / width);
+          setCurrentIndex(newIndex);
+        }}
+      />
+      <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>
+        {imageList.map((_, index) => renderDot(index))}
       </View>
+    </>
+     
     </View>
 
       <Text
