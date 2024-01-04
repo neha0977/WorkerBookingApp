@@ -14,6 +14,8 @@ import PopularServices from "../screens/PopularServices";
 import SearchScreen from "../screens/SearchScreen";
 import ServiceDetailScreen from "../screens/ServiceDetailScreen";
 
+import ProfileScreen from "../screens/ProfileScreen";
+import BottomNavigator from "./BottomNavigator";
 const AppNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
@@ -50,7 +52,7 @@ const AppNavigator = () => {
         <Stack.Screen
           options={{ headerShows: false }}
           name="HomeScreen"
-          component={HomeScreen}
+          component={BottomNavigator}
           option={{
             title: "HomeScreen",
           }}
@@ -87,7 +89,22 @@ const AppNavigator = () => {
             title: "ServiceDetailScreen",
           }}
         />
-        
+         <Stack.Screen
+          options={{ headerShows: false }}
+          name="ForgotPassword"
+          component={ForgotPassword}
+          option={{
+            title: "HomeScreen",
+          }}
+        />
+         <Stack.Screen
+          options={{ headerShows: false }}
+          name="ProfileScreen"
+          component={ProfileScreen}
+          option={{
+            title: "HomeScreen",
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

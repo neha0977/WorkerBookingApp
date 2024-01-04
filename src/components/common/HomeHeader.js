@@ -1,9 +1,48 @@
-import { View, TouchableOpacity, Image, StyleSheet, Text } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  Text,
+  Alert,
+} from "react-native";
 import { COLOR } from "../../utils/commonstyles/Color";
 import { getImageFromURL, IMAGES } from "../../resources/images";
 import React from "react";
-
-const HomeHeader = ({ location, navigation }) => {
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import auth from "@react-native-firebase/auth";
+import { useNavigation } from "@react-navigation/native";
+const HomeHeader = ({ location }) => {
+  const navigation = useNavigation();
+  const handleLogout = () => {
+    Alert.alert(
+      "Logout",
+      "are you sure you want to logout?",
+      [
+        {
+          text: "cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "yes",
+          onPress: () => {
+            AsyncStorage.clear().then(() => {
+              auth()
+                .signOut()
+                .then(() => {
+                  navigation.reset({
+                    index: 0,
+                    routes: [{ name: "SignInScreen" }],
+                  });
+                });
+            });
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
   return (
     <View style={styles.header}>
       <Image
@@ -22,13 +61,22 @@ const HomeHeader = ({ location, navigation }) => {
 
         <TouchableOpacity
           style={styles.notificationStyle}
+          onPress={() => handleLogout()}
+        >
+          <Image
+            source={getImageFromURL(IMAGES.LOGOUT)}
+            style={{ width: 18, height: 18 }}
+          />
+        </TouchableOpacity>
+        {/* <TouchableOpacity
+          style={styles.notificationStyle}
           onPress={() => navigation.navigate("Notifications")}
         >
           <Image
             source={getImageFromURL(IMAGES.NOTIFICATION)}
             style={styles.icon}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );

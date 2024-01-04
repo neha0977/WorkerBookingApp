@@ -21,7 +21,7 @@ const SplashScreen = () => {
       } else {
         navigation.reset({
           index: 0,
-          routes: [{ name: "HomeScreen" }],
+          routes: [{ name: "SignInScreen" }],
         });
       }
     }, 2000);
