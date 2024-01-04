@@ -14,7 +14,7 @@ import {CONSTANTS} from "../../src/utils/constants/StaticContent";
 const ForgotPassword = ({ navigation }) => {
   const [email, setEmail] = useState("");
   return (
-    <SafeAreaView style={STYLES.containerForgotpass}>
+    <SafeAreaView style={[STYLES.containerForgotpass,{paddingHorizontal:'7%'}]}>
     <TouchableOpacity
       style={STYLES.backbtnView}
       onPress={() => navigation.goBack()}

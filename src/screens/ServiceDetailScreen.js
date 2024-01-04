@@ -17,11 +17,11 @@ import { IMAGES, getImageFromURL } from "../resources/images";
 
 const ServiceDetailScreen = () => {
   const servicePackages = [
-    { id: "1", name: "Basic Package",catlegory:"Men's haircut", price: "$10" },
-    { id: "2", name: "Standard Package", catlegory:"Men's Beard Shave",price: "$20" },
-    { id: "3", name: "Premium Package",catlegory:"Men's face care", price: "$30" },
-    { id: "4", name: "Standard Package",catlegory:"Men's hair color", price: "$10" },
-    { id: "5", name: "Premium Package",catlegory:"Men's spa", price: "$60" },
+    { id: "1", name: "Haircut",catlegory:"Men's haircut", price: "$10" },
+    { id: "2", name: "Shaving", catlegory:"Men's Beard Shave",price: "$20" },
+    { id: "3", name: "Facial",catlegory:"Men's face care", price: "$30" },
+    { id: "4", name: "Hair color",catlegory:"Men's hair color", price: "$10" },
+    { id: "5", name: "Massages",catlegory:"Men's spa", price: "$60" },
     // Add more service packages as needed
   ];
   const renderItem = ({ item }) => (
