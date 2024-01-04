@@ -12,6 +12,7 @@ export const CONSTANTS = {
   forget_password_sub_text:
   "Don’t worry you can re-create your password by using your email . Please enter your email to continue the process—",
   forgot_button_text: "Forget Password",
+  dummy_txt:"Service Provider app can be used to make create applications faster to save your time, for user interface kit in android and ios devices, It contains have more than 50 Screens with a different type of UI."
   
 };
 
