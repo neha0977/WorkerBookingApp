@@ -47,9 +47,9 @@ const HomeHeader = ({ location }) => {
   return (
     <View style={styles.header}>
       <Image
-        source={getImageFromURL(IMAGES.HOME_LOGO)}
+        source={getImageFromURL(IMAGES.LOGO)}
         resizeMode="contain"
-        style={{ height: 50, width: 100, top: 5 }}
+        style={{ height: 45, width: 100, top: 2,}}
       />
 
       <View
@@ -58,12 +58,10 @@ const HomeHeader = ({ location }) => {
           alignItems: "center",
           justifyContent: "center",
           alignSelf: "center",
-        }}
-      >
+        }} >
         <TouchableOpacity
           style={styles.notificationStyle}
-          onPress={() => navigation.navigate("NotificationScreen")}
-        >
+          onPress={() => navigation.navigate("NotificationScreen")}  >
           <MaterialCommunityIcons name="bell" color={"black"} size={18} />
         </TouchableOpacity>
 
@@ -77,7 +75,7 @@ const HomeHeader = ({ location }) => {
     </View>
   );
 };
-
+export default HomeHeader;
 const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
@@ -126,4 +124,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeHeader;
+

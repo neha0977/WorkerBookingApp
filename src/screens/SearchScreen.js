@@ -30,10 +30,9 @@ const SearchScreen = () => {
           alignItems: "center",
           flex: 1,
           alignSelf: "center",
-          marginTop: "5%",
-        }}
-      >
+          marginTop: "5%"  }} >
         <Searchbar
+        style={{borderRadius:11,backgroundColor:COLOR.light_purple,borderColor:COLOR.Primary_Color,borderWidth:1}}
           placeholder="Search"
           onChangeText={onChangeSearch}
           value={searchQuery}

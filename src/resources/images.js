@@ -23,7 +23,8 @@ export const IMAGES = {
   SEARCH: "SEARCH",
   NOTIFICATION: "NOTIFICATION",
   HOME_LOGO: "HOME_LOGO",
-  LOGOUT:"LOGOUT"
+  LOGOUT:"LOGOUT",
+  LOGO:"LOGO"
 };
 const getImage = (name) => {
   let iconName;
@@ -100,6 +101,10 @@ const getImage = (name) => {
       case IMAGES.LOGOUT:
       iconName = require("../assets/img/turn-off.png");
       break;
+      case IMAGES.LOGO:
+        iconName = require("../assets/AppLogo/logo.png");
+        break;
+      
     default:
       break;
   }
