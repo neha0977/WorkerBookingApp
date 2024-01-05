@@ -82,13 +82,13 @@ import {
   ImageBackground,
   ScrollView,
 } from "react-native";
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from "react";
 import { STYLES } from "../utils/commonstyles/Style";
 import { IMAGES, getImageFromURL } from "../resources/images";
 import { COLOR } from "../utils/commonstyles/Color";
 import CommonHeader from "../components/common/CommonHeader";
 import HomeHeader from "../components/common/HomeHeader";
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 const catogeryList = [
   {
     id: 0,
@@ -121,6 +121,7 @@ const catogeryList = [
     image: "",
   },
 ];
+
 const popularServices = [
   {
     id: 0,
@@ -137,14 +138,14 @@ const popularServices = [
 ];
 const HomeScreen = ({ navigation }) => {
   const imageList = [
-    require('../assets/img/men.jpg'),
-    require('../assets/img/beauty_500KB.jpg'),
-    require('../assets/img/service_500KB.jpg'),
+    require("../assets/img/men.jpg"),
+    require("../assets/img/beauty_500KB.jpg"),
+    require("../assets/img/service_500KB.jpg"),
     // Add more images as needed
   ];
   const flatListRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
- 
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       const newIndex = (currentIndex + 1) % imageList.length;
@@ -164,8 +165,7 @@ const HomeScreen = ({ navigation }) => {
     return color;
   };
   const renderItem = ({ item, index }) => (
-    <Image source={item} style={{width,
-      height: 200}} resizeMode="cover" />
+    <Image source={item} style={{ width, height: 200 }} resizeMode="cover" />
   );
 
   const renderDot = (index) => (
@@ -176,7 +176,8 @@ const HomeScreen = ({ navigation }) => {
         height: 8,
         borderRadius: 5,
         marginHorizontal: 5,
-        backgroundColor: index === currentIndex ? COLOR.Primary_Color : '#D3D3D3',
+        backgroundColor:
+          index === currentIndex ? COLOR.Primary_Color : "#D3D3D3",
       }}
     />
   );
@@ -184,239 +185,249 @@ const HomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <HomeHeader />
-      <View style={{flexDirection:'column'}}>
-      <>
-      <FlatList
-        ref={flatListRef}
-        data={imageList}
-        renderItem={renderItem}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onMomentumScrollEnd={(event) => {
-          const newIndex = Math.floor(event.nativeEvent.contentOffset.x / width);
-          setCurrentIndex(newIndex);
-        }}
-      />
-      <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>
-        {imageList.map((_, index) => renderDot(index))}
-      </View>
-    </>
-     
-    </View>
-
-      <Text
-        style={{
-          fontSize: 17,
-          color: COLOR.black,
-          fontWeight: "500",
-          marginStart: 10,
-          marginTop: 10,
-        }}
-      >
-        {" "}
-        Categories
-      </Text>
-
-      <View style={{ alignItems: "center" }}>
-        <FlatList
-          data={catogeryList}
-          numColumns={4}
-          horizontal={false}
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item, index) => index}
-          renderItem={({ item }) => {
-            return (
-              <TouchableOpacity
-                style={{
-                  alignItems: "center",
-                  borderWidth: 1,
-                  borderRadius: 10,
-                  borderColor: "#F0F0F0",
-                  backgroundColor: "white",
-                  width: Platform.OS === "android" ? 75 : 90,
-                  height: Platform.OS === "android" ? 75 : 90,
-                  margin: 13,
-                  padding: 10,
-                  justifyContent: "center",
-                  elevation: 5,
-                }}
-                onPress={() => {
-                  if (item.image !== "") {
-                    // Alert.alert("INFO PAGE");
-                    navigation.navigate("ServiceDetailScreen");
-                  } else {
-                    navigation.navigate("AllCategories");
-                  }
-                }}
-              >
-                {item.image !== "" ? (
-                  <Image
-                    source={item.image}
-                    resizeMode={"contain"}
-                    style={{
-                      width: "70%",
-                      height: "70%",
-                    }}
-                  />
-                ) : (
-                  <Text style={{ textAlign: "center", color: COLOR.black }}>
-                    {item.name}
-                  </Text>
-                )}
-                {item.image == "" ? (
-                  ""
-                ) : (
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      textAlign: "center",
-                      marginTop: 4,
-                      color: COLOR.black,
-                    }}
-                  >
-                    {item.name}
-                  </Text>
-                )}
-              </TouchableOpacity>
-            );
-          }}
-        />
-      </View>
-      {/* Popular services */}
-      <View
-        style={{
-          marginTop: "3%",
-        }} >
-        <View style={{ marginHorizontal: 10 }}>
-          <View
-            style={{
-              justifyContent: "space-between",
-              flexDirection: "row",
-            }}
-          >
-            <Text
+      <ScrollView>
+        <View style={{ flexDirection: "column" }}>
+          <>
+            <FlatList
+              ref={flatListRef}
+              data={imageList}
+              renderItem={renderItem}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              onMomentumScrollEnd={(event) => {
+                const newIndex = Math.floor(
+                  event.nativeEvent.contentOffset.x / width
+                );
+                setCurrentIndex(newIndex);
+              }}
+            />
+            <View
               style={{
-                fontSize: 17,
-                color: COLOR.black,
-                fontWeight: "500",
+                flexDirection: "row",
+                justifyContent: "center",
+                marginTop: 10,
               }}
             >
-              {" "}
-              Popular Services
-            </Text>
-            <TouchableOpacity
-              style={{ padding: 5, flexDirection: "row" }}
-              onPress={() => navigation.navigate("PopularServices")}
-            >
-              <Text
-                style={{
-                  fontSize: 12,
-                  color: "red",
-                  marginRight: 5,
-                  alignSelf: "center",
-                }}
-              >
-                {" "}
-                See all{" "}
-              </Text>
-              <View
-                style={{
-                  width: 20,
-                  height: 20,
-                  backgroundColor: "#f0f0f0",
-                  borderColor: "#f0f0f0",
-                  borderWidth: 1,
-                  borderRadius: 40,
-                  marginRight: 16,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Image
-                  source={getImageFromURL(IMAGES.FORWORD_ICON)}
-                  style={{ width: 10, height: 10 }}
-                />
-              </View>
-            </TouchableOpacity>
-          </View>
+              {imageList.map((_, index) => renderDot(index))}
+            </View>
+          </>
+        </View>
 
-          <View>
-            <FlatList
-              data={popularServices}
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(item, index) => index}
-              renderItem={({ item }) => {
-                return (
-                  <View
-                    style={{
-                      flex: 1,
-                      margin: 5,
-                      backgroundColor: "#f0f0f0",
-                      borderRadius: 8,
-                      backgroundColor: "#fff",
-                      shadowColor: "black",
-                      shadowOpacity: 0.3,
-                      shadowOffset: { width: 0, height: 2 },
-                      shadowRadius: 10,
-                      elevation: 3,
-                      backgroundColor: "white",
-                    }}
-                  >
-                    <View
+        <Text
+          style={{
+            fontSize: 17,
+            color: COLOR.black,
+            fontWeight: "500",
+            marginStart: 10,
+            marginTop: 10,
+          }}
+        >
+          {" "}
+          Categories
+        </Text>
+
+        <View style={{ alignItems: "center" }}>
+          <FlatList
+            data={catogeryList}
+            numColumns={4}
+            horizontal={false}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => index}
+            renderItem={({ item }) => {
+              return (
+                <TouchableOpacity
+                  style={{
+                    alignItems: "center",
+                    borderWidth: 1,
+                    borderRadius: 10,
+                    borderColor: "#F0F0F0",
+                    backgroundColor: "white",
+                    width: Platform.OS === "android" ? 75 : 90,
+                    height: Platform.OS === "android" ? 75 : 90,
+                    margin: 13,
+                    padding: 10,
+                    justifyContent: "center",
+                    elevation: 5,
+                  }}
+                  onPress={() => {
+                    if (item.image !== "") {
+                      // Alert.alert("INFO PAGE");
+                      navigation.navigate("ServiceDetailScreen");
+                    } else {
+                      navigation.navigate("AllCategories");
+                    }
+                  }}
+                >
+                  {item.image !== "" ? (
+                    <Image
+                      source={item.image}
+                      resizeMode={"contain"}
                       style={{
-                        backgroundColor: getRandomColor(),
-                        width: 175,
-                        height: 60,
-                        borderRadius: 5,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        margin: 5,
+                        width: "70%",
+                        height: "70%",
                       }}
-                    >
-                      <Image
-                        resizeMode="contain"
-                        source={item.image}
-                        style={{
-                          height: 50,
-                          width: 50,
-                        }}
-                      />
-                    </View>
-                    <Text
-                      style={{
-                        fontSize: 15,
-                        color: COLOR.black,
-                        fontWeight: "500",
-                        marginLeft: 5,
-                      }}
-                    >
-                      {item.title}
+                    />
+                  ) : (
+                    <Text style={{ textAlign: "center", color: COLOR.black }}>
+                      {item.name}
                     </Text>
+                  )}
+                  {item.image == "" ? (
+                    ""
+                  ) : (
                     <Text
                       style={{
                         fontSize: 12,
+                        textAlign: "center",
+                        marginTop: 4,
                         color: COLOR.black,
-                        margin: 5,
-                        marginBottom: 5,
                       }}
                     >
-                      {item.subTitle}
+                      {item.name}
                     </Text>
-                  </View>
-                );
+                  )}
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
+        {/* Popular services */}
+        <View
+          style={{
+            marginTop: "3%",
+          }}
+        >
+          <View style={{ marginHorizontal: 10 }}>
+            <View
+              style={{
+                justifyContent: "space-between",
+                flexDirection: "row",
               }}
-            />
+            >
+              <Text
+                style={{
+                  fontSize: 17,
+                  color: COLOR.black,
+                  fontWeight: "500",
+                }}
+              >
+                {" "}
+                Popular Services
+              </Text>
+              <TouchableOpacity
+                style={{ padding: 5, flexDirection: "row" }}
+                onPress={() => navigation.navigate("PopularServices")}
+              >
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: "red",
+                    marginRight: 5,
+                    alignSelf: "center",
+                  }}
+                >
+                  {" "}
+                  See all{" "}
+                </Text>
+                <View
+                  style={{
+                    width: 20,
+                    height: 20,
+                    backgroundColor: "#f0f0f0",
+                    borderColor: "#f0f0f0",
+                    borderWidth: 1,
+                    borderRadius: 40,
+                    marginRight: 16,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Image
+                    source={getImageFromURL(IMAGES.FORWORD_ICON)}
+                    style={{ width: 10, height: 10 }}
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <View>
+              <FlatList
+                data={popularServices}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(item, index) => index}
+                renderItem={({ item }) => {
+                  return (
+                    <View
+                      style={{
+                        flex: 1,
+                        margin: 5,
+                        backgroundColor: "#f0f0f0",
+                        borderRadius: 8,
+                        backgroundColor: "#fff",
+                        shadowColor: "black",
+                        shadowOpacity: 0.3,
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowRadius: 10,
+                        elevation: 3,
+                        backgroundColor: "white",
+                      }}
+                    >
+                      <View
+                        style={{
+                          backgroundColor: getRandomColor(),
+                          width: 175,
+                          height: 60,
+                          borderRadius: 5,
+                          justifyContent: "center",
+                          alignItems: "center",
+                          margin: 5,
+                        }}
+                      >
+                        <Image
+                          resizeMode="contain"
+                          source={item.image}
+                          style={{
+                            height: 50,
+                            width: 50,
+                          }}
+                        />
+                      </View>
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          color: COLOR.black,
+                          fontWeight: "500",
+                          marginLeft: 5,
+                        }}
+                      >
+                        {item.title}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          color: COLOR.black,
+                          margin: 5,
+                          marginBottom: 5,
+                        }}
+                      >
+                        {item.subTitle}
+                      </Text>
+                    </View>
+                  );
+                }}
+              />
+            </View>
           </View>
         </View>
-      </View>
-      <TouchableOpacity
-        // onPress={() => navigation.navigate("ServiceDetailScreen")}
-        onPress={()=>navigation.navigate('BookingScreen')}
-      >
-        <Text>details</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          // onPress={() => navigation.navigate("ServiceDetailScreen")}
+          onPress={() => navigation.navigate("BookingScreen")}
+        >
+          <Text>details</Text>
+        </TouchableOpacity>
+      </ScrollView>
     </SafeAreaView>
   );
 };

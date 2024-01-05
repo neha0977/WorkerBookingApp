@@ -47,13 +47,7 @@ const SignInScreen = () => {
     setTimeout(() => {
       try {
         setLoading(false);
-        signIn(inputs);
-        setTimeout(() => {
-          navigation.reset({
-            index: 0,
-            routes: [{ name: "HomeScreen" }],
-          });
-        }, 2000);
+        signIn(inputs, navigation);
       } catch (error) {
         Alert.alert("Error", CONSTANTS.something_wrong);
       }
@@ -64,7 +58,7 @@ const SignInScreen = () => {
   const handleOnchange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
   };
- 
+
   // handle erroe in text inputs
   const handleError = (error, input) => {
     setErrors((prevState) => ({ ...prevState, [input]: error }));

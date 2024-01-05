@@ -1,12 +1,5 @@
-import {
-  FlatList,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import React from "react";
+import { FlatList, SafeAreaView, ScrollView, Text, View } from "react-native";
+import React, { useState, useMemo } from "react";
 import CommonHeader from "../components/common/CommonHeader";
 import { COLOR } from "../utils/commonstyles/Color";
 import { Calendar } from "react-native-calendars";
@@ -70,8 +63,20 @@ const Times = [
 ];
 
 const BookingScreen = () => {
+  const initDate = "2024-01-01";
+  const [selected, setSelected] = useState(initDate);
+  const marked = useMemo(
+    () => ({
+      [selected]: {
+        selected: true,
+        selectedColor: COLOR.Primary_Color,
+        selectedTextColor: COLOR.Primary_Color,
+      },
+    }),
+    [selected]
+  );
+
   const timeListRender = ({ item, index }) => {
-    //console.log(item, index);
     return (
       <View
         style={{
@@ -115,11 +120,16 @@ const BookingScreen = () => {
       <CommonHeader title={"Booking"} />
       <ScrollView>
         <Calendar
-          initialDate="2024-01-01"
+          initialDate={initDate}
           minDate="2024-01-01"
           maxDate="2024-02-30"
           disableAllTouchEventsForDisabledDays={true}
-          onDayPress={(day) => console.log("onDayPress", day)}
+          markedDates={marked}
+          onDayPress={(day) => {
+            console.log("day", day);
+            setSelected(day.dateString);
+            // onDaySelect && onDaySelect(day);
+          }}
           onDayLongPress={(day) => console.log("onDayLongPress", day)}
           onMonthChange={(date) => console.log("onMonthChange", date)}
           onPressArrowLeft={(goToPreviousMonth) => {
@@ -138,18 +148,41 @@ const BookingScreen = () => {
             borderColor: COLOR.white,
           }}
           theme={{
+            backgroundColor: "#ffffff",
+            calendarBackground: "#ffffff",
+            selectedDayBackgroundColor: "red",
+            selectedDayTextColor: "red",
+            todayTextColor: COLOR.Primary_Color,
+            dayTextColor: "#000000",
+            textDayFontWeight: "500",
+            textDayFontSize: 12,
+            textDisabledColor: "#d9e",
+            textSectionTitleColor: COLOR.Primary_Color,
+            selectedDayTextColor: "black",
+            todayTextColor: COLOR.white,
+            todayBackgroundColor: COLOR.Primary_Color,
+            selectedDotColor: "red",
+            monthTextColor: "#000",
+            textMonthFontWeight: "bold",
+            textDayHeaderFontWeight: "bold",
             "stylesheet.calendar.header": {
-              dayTextAtIndex0: {
-                color: "red",
+              header: {
+                flexDirection: "row",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                textDayHeaderFontSize: 20,
               },
-              dayTextAtIndex6: {
-                color: "green",
+              week: {
+                marginTop: 20,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                //Here I can change only the background week days
               },
             },
-            calendarBackground: "#222",
-            dayTextColor: "#fff",
-            textDisabledColor: "#444",
-            monthTextColor: "#888",
+            // textDayFontSize: 14,
+            // textMonthFontSize: 16,
+            // textDayHeaderFontSize: 14,
+            // textDayColor: "#000000",
           }}
         />
         <Text
@@ -163,15 +196,15 @@ const BookingScreen = () => {
           {" "}
           Select Date
         </Text>
-        <View style={{}}>
-          <FlatList
-            data={Times}
-            keyExtractor={(item, index) => index}
-            numColumns={4}
-            showsVerticalScrollIndicator={false}
-            renderItem={(item, index) => timeListRender(item, index)}
-          />
-        </View>
+
+        <FlatList
+          data={Times}
+          keyExtractor={(item, index) => index}
+          numColumns={4}
+          showsVerticalScrollIndicator={false}
+          renderItem={(item, index) => timeListRender(item, index)}
+        />
+
         <View
           style={{
             width: "90%",
@@ -188,5 +221,3 @@ const BookingScreen = () => {
 };
 
 export default BookingScreen;
-
-const styles = StyleSheet.create({});

@@ -3,7 +3,7 @@ import { Alert, ToastAndroid } from "react-native";
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-export const signIn = async (input) => {
+export const signIn = async (input, navigation) => {
   console.log("input", input);
   let { email: email, password: password } = input;
 
@@ -16,6 +16,12 @@ export const signIn = async (input) => {
     AsyncStorage.setItem("userid", authResult.user.uid);
     console.log("DAta Stored");
     ToastAndroid.show("Login successfully!", ToastAndroid.SHORT);
+    setTimeout(() => {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "HomeScreen" }],
+      });
+    }, 2000);
   } catch (error) {
     if (error.code === "auth/invalid-email")
       ToastAndroid.show("That email address is invalid!", ToastAndroid.SHORT);

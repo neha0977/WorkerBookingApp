@@ -14,7 +14,8 @@ const CommonButton = ({title, onPress = () => {}}) => {
         marginVertical: 20,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius:10
+        borderRadius:10,
+        elevation:5
       }}>
       <Text style={{color: COLOR.white, fontWeight: 'bold', fontSize: 15}}>
         {title}
