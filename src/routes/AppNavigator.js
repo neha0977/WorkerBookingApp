@@ -18,6 +18,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import BottomNavigator from "./BottomNavigator";
 import NotificationScreen from "../screens/NotificationScreen";
 import BookingScreen from "../screens/BookingScreen";
+import ServiceCartScreen from "../screens/ServiceCartScreen";
 const AppNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
@@ -123,6 +124,15 @@ const AppNavigator = () => {
             title: "HomeScreen",
           }}
         />
+         <Stack.Screen
+          options={{ headerShows: false }}
+          name="ServiceCartScreen"
+          component={ServiceCartScreen}
+          option={{
+            title: "ServiceCartScreen",
+          }}
+        />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );

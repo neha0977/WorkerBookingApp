@@ -12,4 +12,5 @@ export const COLOR = {
   light: "#F3F4FB",
   darkBlue: "#7978B5",
   red: "red",
+  dark_red:"#A61400"
 };
