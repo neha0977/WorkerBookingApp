@@ -12,67 +12,65 @@ import { COLOR } from "../utils/commonstyles/Color";
 import { Calendar } from "react-native-calendars";
 import CommonButton from "../components/common/CommonButton";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-const Times = [
-  {
-    id: 0,
-    title: "AM",
-    time: "06:00",
-  },
-  {
-    id: 1,
-    title: "AM",
-    time: "08:00",
-  },
-  {
-    id: 3,
-    title: "AM",
-    time: "10:00",
-  },
-  {
-    id: 4,
-    title: "PM",
-    time: "12:00",
-  },
-  {
-    id: 5,
-    title: "PM",
-    time: "14:00",
-  },
-  {
-    id: 6,
-    title: "PM",
-    time: "14:00",
-  },
-  {
-    id: 7,
-    title: "PM",
-    time: "16:00",
-  },
-  {
-    id: 8,
-    title: "PM",
-    time: "18:00",
-  },
-  {
-    id: 9,
-    title: "PM",
-    time: "19:00",
-  },
-  {
-    id: 10,
-    title: "PM",
-    time: "20:00",
-  },
-  {
-    id: 11,
-    title: "PM",
-    time: "21:00",
-  },
-];
+
 
 const BookingScreen = () => {
   const initDate = "2024-01-01";
   const [selected, setSelected] = useState("");
+  const [timeSelect, setTimeSelect] = useState("");
+  const [Index, setIndex] = useState(-1);
+  const [Times, setTimes] = useState([
+    {
+      id: 0,
+      title: "AM",
+      time: "06:00 AM",
+    },
+    {
+      id: 1,
+      title: "AM",
+      time: "08:00 AM",
+    },
+    {
+      id: 3,
+      title: "AM",
+      time: "10:00 AM",
+    },
+    {
+      id: 4,
+      title: "PM",
+      time: "12:00 PM",
+    },
+    {
+      id: 5,
+      title: "PM",
+      time: "14:00 PM",
+    },
+    {
+      id: 7,
+      title: "PM",
+      time: "16:00 PM",
+    },
+    {
+      id: 8,
+      title: "PM",
+      time: "18:00 PM",
+    },
+    {
+      id: 9,
+      title: "PM",
+      time: "19:00 PM",
+    },
+    {
+      id: 10,
+      title: "PM",
+      time: "20:00 PM",
+    },
+    {
+      id: 11,
+      title: "PM",
+      time: "21:00 PM",
+    },
+  ]);
   const marked = useMemo(
     () => ({
       [selected]: {
@@ -84,11 +82,13 @@ const BookingScreen = () => {
     [selected]
   );
   const handleProced = () => {
-    console.log("H");
+    if (!selected) {
+      ToastAndroid.show("Please select date", ToastAndroid.SHORT);
+    }
   };
   const timeListRender = ({ item, index }) => {
     return (
-      <View
+      <TouchableOpacity
         style={{
           flexDirection: "row",
           backgroundColor: COLOR.white,
@@ -98,6 +98,14 @@ const BookingScreen = () => {
           padding: 12,
           marginVertical: 10,
           alignItems: "center",
+          borderColor: Index != item.index ? COLOR.Primary_Color : "pink",
+        }}
+        onPress={() => {
+          setTimeSelect(item.time);
+          setIndex(item.index);
+          const myArr = [...availableSlots];
+          myArr[index].isSelected = !item.isSelected;
+          setAvailableSlots(myArr);
         }}
       >
         <Text
@@ -111,7 +119,7 @@ const BookingScreen = () => {
           {" "}
           {item.time}
         </Text>
-        <Text
+        {/* <Text
           style={{
             fontSize: 12,
             color: COLOR.black,
@@ -121,8 +129,8 @@ const BookingScreen = () => {
         >
           {" "}
           {item.title}
-        </Text>
-      </View>
+        </Text> */}
+      </TouchableOpacity>
     );
   };
   return (
