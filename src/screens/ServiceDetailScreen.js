@@ -5,15 +5,17 @@ import {
   ScrollView,
   Image,
   FlatList,
+  Dimensions,
   ImageBackground,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React,{useState,useEffect} from "react";
 import CommonHeader from "../components/common/CommonHeader";
 import { STYLES } from "../utils/commonstyles/Style";
 import { COLOR } from "../utils/commonstyles/Color";
 import { CONSTANTS } from "../utils/constants/StaticContent";
 import { IMAGES, getImageFromURL } from "../resources/images";
+const { width } = Dimensions.get("window");
 
 const ServiceDetailScreen = () => {
   const servicePackages = [
@@ -44,19 +46,21 @@ const ServiceDetailScreen = () => {
     { id: "5", name: "Premium Package", catlegory: "Men's spa", price: "$60" },
     // Add more service packages as needed
   ];
+  const [itemQuantities, setItemQuantities] = useState({});
+  const [showQuantityItemIds, setShowQuantityItemIds] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+
   const renderItem = ({ item }) => (
     <View
       style={{
         flexDirection: "row",
         justifyContent: "space-between",
-        // alignItems: "center",
         padding: 10,
         marginVertical: 8,
         backgroundColor: "white",
         borderRadius: 8,
         elevation: 1,
-      }}
-    >
+      }} >
       <View style={{ flexDirection: "row", justifyContent: "center" }}>
         <Image
           source={require("../assets/img/men.jpg")}
@@ -65,34 +69,26 @@ const ServiceDetailScreen = () => {
             width: 70,
             borderRadius: 8,
             alignSelf: "center",
-          }}
-        />
+          }}/>
         <View
           style={{
             flexDirection: "column",
             marginLeft: 10,
             alignSelf: "center",
-          }}
-        >
+          }}>
           <Text
             style={{
               fontSize: 13,
               fontWeight: "500",
               color: COLOR.Text_Color,
-            }}
-          >
-            {item.name}{" "}
-          </Text>
+            }} >
+            {item.name}</Text>
           <Text
             style={{
               fontSize: 11,
               fontWeight: "300",
-
               color: COLOR.Text_Color,
-            }}
-          >
-            {item.catlegory}{" "}
-          </Text>
+            }}> {item.catlegory} </Text>
           <View style={{ marginTop: 10, flexDirection: "row" }}>
             <Image
               source={require("../assets/img/star.png")}
@@ -103,14 +99,25 @@ const ServiceDetailScreen = () => {
                 fontSize: 11,
                 fontWeight: 500,
                 color: COLOR.black,
-
                 marginHorizontal: 3,
               }}
             >
               {" "}
-              4.5
+              4.5{" "}
             </Text>
           </View>
+
+          <TouchableOpacity>
+            <Text
+              style={{
+                fontSize: 9,
+                fontWeight: "600",
+                marginTop: 8,
+                color: COLOR.Primary_Color,
+              }} >
+              VIEW DETAILS {" >"}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -118,46 +125,58 @@ const ServiceDetailScreen = () => {
         style={{
           flexDirection: "column",
           marginLeft: 10,
-          justifyContent: "space-between",
-        }}
-      >
+          justifyContent: "space-between"}} >
+        {/* //Add button */}
+        {!showQuantityItemIds.includes(item.id) && (
         <TouchableOpacity
           style={{
             padding: 2,
             borderRadius: 4,
             borderColor: COLOR.Primary_Color,
             borderWidth: 1,
-          }}
-        >
+          }} 
+          onPress={() => {
+            const newQuantities = { ...itemQuantities };
+              newQuantities[item.id] = (newQuantities[item.id] || 0) + 1;
+              setItemQuantities(newQuantities);
+
+              // Preserve existing item IDs in showQuantityItemIds
+              setShowQuantityItemIds((prevIds) => [...prevIds, item.id]);
+
+              calculateTotalPrice();
+            }}>
           <Text
             style={{
               color: COLOR.Primary_Color,
               fontSize: 12,
               alignSelf: "center",
               paddingHorizontal: 5,
-              fontWeight: "500",
-            }}
-          >
-            ADD
-          </Text>
+              fontWeight: "500"}}> ADD </Text>
         </TouchableOpacity>
-        <View style={{ flexDirection: "row" }}>
-          <TouchableOpacity
+        )}
+
+        {/* //Quantity button */}
+        {itemQuantities[item.id] > 0 && (
+        <View
+          style={{
+            paddingHorizontal: 6,
+            paddingVertical: 4,
+            borderRadius: 4,
+            borderColor: COLOR.Primary_Color,
+            borderWidth: 1,
+            flexDirection: "row",
+          }} >
+          <TouchableOpacity onPress={() => updateQuantity(item.id, 1)}
             style={{
-              height: 25,
-              width: 25,
-              backgroundColor: COLOR.Primary_Color,
-              borderRadius: 40,
               justifyContent: "center",
-            }}
-          >
+            }} >
             <Image
               source={require("../assets/img/plus.png")}
               style={{
                 alignSelf: "center",
-                height: 11,
-                width: 11,
-                tintColor: "white",
+                height: 9,
+                width: 9,
+                tintColor: COLOR.Primary_Color,
               }}
             />
           </TouchableOpacity>
@@ -168,47 +187,90 @@ const ServiceDetailScreen = () => {
               alignSelf: "center",
               fontSize: 13,
               fontWeight: "500",
-              color: COLOR.Text_Color,
-            }}
-          >
-            1
-          </Text>
+              color: COLOR.Primary_Color,
+            }} >{itemQuantities[item.id]}</Text>
 
-          <TouchableOpacity
+          <TouchableOpacity   onPress={() => updateQuantity(item.id, -1)}
             style={{
-              height: 25,
-              width: 25,
-              backgroundColor: COLOR.Primary_Color,
-              borderRadius: 40,
               justifyContent: "center",
-            }}
-          >
+            }}>
             <Image
               source={require("../assets/img/minus.png")}
               style={{
                 alignSelf: "center",
-                height: 11,
-                width: 11,
-                tintColor: "white",
+                height: 9,
+                width: 9,
+                tintColor: COLOR.Primary_Color,
               }}
             />
           </TouchableOpacity>
         </View>
+        )}
 
+        {itemQuantities[item.id] <= 0 && (
+          <TouchableOpacity
+            style={{
+              padding: 2,
+              borderRadius: 4,
+              borderColor: COLOR.Primary_Color,
+              borderWidth: 1,
+            }}
+            onPress={() => {
+              const newQuantities = { ...itemQuantities };
+              newQuantities[item.id] = (newQuantities[item.id] || 0) + 1;
+              setItemQuantities(newQuantities);
+
+              // Preserve existing item IDs in showQuantityItemIds
+              setShowQuantityItemIds((prevIds) => [...prevIds, item.id]);
+
+              calculateTotalPrice();
+            }}
+          >
+            <Text
+              style={{
+                color: COLOR.Primary_Color,
+                fontSize: 12,
+                alignSelf: "center",
+                paddingHorizontal: 5,
+                fontWeight: "500",
+              }}
+            >
+              {" "}
+              ADD{" "}
+            </Text>
+          </TouchableOpacity>
+        )}
         <Text
           style={{
             fontSize: 15,
             fontWeight: "bold",
             color: COLOR.black,
             alignSelf: "center",
-          }}
-        >
-          {item.price}{" "}
-        </Text>
+          }}>{item.price}</Text>
       </View>
     </View>
   );
 
+  const updateQuantity = (itemId, change) => {
+    const newQuantities = { ...itemQuantities };
+    newQuantities[itemId] = Math.max(0, newQuantities[itemId] + change);
+    setItemQuantities(newQuantities);
+    calculateTotalPrice();
+  };
+
+  const calculateTotalPrice = () => {
+    let total = 0;
+    servicePackages.forEach((item) => {
+      total += (itemQuantities[item.id] || 0) * parseInt(item.price.slice(1));
+    });
+    setTotalPrice(total);
+  };
+
+  useEffect(() => {
+    calculateTotalPrice();
+  }, [itemQuantities]);
+
+  
   return (
     <SafeAreaView style={STYLES.containerForgotpass}>
       <CommonHeader title="Detail" />
@@ -312,6 +374,48 @@ const ServiceDetailScreen = () => {
           </View>
         </View>
       </ScrollView>
+
+      {/* //Service cart view */}
+      <View
+        style={{
+          width: width,
+          height: 50,
+          flexDirection: "row",
+          backgroundColor: COLOR.Primary_Color,
+          padding: 10,
+          borderTopLeftRadius: 15,
+          borderTopRightRadius: 15,
+          elevation: 5,
+          justifyContent: "space-between",
+        }}
+      >
+        <Text
+          style={{
+            color: COLOR.white,
+            fontSize: 12,
+            fontWeight: "500",
+            alignSelf: "center",
+            paddingLeft: 20,
+          }} >  {/* Calculate total price based on selected package and quantity */}
+          ${totalPrice}
+        </Text>
+
+        <TouchableOpacity
+          style={{
+            backgroundColor: COLOR.light_purple,
+            paddingHorizontal: 5,
+            paddingVertical: 4,
+            borderRadius: 5,
+            height: 26,
+            alignSelf: "center" }}>
+          <Text
+            style={{
+              color: COLOR.Primary_Color,
+              fontSize: 12,
+              fontWeight: "500",
+              alignSelf: "center" }} > Select slot </Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };

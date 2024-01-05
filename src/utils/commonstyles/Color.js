@@ -4,6 +4,7 @@ export const COLOR = {
   Background_Color: "#FFFFFF",
   Text_Color: "#000000",
   light_purple:"#FBFAFE",
+  fade_purple:"#EEE8F5",
   white: "#fff",
   black: "#000",
   blue: "#5D5FEE",

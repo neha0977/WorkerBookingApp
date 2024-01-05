@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     height: 60,
-    backgroundColor: '#EEE8F5',
+    backgroundColor: COLOR.fade_purple,
     elevation: 1,
     borderColor: "grey",
   },

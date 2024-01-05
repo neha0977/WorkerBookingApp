@@ -172,8 +172,8 @@ const HomeScreen = ({ navigation }) => {
     <View
       key={index}
       style={{
-        width: 10,
-        height: 10,
+        width: 8,
+        height: 8,
         borderRadius: 5,
         marginHorizontal: 5,
         backgroundColor: index === currentIndex ? COLOR.Primary_Color : '#D3D3D3',
@@ -217,8 +217,6 @@ const HomeScreen = ({ navigation }) => {
         {" "}
         Categories
       </Text>
-
-    
 
       <View style={{ alignItems: "center" }}>
         <FlatList
@@ -289,8 +287,7 @@ const HomeScreen = ({ navigation }) => {
       <View
         style={{
           marginTop: "3%",
-        }}
-      >
+        }} >
         <View style={{ marginHorizontal: 10 }}>
           <View
             style={{
