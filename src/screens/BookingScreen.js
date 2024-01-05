@@ -64,12 +64,12 @@ const Times = [
 
 const BookingScreen = () => {
   const initDate = "2024-01-01";
-  const [selected, setSelected] = useState(initDate);
+  const [selected, setSelected] = useState("");
   const marked = useMemo(
     () => ({
       [selected]: {
         selected: true,
-        selectedColor: COLOR.Primary_Color,
+        selectedColor: COLOR.fade_purple,
         selectedTextColor: COLOR.Primary_Color,
       },
     }),
@@ -159,8 +159,8 @@ const BookingScreen = () => {
             textDisabledColor: "#d9e",
             textSectionTitleColor: COLOR.Primary_Color,
             selectedDayTextColor: "black",
-            todayTextColor: COLOR.white,
-            todayBackgroundColor: COLOR.Primary_Color,
+            //todayTextColor: COLOR.white,
+           // todayBackgroundColor: COLOR.Primary_Color,
             selectedDotColor: "red",
             monthTextColor: "#000",
             textMonthFontWeight: "bold",
