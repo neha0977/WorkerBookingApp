@@ -26,8 +26,9 @@ const CommonHeader = ({ title }) => {
         >
           <Image
             source={getImageFromURL(IMAGES.BACK_ICON)}
-            style={{ width: 15, height: 15 }}
             resizeMode={"center"}
+            style={{ width: 15, height: 15 }}
+
           />
         </TouchableOpacity>
 
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
     borderColor: "grey",
   },
   title: {
-    fontSize: 13,
+    fontSize: 16,
     color: COLOR.black,
     fontWeight: "500",
     textAlign: "center",

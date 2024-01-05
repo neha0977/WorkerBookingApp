@@ -8,8 +8,9 @@ import {
   Dimensions,
   ImageBackground,
   TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
-import React,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import CommonHeader from "../components/common/CommonHeader";
 import { STYLES } from "../utils/commonstyles/Style";
 import { COLOR } from "../utils/commonstyles/Color";
@@ -17,7 +18,7 @@ import { CONSTANTS } from "../utils/constants/StaticContent";
 import { IMAGES, getImageFromURL } from "../resources/images";
 const { width } = Dimensions.get("window");
 
-const ServiceDetailScreen = () => {
+const ServiceDetailScreen = ({ navigation }) => {
   const servicePackages = [
     {
       id: "1",
@@ -60,7 +61,8 @@ const ServiceDetailScreen = () => {
         backgroundColor: "white",
         borderRadius: 8,
         elevation: 1,
-      }} >
+      }}
+    >
       <View style={{ flexDirection: "row", justifyContent: "center" }}>
         <Image
           source={require("../assets/img/men.jpg")}
@@ -69,26 +71,34 @@ const ServiceDetailScreen = () => {
             width: 70,
             borderRadius: 8,
             alignSelf: "center",
-          }}/>
+          }}
+        />
         <View
           style={{
             flexDirection: "column",
             marginLeft: 10,
             alignSelf: "center",
-          }}>
+          }}
+        >
           <Text
             style={{
               fontSize: 13,
               fontWeight: "500",
               color: COLOR.Text_Color,
-            }} >
-            {item.name}</Text>
+            }}
+          >
+            {item.name}
+          </Text>
           <Text
             style={{
               fontSize: 11,
               fontWeight: "300",
               color: COLOR.Text_Color,
-            }}> {item.catlegory} </Text>
+            }}
+          >
+            {" "}
+            {item.catlegory}{" "}
+          </Text>
           <View style={{ marginTop: 10, flexDirection: "row" }}>
             <Image
               source={require("../assets/img/star.png")}
@@ -114,7 +124,8 @@ const ServiceDetailScreen = () => {
                 fontWeight: "600",
                 marginTop: 8,
                 color: COLOR.Primary_Color,
-              }} >
+              }}
+            >
               VIEW DETAILS {" >"}
             </Text>
           </TouchableOpacity>
@@ -125,18 +136,20 @@ const ServiceDetailScreen = () => {
         style={{
           flexDirection: "column",
           marginLeft: 10,
-          justifyContent: "space-between"}} >
+          justifyContent: "space-between",
+        }}
+      >
         {/* //Add button */}
         {!showQuantityItemIds.includes(item.id) && (
-        <TouchableOpacity
-          style={{
-            padding: 2,
-            borderRadius: 4,
-            borderColor: COLOR.Primary_Color,
-            borderWidth: 1,
-          }} 
-          onPress={() => {
-            const newQuantities = { ...itemQuantities };
+          <TouchableOpacity
+            style={{
+              padding: 2,
+              borderRadius: 4,
+              borderColor: COLOR.Primary_Color,
+              borderWidth: 1,
+            }}
+            onPress={() => {
+              const newQuantities = { ...itemQuantities };
               newQuantities[item.id] = (newQuantities[item.id] || 0) + 1;
               setItemQuantities(newQuantities);
 
@@ -144,67 +157,81 @@ const ServiceDetailScreen = () => {
               setShowQuantityItemIds((prevIds) => [...prevIds, item.id]);
 
               calculateTotalPrice();
-            }}>
-          <Text
-            style={{
-              color: COLOR.Primary_Color,
-              fontSize: 12,
-              alignSelf: "center",
-              paddingHorizontal: 5,
-              fontWeight: "500"}}> ADD </Text>
-        </TouchableOpacity>
+            }}
+          >
+            <Text
+              style={{
+                color: COLOR.Primary_Color,
+                fontSize: 12,
+                alignSelf: "center",
+                paddingHorizontal: 5,
+                fontWeight: "500",
+              }}
+            >
+              {" "}
+              ADD{" "}
+            </Text>
+          </TouchableOpacity>
         )}
 
         {/* //Quantity button */}
         {itemQuantities[item.id] > 0 && (
-        <View
-          style={{
-            paddingHorizontal: 6,
-            paddingVertical: 4,
-            borderRadius: 4,
-            borderColor: COLOR.Primary_Color,
-            borderWidth: 1,
-            flexDirection: "row",
-          }} >
-          <TouchableOpacity onPress={() => updateQuantity(item.id, 1)}
+          <View
             style={{
-              justifyContent: "center",
-            }} >
-            <Image
-              source={require("../assets/img/plus.png")}
+              paddingHorizontal: 6,
+              paddingVertical: 4,
+              borderRadius: 4,
+              borderColor: COLOR.Primary_Color,
+              borderWidth: 1,
+              flexDirection: "row",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => updateQuantity(item.id, 1)}
               style={{
-                alignSelf: "center",
-                height: 9,
-                width: 9,
-                tintColor: COLOR.Primary_Color,
+                justifyContent: "center",
               }}
-            />
-          </TouchableOpacity>
+            >
+              <Image
+                source={require("../assets/img/plus.png")}
+                style={{
+                  alignSelf: "center",
+                  height: 9,
+                  width: 9,
+                  tintColor: COLOR.Primary_Color,
+                }}
+              />
+            </TouchableOpacity>
 
-          <Text
-            style={{
-              marginHorizontal: 10,
-              alignSelf: "center",
-              fontSize: 13,
-              fontWeight: "500",
-              color: COLOR.Primary_Color,
-            }} >{itemQuantities[item.id]}</Text>
-
-          <TouchableOpacity   onPress={() => updateQuantity(item.id, -1)}
-            style={{
-              justifyContent: "center",
-            }}>
-            <Image
-              source={require("../assets/img/minus.png")}
+            <Text
               style={{
+                marginHorizontal: 10,
                 alignSelf: "center",
-                height: 9,
-                width: 9,
-                tintColor: COLOR.Primary_Color,
+                fontSize: 13,
+                fontWeight: "500",
+                color: COLOR.Primary_Color,
               }}
-            />
-          </TouchableOpacity>
-        </View>
+            >
+              {itemQuantities[item.id]}
+            </Text>
+
+            <TouchableOpacity
+              onPress={() => updateQuantity(item.id, -1)}
+              style={{
+                justifyContent: "center",
+              }}
+            >
+              <Image
+                source={require("../assets/img/minus.png")}
+                style={{
+                  alignSelf: "center",
+                  height: 9,
+                  width: 9,
+                  tintColor: COLOR.Primary_Color,
+                }}
+              />
+            </TouchableOpacity>
+          </View>
         )}
 
         {itemQuantities[item.id] <= 0 && (
@@ -246,7 +273,10 @@ const ServiceDetailScreen = () => {
             fontWeight: "bold",
             color: COLOR.black,
             alignSelf: "center",
-          }}>{item.price}</Text>
+          }}
+        >
+          {item.price}
+        </Text>
       </View>
     </View>
   );
@@ -270,7 +300,6 @@ const ServiceDetailScreen = () => {
     calculateTotalPrice();
   }, [itemQuantities]);
 
-  
   return (
     <SafeAreaView style={STYLES.containerForgotpass}>
       <CommonHeader title="Detail" />
@@ -289,7 +318,7 @@ const ServiceDetailScreen = () => {
               source={require("../assets/img/men.jpg")}
               style={[
                 STYLES.AppLogo,
-                { alignSelf: "center", resizeMode: "fit" },
+                { alignSelf: "center", resizeMode: "contain" },
               ]}
             />
           </View>
@@ -396,8 +425,11 @@ const ServiceDetailScreen = () => {
             fontWeight: "500",
             alignSelf: "center",
             paddingLeft: 20,
-          }} >  {/* Calculate total price based on selected package and quantity */}
-          ${totalPrice}
+          }}
+        >
+          {" "}
+          {/* Calculate total price based on selected package and quantity */}$
+          {totalPrice}
         </Text>
 
         <TouchableOpacity
@@ -407,13 +439,29 @@ const ServiceDetailScreen = () => {
             paddingVertical: 4,
             borderRadius: 5,
             height: 26,
-            alignSelf: "center" }}>
+            alignSelf: "center",
+          }}
+          onPress={() => {
+            console.log("HIIII");
+            if (totalPrice !== 0) navigation.navigate("BookingScreen");
+            else
+              ToastAndroid.show(
+                "Please add services first",
+                ToastAndroid.SHORT
+              );
+          }}
+        >
           <Text
             style={{
               color: COLOR.Primary_Color,
               fontSize: 12,
               fontWeight: "500",
-              alignSelf: "center" }} > Select slot </Text>
+              alignSelf: "center",
+            }}
+          >
+            {" "}
+            View Cart{" "}
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

@@ -1,9 +1,17 @@
-import { FlatList, SafeAreaView, ScrollView, Text, View } from "react-native";
+import {
+  FlatList,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState, useMemo } from "react";
 import CommonHeader from "../components/common/CommonHeader";
 import { COLOR } from "../utils/commonstyles/Color";
 import { Calendar } from "react-native-calendars";
 import CommonButton from "../components/common/CommonButton";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 const Times = [
   {
     id: 0,
@@ -75,7 +83,9 @@ const BookingScreen = () => {
     }),
     [selected]
   );
-
+  const handleProced = () => {
+    console.log("H");
+  };
   const timeListRender = ({ item, index }) => {
     return (
       <View
@@ -84,7 +94,7 @@ const BookingScreen = () => {
           backgroundColor: COLOR.white,
           borderRadius: 5,
           elevation: 3,
-          marginHorizontal: 15,
+          marginHorizontal: 10,
           padding: 12,
           marginVertical: 10,
           alignItems: "center",
@@ -92,7 +102,7 @@ const BookingScreen = () => {
       >
         <Text
           style={{
-            fontSize: 10,
+            fontSize: 12,
             color: COLOR.black,
             fontWeight: "500",
             textAlign: "center",
@@ -103,7 +113,7 @@ const BookingScreen = () => {
         </Text>
         <Text
           style={{
-            fontSize: 10,
+            fontSize: 12,
             color: COLOR.black,
             fontWeight: "500",
             textAlign: "center",
@@ -119,6 +129,39 @@ const BookingScreen = () => {
     <SafeAreaView style={{ backgroundColor: COLOR.white, flex: 1 }}>
       <CommonHeader title={"Booking"} />
       <ScrollView>
+        <View style={{ margin: 10 }}>
+          <View style={{ flexDirection: "row" }}>
+            <MaterialCommunityIcons
+              name="map-marker"
+              color={"black"}
+              size={20}
+            />
+            <Text
+              style={{ fontWeight: "bold", color: COLOR.black, fontSize: 18 }}
+            >
+              Service at
+            </Text>
+          </View>
+          <Text
+            style={{
+              maxWidth: "50%",
+              color: COLOR.black,
+              marginTop: 5,
+              lineHeight: 25,
+              marginStart: 5,
+            }}
+          >
+            J-38, 3rd floor, Noida sector 63, Uttar Pradesh, India{" "}
+          </Text>
+        </View>
+        <View
+          style={{
+            borderColor: "#e3e3e3",
+            borderWidth: 0.5,
+            padding: 0,
+            backgroundColor: "#e3e3e3",
+          }}
+        />
         <Calendar
           initialDate={initDate}
           minDate="2024-01-01"
@@ -160,7 +203,7 @@ const BookingScreen = () => {
             textSectionTitleColor: COLOR.Primary_Color,
             selectedDayTextColor: "black",
             //todayTextColor: COLOR.white,
-           // todayBackgroundColor: COLOR.Primary_Color,
+            // todayBackgroundColor: COLOR.Primary_Color,
             selectedDotColor: "red",
             monthTextColor: "#000",
             textMonthFontWeight: "bold",
@@ -204,7 +247,6 @@ const BookingScreen = () => {
           showsVerticalScrollIndicator={false}
           renderItem={(item, index) => timeListRender(item, index)}
         />
-
         <View
           style={{
             width: "90%",
@@ -213,7 +255,26 @@ const BookingScreen = () => {
             alignSelf: "center",
           }}
         >
-          <CommonButton title={"Save"} />
+          <TouchableOpacity
+            onPress={() => handleProced()}
+            activeOpacity={0.7}
+            style={{
+              height: 45,
+              width: "100%",
+              backgroundColor: COLOR.Primary_Color,
+              marginVertical: 20,
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 10,
+              elevation: 5,
+            }}
+          >
+            <Text
+              style={{ color: COLOR.white, fontWeight: "bold", fontSize: 15 }}
+            >
+              Proceed
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
