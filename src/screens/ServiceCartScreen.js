@@ -20,8 +20,10 @@ import {
   
 
 const ServiceCartScreen = ({route}) => {
-
-    const servicePackages = [
+      const [itemQuantities, setItemQuantities] = useState({});
+      const [showQuantityItemIds, setShowQuantityItemIds] = useState([]);
+      const [totalPrice, setTotalPrice] = useState(0);
+      const [servicePackages, setServicePackages] = useState([
         {
           id: "1",
           name: "Basic Package",
@@ -34,11 +36,8 @@ const ServiceCartScreen = ({route}) => {
           catlegory: "Men's Beard Shave",
           price: "$20",
         },
-      ];
-      const [itemQuantities, setItemQuantities] = useState({});
-      const [showQuantityItemIds, setShowQuantityItemIds] = useState([]);
-      const [totalPrice, setTotalPrice] = useState(0);
-    
+      ]);
+
       const renderItem = ({ item }) => (
           <View style={{flexDirection:'column'}}>
             <View
@@ -108,8 +107,7 @@ const ServiceCartScreen = ({route}) => {
                     fontSize: 9,
                     fontWeight: "600",
                     marginTop: 8,
-                    color: COLOR.Primary_Color,
-                  }}>
+                    color: COLOR.Primary_Color}}>
                   Service Charge: 10
                 </Text>
               </TouchableOpacity>
@@ -129,7 +127,7 @@ const ServiceCartScreen = ({route}) => {
                   borderColor: COLOR.dark_red,
                   borderWidth: 1,
                 }}
-                onPress={() => {console.log("remove") }}>
+                onPress={() => handleRemoveItem(item.id)}>
                 <Text
                   style={{
                     color: COLOR.dark_red,
@@ -145,9 +143,14 @@ const ServiceCartScreen = ({route}) => {
 
         <View style={{backgroundColor:COLOR.grey,height:1,width:width}} />
           </View>
-      
       );
      
+      const handleRemoveItem = (itemId) => {
+        // Filter out the item with the specified id and update the state
+        setServicePackages((prevPackages) =>
+          prevPackages.filter((item) => item.id !== itemId)
+        );
+      };
       return (
         <SafeAreaView style={STYLES.containerForgotpass}>
           <CommonHeader title="Service cart" />
