@@ -49,6 +49,7 @@ const ServiceDetailScreen = ({ navigation }) => {
   const [itemQuantities, setItemQuantities] = useState({});
   const [showQuantityItemIds, setShowQuantityItemIds] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [setItem, setSetItem] = useState([]);
 
   const renderItem = ({ item }) => (
     <View
@@ -165,7 +166,11 @@ const ServiceDetailScreen = ({ navigation }) => {
                 alignSelf: "center",
                 paddingHorizontal: 5,
                 fontWeight: "500",
-              }}> ADD</Text>
+              }}
+            >
+              {" "}
+              ADD
+            </Text>
           </TouchableOpacity>
         )}
 
@@ -205,13 +210,17 @@ const ServiceDetailScreen = ({ navigation }) => {
                 fontSize: 13,
                 fontWeight: "500",
                 color: COLOR.Primary_Color,
-              }} >{itemQuantities[item.id]} </Text>
+              }}
+            >
+              {itemQuantities[item.id]}{" "}
+            </Text>
 
             <TouchableOpacity
               onPress={() => updateQuantity(item.id, -1)}
               style={{
                 justifyContent: "center",
-              }}>
+              }}
+            >
               <Image
                 source={require("../assets/img/minus.png")}
                 style={{
@@ -234,6 +243,10 @@ const ServiceDetailScreen = ({ navigation }) => {
               borderWidth: 1,
             }}
             onPress={() => {
+              // console.warn("item", item);
+              // const arr = [];
+              // let newArr = arr.push(item);
+              // setItem(newArr);
               const newQuantities = { ...itemQuantities };
               newQuantities[item.id] = (newQuantities[item.id] || 0) + 1;
               setItemQuantities(newQuantities);
@@ -249,7 +262,11 @@ const ServiceDetailScreen = ({ navigation }) => {
                 alignSelf: "center",
                 paddingHorizontal: 5,
                 fontWeight: "500",
-              }}> ADD</Text>
+              }}
+            >
+              {" "}
+              ADD
+            </Text>
           </TouchableOpacity>
         )}
         <Text
@@ -257,7 +274,9 @@ const ServiceDetailScreen = ({ navigation }) => {
             fontSize: 15,
             fontWeight: "bold",
             color: COLOR.black,
-            alignSelf: "center" }}>
+            alignSelf: "center",
+          }}
+        >
           {item.price}
         </Text>
       </View>
@@ -294,12 +313,16 @@ const ServiceDetailScreen = ({ navigation }) => {
               width: "100%",
               backgroundColor: COLOR.blue,
               justifyContent: "center",
-              borderRadius: 10 }} >
+              borderRadius: 10,
+            }}
+          >
             <Image
               source={require("../assets/img/men.jpg")}
               style={[
                 STYLES.AppLogo,
-                { alignSelf: "center", resizeMode: "contain" } ]} />
+                { alignSelf: "center", resizeMode: "contain" },
+              ]}
+            />
           </View>
           <Text
             style={{
@@ -307,7 +330,8 @@ const ServiceDetailScreen = ({ navigation }) => {
               marginTop: 10,
               fontWeight: "500",
               color: COLOR.black,
-            }} >
+            }}
+          >
             Men's Grooming
           </Text>
           <View style={{ marginTop: 5, flexDirection: "row" }}>
@@ -321,7 +345,11 @@ const ServiceDetailScreen = ({ navigation }) => {
                 fontWeight: 500,
                 color: COLOR.black,
                 marginHorizontal: 3,
-              }}> 4.5 </Text>
+              }}
+            >
+              {" "}
+              4.5{" "}
+            </Text>
             <View
               style={{
                 justifyContent: "center",
@@ -331,8 +359,14 @@ const ServiceDetailScreen = ({ navigation }) => {
                 borderRadius: 15,
                 height: 25,
                 elevation: 3,
-              }} >
-              <Text style={{ fontSize: 10, color: COLOR.Primary_Color, padding: 5 }}> 2K bookings </Text>
+              }}
+            >
+              <Text
+                style={{ fontSize: 10, color: COLOR.Primary_Color, padding: 5 }}
+              >
+                {" "}
+                2K bookings{" "}
+              </Text>
             </View>
           </View>
 
@@ -343,7 +377,10 @@ const ServiceDetailScreen = ({ navigation }) => {
               color: COLOR.black,
               marginHorizontal: 3,
               marginTop: "5%",
-            }} >{CONSTANTS.dummy_txt}</Text>
+            }}
+          >
+            {CONSTANTS.dummy_txt}
+          </Text>
 
           <Text
             style={{
@@ -352,7 +389,11 @@ const ServiceDetailScreen = ({ navigation }) => {
               color: COLOR.black,
               marginHorizontal: 3,
               marginTop: "5%",
-            }}> Packages</Text>
+            }}
+          >
+            {" "}
+            Packages
+          </Text>
           <View style={{ marginTop: 10 }}>
             <FlatList
               data={servicePackages}
@@ -379,7 +420,8 @@ const ServiceDetailScreen = ({ navigation }) => {
           borderTopRightRadius: 15,
           elevation: 5,
           justifyContent: "space-between",
-        }}>
+        }}
+      >
         <Text
           style={{
             color: COLOR.white,
@@ -387,7 +429,8 @@ const ServiceDetailScreen = ({ navigation }) => {
             fontWeight: "500",
             alignSelf: "center",
             paddingLeft: 20,
-          }}>
+          }}
+        >
           {/* Calculate total price based on selected package and quantity */}$
           {totalPrice}
         </Text>
@@ -402,20 +445,28 @@ const ServiceDetailScreen = ({ navigation }) => {
             alignSelf: "center",
           }}
           onPress={() => {
-            if (totalPrice !== 0) navigation.navigate("ServiceCartScreen",{totalPrice:totalPrice});
+            if (totalPrice !== 0)
+              navigation.navigate("ServiceCartScreen", {
+                totalPrice: totalPrice,
+                showQuantityItemIds: showQuantityItemIds,
+                itemQuantities: itemQuantities,
+              });
             else
               ToastAndroid.show(
                 "Please add services first",
                 ToastAndroid.SHORT
               );
-          }}>
+          }}
+        >
           <Text
             style={{
               color: COLOR.Primary_Color,
               fontSize: 12,
-              paddingHorizontal:5,
+              paddingHorizontal: 5,
               fontWeight: "500",
-              alignSelf: "center"}} >
+              alignSelf: "center",
+            }}
+          >
             View cart
           </Text>
         </TouchableOpacity>

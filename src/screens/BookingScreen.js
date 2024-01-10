@@ -5,6 +5,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
 import React, { useState, useMemo } from "react";
 import CommonHeader from "../components/common/CommonHeader";
@@ -13,8 +14,7 @@ import { Calendar } from "react-native-calendars";
 import CommonButton from "../components/common/CommonButton";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-
-const BookingScreen = () => {
+const BookingScreen = ({ navigation }) => {
   const initDate = "2024-01-01";
   const [selected, setSelected] = useState("");
   const [timeSelect, setTimeSelect] = useState("");
@@ -24,53 +24,65 @@ const BookingScreen = () => {
       id: 0,
       title: "AM",
       time: "06:00 AM",
+      isSelected: false,
     },
     {
       id: 1,
       title: "AM",
       time: "08:00 AM",
+      isSelected: false,
     },
     {
       id: 3,
       title: "AM",
       time: "10:00 AM",
+      isSelected: false,
     },
     {
       id: 4,
       title: "PM",
       time: "12:00 PM",
+      isSelected: false,
     },
     {
       id: 5,
       title: "PM",
       time: "14:00 PM",
+      isSelected: false,
     },
     {
       id: 7,
       title: "PM",
       time: "16:00 PM",
+      isSelected: false,
     },
     {
       id: 8,
       title: "PM",
       time: "18:00 PM",
+      isSelected: false,
     },
     {
       id: 9,
       title: "PM",
       time: "19:00 PM",
+      isSelected: false,
     },
     {
       id: 10,
       title: "PM",
       time: "20:00 PM",
+      isSelected: false,
     },
     {
       id: 11,
       title: "PM",
       time: "21:00 PM",
+      isSelected: false,
     },
   ]);
+  const [selectedItem, setSelectedItem] = useState(null);
+
   const marked = useMemo(
     () => ({
       [selected]: {
@@ -86,6 +98,20 @@ const BookingScreen = () => {
       ToastAndroid.show("Please select date", ToastAndroid.SHORT);
     }
   };
+  const handleItemPress = (item, index) => {
+    console.log(item);
+    setSelectedItem(item.id === selectedItem ? null : item.id);
+    // setTimes((prevData) =>
+    //   prevData.map((item) =>
+    //     item.id == item.id
+    //       ? { ...item, isSelected: !item.isSelected }
+    //       : { ...item, isSelected: false }
+    //   )
+    // );
+    // const myArr = [...Times];
+    // myArr[index].isSelected = !item.isSelected;
+    // setTimes(myArr);
+  };
   const timeListRender = ({ item, index }) => {
     return (
       <TouchableOpacity
@@ -98,20 +124,18 @@ const BookingScreen = () => {
           padding: 12,
           marginVertical: 10,
           alignItems: "center",
-          borderColor: Index != item.index ? COLOR.Primary_Color : "pink",
+          borderColor:
+            selectedItem === item.id ? COLOR.Primary_Color : "#e3e3e3",
+          borderWidth: 0.5,
         }}
         onPress={() => {
-          setTimeSelect(item.time);
-          setIndex(item.index);
-          const myArr = [...availableSlots];
-          myArr[index].isSelected = !item.isSelected;
-          setAvailableSlots(myArr);
+          handleItemPress(item, index);
         }}
       >
         <Text
           style={{
             fontSize: 12,
-            color: COLOR.black,
+            color: selectedItem === item.id ? COLOR.Primary_Color : COLOR.black,
             fontWeight: "500",
             textAlign: "center",
           }}
@@ -138,17 +162,48 @@ const BookingScreen = () => {
       <CommonHeader title={"Booking"} />
       <ScrollView>
         <View style={{ margin: 10 }}>
-          <View style={{ flexDirection: "row" }}>
-            <MaterialCommunityIcons
-              name="map-marker"
-              color={"black"}
-              size={20}
-            />
-            <Text
-              style={{ fontWeight: "bold", color: COLOR.black, fontSize: 18 }}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <View style={{ flexDirection: "row" }}>
+              <MaterialCommunityIcons
+                name="map-marker"
+                color={"black"}
+                size={20}
+              />
+              <Text
+                style={{ fontWeight: "bold", color: COLOR.black, fontSize: 18 }}
+              >
+                Service at
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={{
+                padding: 2,
+                borderRadius: 4,
+                borderColor: COLOR.Primary_Color,
+                borderWidth: 1,
+              }}
+              onPress={() => navigation.navigate("AddressScreen")}
             >
-              Service at
-            </Text>
+              <Text
+                style={{
+                  color: COLOR.Primary_Color,
+                  fontSize: 10,
+                  alignSelf: "center",
+                  paddingHorizontal: 5,
+                  paddingVertical: 2,
+                  fontWeight: "500",
+                }}
+              >
+                {" "}
+                CHANGE
+              </Text>
+            </TouchableOpacity>
           </View>
           <Text
             style={{
