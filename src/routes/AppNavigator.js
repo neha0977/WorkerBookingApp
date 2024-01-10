@@ -152,11 +152,12 @@ const AppNavigator = () => {
             title: "BookedService",
           }}
         />
-        
+        <Stack.Screen
+          options={{ headerShows: false }}
           name="AddressScreen"
           component={AddressScreen}
           option={{
-            title: "ServiceCartScreen",
+            title: "AddressScreen",
           }}
         />
       </Stack.Navigator>
