@@ -5,7 +5,7 @@ import {
   ScrollView,
   Dimensions,
   FlatList,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
 import CommonHeader from "../components/common/CommonHeader";
@@ -49,6 +49,7 @@ const BookedService = () => {
       service_price: "$390",
       total: "$400",
     },
+
   ]);
   const renderItem = ({ item }) => (
     <View style={{ flexDirection: "column" }}>
@@ -225,51 +226,53 @@ const BookedService = () => {
     </View>
   );
   return (
-    <SafeAreaView styles={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLOR.light_purple }}>
       <CommonHeader title="Appointment detail" />
-      <ScrollView
-        style={{
-          paddingHorizontal: 15,
-          paddingTop: 15,
-          height: height,
-          backgroundColor: COLOR.light_purple,
-        }}>
-        <View style={{ flexDirection: "column", marginHorizontal: "2%" }}>
-          <Text
-            style={{ color: COLOR.Text_Color, fontSize: 13, fontWeight: "500" }} >
-            Service detail
-          </Text>
+      <ScrollView style={{ paddingTop: 5, paddingHorizontal: 15 }}>
+        <Text
+          style={{
+            color: COLOR.Text_Color,
+            fontSize: 13,
+            fontWeight: "500",
+            paddingTop: 15,
+          }}
+        >
+          Service detail
+        </Text>
+        <View style={{ flex: 1 }}>
           <FlatList
             data={servicePackages}
             keyExtractor={(item) => item.id}
+            showsVerticalScrollIndicator={false}
             renderItem={renderItem}
-            contentContainerStyle={{
-              flexGrow: 1,
-              justifyContent: "center",
-            }}
           />
-
-       <TouchableOpacity
-            style={{
-              padding: 2,
-              borderRadius: 4,
-              borderColor: COLOR.dark_red,
-              borderWidth: 1,
-              marginVertical:'5%' }}>
-            <Text
-              style={{
-                color: COLOR.dark_red,
-                fontSize: 10,
-                alignSelf: "center",
-                paddingHorizontal: 5,
-                paddingVertical: 2,
-                fontWeight: "500" }} >
-              Cancel booking
-            </Text>
-          </TouchableOpacity>
         </View>
+
+        <TouchableOpacity
+          style={{
+            borderRadius: 4,
+            borderColor: COLOR.dark_red,
+            borderWidth: 1,
+            marginVertical: 5,
+            marginBottom: "5%",
+            padding: 10,
+            marginTop: "5%",
+          }}
+        >
+          <Text
+            style={{
+              color: COLOR.dark_red,
+              fontSize: 12,
+              alignSelf: "center",
+              paddingHorizontal: 5,
+              paddingVertical: 2,
+              fontWeight: "500",
+            }}
+          >
+            Cancel booking
+          </Text>
+        </TouchableOpacity>
       </ScrollView>
-     
     </SafeAreaView>
   );
 };

@@ -23,6 +23,7 @@ import BookingHistory from "../screens/BookingHistory";
 import BookedService from "../screens/BookedService";
 
 import AddressScreen from "../screens/AddressScreen";
+import AddressListScreen from "../screens/AddressListScreen";
 const AppNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
@@ -156,6 +157,14 @@ const AppNavigator = () => {
           options={{ headerShows: false }}
           name="AddressScreen"
           component={AddressScreen}
+          option={{
+            title: "AddressScreen",
+          }}
+        />
+          <Stack.Screen
+          options={{ headerShows: false }}
+          name="AddressListScreen"
+          component={AddressListScreen}
           option={{
             title: "AddressScreen",
           }}

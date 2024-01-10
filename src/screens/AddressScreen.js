@@ -15,7 +15,7 @@ import CommonTextInput from "../components/common/CommonTextInput";
 import { COLOR } from "../utils/commonstyles/Color";
 import { CONSTANTS } from "../utils/constants/StaticContent";
 import CommonButton from "../components/common/CommonButton";
-const AddressScreen = () => {
+const AddressScreen = ({ navigation }) => {
   const [errors, setErrors] = React.useState({});
   const [fullAddress, setFullAddress] = useState({
     area: "",
@@ -24,27 +24,40 @@ const AddressScreen = () => {
     houseNumber: "",
     pin: "",
   });
-  const [newAddress, setNewAddress] = useState("");
-  const [addresses, setAddresses] = useState([
-    { street: "123 Main St", city: "City1" },
-    { street: "456 Second St", city: "City2" },
-  ]);
-
+  const [addresses, setAddresses] = useState([]);
   const addAddress = () => {
-    console.log("HIII")
-    if (fullAddress.area.trim() !== "" && fullAddress.city.trim() !== "") {
-      setAddresses([...addresses, fullAddress]);
-      // setFullAddress({ area: '', city: '' });
-      console.log("HIII2")
+    console.log("HIII");
+    if (
+      fullAddress.area.trim() !== "" &&
+      fullAddress.city.trim() !== "" &&
+      fullAddress.buildingName.trim() !== "" &&
+      fullAddress.houseNumber.trim() !== "" &&
+      fullAddress.pin.trim() !== ""
+    ) {
+      console.log(addresses, fullAddress);
+      setAddresses([...addresses, { ...fullAddress }]);
+      navigation.navigate("AddressListScreen", {
+        addresses:addresses,
+        onRemoveAddress: removeAddress,
+      });
+      setFullAddress({
+        city: "",
+        area: "",
+        pincode: "",
+        houseNumber: "",
+        building: "",
+      });
     }
   };
 
-  const removeAddress = (index) => {
-    const newAddresses = [...addresses];
-    newAddresses.splice(index, 1);
-    setAddresses(newAddresses);
-  };
-
+  const removeAddress = React.useCallback(
+    (index) => {
+      const newAddresses = [...addresses];
+      newAddresses.splice(index, 1);
+      setAddresses(newAddresses);
+    },
+    [addresses]
+  );
   //validate user input function
   const validate = async () => {
     Keyboard.dismiss();
@@ -100,7 +113,7 @@ const AddressScreen = () => {
     <SafeAreaView style={{ backgroundColor: COLOR.white, flex: 1 }}>
       <CommonHeader title={"Address"} />
 
-      <ScrollView style={{ margin: 20 }}>
+      <ScrollView style={{ margin: 20 }} showsVerticalScrollIndicator={false}>
         <Text
           style={{
             color: COLOR.black,
@@ -157,23 +170,37 @@ const AddressScreen = () => {
           placeholder="Enter pin "
           error={errors.pin}
         />
-        <CommonButton title={"save"} onPress={() => addAddress()} />
-        <FlatList
-          data={addAddress}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item, index }) => (
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginTop: 8,
-              }}
-            >
-              <Text>{item}</Text>
-              <Button title="Remove" onPress={() => removeAddress(index)} />
-            </View>
-          )}
-        />
+
+        {/* <CommonButton title={"save"} onPress={addAddress} /> */}
+        <TouchableOpacity
+          onPress={() => addAddress()}
+          activeOpacity={0.7}
+          style={{
+            height: 45,
+            width: "100%",
+            backgroundColor: COLOR.Primary_Color,
+            marginVertical: 20,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 10,
+            elevation: 5,
+          }}
+        >
+          <Text
+            style={{ color: COLOR.white, fontWeight: "bold", fontSize: 15 }}
+          >
+            save
+          </Text>
+          {/* <Button
+            title="View Addresses"
+            onPress={() =>
+              navigation.navigate("AddressListScreen", {
+                addresses,
+                removeAddress,
+              })
+            }
+          /> */}
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );

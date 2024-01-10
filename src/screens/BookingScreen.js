@@ -6,6 +6,7 @@ import {
   View,
   TouchableOpacity,
   ToastAndroid,
+  Alert,
 } from "react-native";
 import React, { useState, useMemo } from "react";
 import CommonHeader from "../components/common/CommonHeader";
@@ -94,23 +95,14 @@ const BookingScreen = ({ navigation }) => {
     [selected]
   );
   const handleProced = () => {
-    if (!selected) {
-      ToastAndroid.show("Please select date", ToastAndroid.SHORT);
-    }
+    // if (!selected) {
+    //   ToastAndroid.show("Please select date", ToastAndroid.SHORT);
+    // }
+    navigation.navigate("BookedService");
   };
   const handleItemPress = (item, index) => {
     console.log(item);
     setSelectedItem(item.id === selectedItem ? null : item.id);
-    // setTimes((prevData) =>
-    //   prevData.map((item) =>
-    //     item.id == item.id
-    //       ? { ...item, isSelected: !item.isSelected }
-    //       : { ...item, isSelected: false }
-    //   )
-    // );
-    // const myArr = [...Times];
-    // myArr[index].isSelected = !item.isSelected;
-    // setTimes(myArr);
   };
   const timeListRender = ({ item, index }) => {
     return (
@@ -143,17 +135,6 @@ const BookingScreen = ({ navigation }) => {
           {" "}
           {item.time}
         </Text>
-        {/* <Text
-          style={{
-            fontSize: 12,
-            color: COLOR.black,
-            fontWeight: "500",
-            textAlign: "center",
-          }}
-        >
-          {" "}
-          {item.title}
-        </Text> */}
       </TouchableOpacity>
     );
   };
@@ -188,7 +169,10 @@ const BookingScreen = ({ navigation }) => {
                 borderColor: COLOR.Primary_Color,
                 borderWidth: 1,
               }}
-              onPress={() => navigation.navigate("AddressScreen")}
+              onPress={() => {
+                Alert.alert("Chnaged");
+                //navigation.navigate("AddressScreen");
+              }}
             >
               <Text
                 style={{
