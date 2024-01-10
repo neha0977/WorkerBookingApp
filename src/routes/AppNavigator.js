@@ -19,6 +19,9 @@ import BottomNavigator from "./BottomNavigator";
 import NotificationScreen from "../screens/NotificationScreen";
 import BookingScreen from "../screens/BookingScreen";
 import ServiceCartScreen from "../screens/ServiceCartScreen";
+import BookingHistory from "../screens/BookingHistory";
+import BookedService from "../screens/BookedService";
+
 const AppNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
@@ -130,6 +133,22 @@ const AppNavigator = () => {
           component={ServiceCartScreen}
           option={{
             title: "ServiceCartScreen",
+          }}
+        />
+        <Stack.Screen
+          options={{ headerShows: false }}
+          name="BookingHistory"
+          component={BookingHistory}
+          option={{
+            title: "BookingHistory",
+          }}
+        />
+        <Stack.Screen
+          options={{ headerShows: false }}
+          name="BookedService"
+          component={BookedService}
+          option={{
+            title: "BookedService",
           }}
         />
         

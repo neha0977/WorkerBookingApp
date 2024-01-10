@@ -20,8 +20,6 @@ import {
   
 
 const ServiceCartScreen = ({route}) => {
-      const [itemQuantities, setItemQuantities] = useState({});
-      const [showQuantityItemIds, setShowQuantityItemIds] = useState([]);
       const [totalPrice, setTotalPrice] = useState(0);
       const [servicePackages, setServicePackages] = useState([
         {
@@ -208,7 +206,7 @@ const ServiceCartScreen = ({route}) => {
                   ToastAndroid.show(
                     "Please add services first",
                     ToastAndroid.SHORT
-                  );
+                  );     
               }}>
               <Text
                 style={{

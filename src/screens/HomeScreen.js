@@ -168,7 +168,7 @@ const HomeScreen = ({ navigation }) => {
     <Image source={item} style={{ width, height: 200 }} resizeMode="cover" />
   );
 
-  const renderDot = (index) => (
+  const renderDot = (index) => (  
     <View
       key={index}
       style={{
@@ -325,8 +325,7 @@ const HomeScreen = ({ navigation }) => {
                     color: "red",
                     marginRight: 5,
                     alignSelf: "center",
-                  }}
-                >
+                  }} >
                   {" "}
                   See all{" "}
                 </Text>

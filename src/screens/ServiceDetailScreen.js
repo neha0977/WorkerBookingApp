@@ -240,10 +240,8 @@ const ServiceDetailScreen = ({ navigation }) => {
 
               // Preserve existing item IDs in showQuantityItemIds
               setShowQuantityItemIds((prevIds) => [...prevIds, item.id]);
-
               calculateTotalPrice();
-            }}
-          >
+            }} >
             <Text
               style={{
                 color: COLOR.Primary_Color,

@@ -19,7 +19,6 @@ import { STYLES } from "../utils/commonstyles/Style";
 
 const SignInScreen = () => {
   const navigation = useNavigation();
-
   const [inputs, setInputs] = React.useState({ email: "", password: "" });
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);
@@ -63,6 +62,7 @@ const SignInScreen = () => {
   const handleError = (error, input) => {
     setErrors((prevState) => ({ ...prevState, [input]: error }));
   };
+
   return (
     <SafeAreaView style={STYLES.mainContainer}>
       <Loader visible={loading} />
@@ -100,16 +100,14 @@ const SignInScreen = () => {
             style={[
               STYLES.btbLogText,
               { color: COLOR.Primary_Color, fontWeight: "500", fontSize: 12 },
-            ]}
-          >
+            ]}>
             Forgot Password ?
           </Text>
           <CommonButton title={CONSTANTS.log_in} onPress={validate} />
           <View style={{ flexDirection: "row", justifyContent: "center" }}>
             <Text
               onPress={() => navigation.navigate("SignUpScreen")}
-              style={[STYLES.btbLogText, { fontWeight: "regular" }]}
-            >
+              style={[STYLES.btbLogText, { fontWeight: "regular" }]} >
               Don't have account?
             </Text>
             <Text

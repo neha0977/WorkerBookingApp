@@ -47,6 +47,12 @@ const ProfileScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLOR.white }}>
       <CommonHeader title={"Profile"} />
+      <TouchableOpacity onPress={() => navigation.navigate("BookingHistory")}>
+          <Text>Booking history</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("BookedService")}>
+          <Text>Booked Service</Text>
+        </TouchableOpacity>
       <View style={{ alignItems: "center", justifyContent: "center",flex:1 }}>
         <Text>welcome:  {user}</Text>
         <TouchableOpacity onPress={() => signOutUser}>
