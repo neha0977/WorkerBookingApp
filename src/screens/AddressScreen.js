@@ -26,14 +26,16 @@ const AddressScreen = () => {
   });
   const [newAddress, setNewAddress] = useState("");
   const [addresses, setAddresses] = useState([
-    "123 Main St, City1",
-    "456 Second St, City2",
+    { street: "123 Main St", city: "City1" },
+    { street: "456 Second St", city: "City2" },
   ]);
 
   const addAddress = () => {
-    if (newAddress.trim() !== "") {
-      setAddresses([...addresses, newAddress]);
-      setNewAddress("");
+    console.log("HIII")
+    if (fullAddress.area.trim() !== "" && fullAddress.city.trim() !== "") {
+      setAddresses([...addresses, fullAddress]);
+      // setFullAddress({ area: '', city: '' });
+      console.log("HIII2")
     }
   };
 
@@ -155,7 +157,7 @@ const AddressScreen = () => {
           placeholder="Enter pin "
           error={errors.pin}
         />
-        <CommonButton title={"save"} />
+        <CommonButton title={"save"} onPress={() => addAddress()} />
         <FlatList
           data={addAddress}
           keyExtractor={(item, index) => index.toString()}
