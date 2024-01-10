@@ -19,6 +19,7 @@ import BottomNavigator from "./BottomNavigator";
 import NotificationScreen from "../screens/NotificationScreen";
 import BookingScreen from "../screens/BookingScreen";
 import ServiceCartScreen from "../screens/ServiceCartScreen";
+import AddressScreen from "../screens/AddressScreen";
 const AppNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
@@ -92,7 +93,7 @@ const AppNavigator = () => {
             title: "ServiceDetailScreen",
           }}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerShows: false }}
           name="ForgotPassword"
           component={ForgotPassword}
@@ -116,7 +117,7 @@ const AppNavigator = () => {
             title: "HomeScreen",
           }}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerShows: false }}
           name="BookingScreen"
           component={BookingScreen}
@@ -124,7 +125,7 @@ const AppNavigator = () => {
             title: "HomeScreen",
           }}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerShows: false }}
           name="ServiceCartScreen"
           component={ServiceCartScreen}
@@ -132,7 +133,14 @@ const AppNavigator = () => {
             title: "ServiceCartScreen",
           }}
         />
-        
+        <Stack.Screen
+          options={{ headerShows: false }}
+          name="AddressScreen"
+          component={AddressScreen}
+          option={{
+            title: "ServiceCartScreen",
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
