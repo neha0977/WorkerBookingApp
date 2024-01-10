@@ -1,11 +1,13 @@
-import {  Text,
+import {
+  Text,
   View,
   SafeAreaView,
   ScrollView,
   Dimensions,
   FlatList,
-  TouchableOpacity } from "react-native";
-  import React, { useState } from "react";
+  TouchableOpacity,
+} from "react-native";
+import React, { useState } from "react";
 import CommonHeader from "../components/common/CommonHeader";
 import { STYLES } from "../utils/commonstyles/Style";
 import { COLOR } from "../utils/commonstyles/Color";
@@ -55,7 +57,8 @@ const BookingHistory = () => {
           fontSize: 13,
           marginTop: 15,
           fontWeight: "700",
-        }} >
+        }}
+      >
         Men's grooming @ 380 coloring
       </Text>
       <Text
@@ -94,12 +97,17 @@ const BookingHistory = () => {
             Service Type
           </Text>
 
-          <TouchableOpacity style={{marginTop: 10}}>
-         <Text style={{ color: COLOR.Primary_Color, fontSize: 11 ,fontWeight:'500'}}>
-            Book Again
-          </Text>
-         </TouchableOpacity>
-         
+          <TouchableOpacity style={{ marginTop: 10 }}>
+            <Text
+              style={{
+                color: COLOR.Primary_Color,
+                fontSize: 11,
+                fontWeight: "500",
+              }}
+            >
+              Book Again
+            </Text>
+          </TouchableOpacity>
         </View>
 
         <View style={{ flexDirection: "column" }}>
@@ -247,36 +255,30 @@ const BookingHistory = () => {
             {item.total}
           </Text>
 
-          <TouchableOpacity style={{marginTop: 10}}>
-         <Text style={{ color: COLOR.dark_red, fontSize: 11 ,fontWeight:'500'}}>
-            View Details
-          </Text>
-         </TouchableOpacity>
+          <TouchableOpacity style={{ marginTop: 10 }}>
+            <Text
+              style={{ color: COLOR.dark_red, fontSize: 11, fontWeight: "500" }}
+            >
+              View Details
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
-
-
     </View>
   );
   return (
     <SafeAreaView styles={{ flex: 1 }}>
-    <CommonHeader title="Booking history" />
-      <View style={{ flexDirection: "column", marginHorizontal: "5%" }}>
+      <CommonHeader title="Booking history" />
+      <ScrollView style={{ marginHorizontal: "5%", }} showsVerticalScrollIndicator={false}>
         <FlatList
           data={servicePackages}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
-          // contentContainerStyle={{
-          //   flexGrow: 1,
-          //   justifyContent: "center",
-          // }}
+          showsVerticalScrollIndicator={false}
         />
-
-      </View>
-   
-  </SafeAreaView>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 export default BookingHistory;
-
