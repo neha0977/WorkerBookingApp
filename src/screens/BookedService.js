@@ -11,7 +11,6 @@ import React, { useState } from "react";
 import CommonHeader from "../components/common/CommonHeader";
 import { STYLES } from "../utils/commonstyles/Style";
 import { COLOR } from "../utils/commonstyles/Color";
-import { InteractionManager } from "../../node_modules/react-native/types/index";
 const { width, height } = Dimensions.get("window");
 
 const BookedService = () => {

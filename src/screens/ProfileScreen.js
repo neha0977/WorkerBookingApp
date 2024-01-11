@@ -5,11 +5,13 @@ import {
   TouchableOpacity,
   View,
   Alert,
+  Image
 } from "react-native";
 import React from "react";
 import CommonHeader from "../components/common/CommonHeader";
 import { COLOR } from "../utils/commonstyles/Color";
 import auth from "@react-native-firebase/auth";
+import { IMAGES, getImageFromURL } from "../resources/images";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const ProfileScreen = () => {
@@ -47,18 +49,31 @@ const ProfileScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLOR.white }}>
       <CommonHeader title={"Profile"} />
-      <TouchableOpacity onPress={() => navigation.navigate("BookingHistory")}>
-          <Text>Booking history</Text>
+      <View style={{flexDirection:'column'}}>
+
+      <View style={{height:180,backgroundColor:COLOR.Primary_Color,justifyContent:'center',alignItems:'center',borderBottomLeftRadius:20,borderBottomRightRadius:20}}>
+      <Image
+        style={{ width: 80, height: 80, resizeMode: "contain",borderRadius:10}}
+        source={getImageFromURL(IMAGES.LOGO)}
+      />
+      <View style={{alignContent:'center',alignItems:'center',marginTop:15}}>
+        <Text style={{color:COLOR.white,fontSize:15}}>NEHA</Text>
+        <Text style={{color:COLOR.white,fontSize:12,marginTop:5}}>{user}</Text>
+      </View>
+      </View>
+
+      <TouchableOpacity style={{marginTop:'5%',marginHorizontal:15}} onPress={() => navigation.navigate("BookingHistory")}>
+          <Text style={{color:COLOR.black,fontSize:14}}>Booking history</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("BookedService")}>
-          <Text>Booked Service</Text>
+        <TouchableOpacity style={{marginTop:'2%',marginHorizontal:15}} onPress={() => navigation.navigate("BookedService")}>
+          <Text style={{color:COLOR.black,fontSize:14}}>Booked Service</Text>
         </TouchableOpacity>
-      <View style={{ alignItems: "center", justifyContent: "center",flex:1 }}>
-        <Text>welcome:  {user}</Text>
-        <TouchableOpacity onPress={() => signOutUser}>
-          <Text>Sign Out</Text>
+        <TouchableOpacity style={{marginTop:'2%',marginHorizontal:15}} onPress={() => signOutUser()}>
+          <Text style={{color:COLOR.black,fontSize:14}}>Sign Out</Text>
         </TouchableOpacity>
       </View>
+    
+     
     </SafeAreaView>
   );
 };
