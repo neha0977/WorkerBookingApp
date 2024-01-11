@@ -267,9 +267,14 @@ const BookingHistory = () => {
     </View>
   );
   return (
-    <SafeAreaView styles={{ flex: 1 }}>
+    <SafeAreaView
+      styles={{ flex: 1, marginBottom: "20%", backgroundColor: COLOR.white }}
+    >
       <CommonHeader title="Booking history" />
-      <ScrollView style={{ marginHorizontal: "5%", }} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={{ marginHorizontal: "5%", marginBottom: "15%" }}
+        showsVerticalScrollIndicator={false}
+      >
         <FlatList
           data={servicePackages}
           keyExtractor={(item) => item.id}
