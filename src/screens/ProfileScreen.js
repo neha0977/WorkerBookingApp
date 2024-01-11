@@ -68,6 +68,12 @@ const ProfileScreen = () => {
         <TouchableOpacity style={{marginTop:'2%',marginHorizontal:15}} onPress={() => navigation.navigate("BookedService")}>
           <Text style={{color:COLOR.black,fontSize:14}}>Booked Service</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={{marginTop:'2%',marginHorizontal:15}}>
+          <Text style={{color:COLOR.black,fontSize:14}}>Privacy policy</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{marginTop:'2%',marginHorizontal:15}}>
+          <Text style={{color:COLOR.black,fontSize:14}}>AboutUs</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={{marginTop:'2%',marginHorizontal:15}} onPress={() => signOutUser()}>
           <Text style={{color:COLOR.black,fontSize:14}}>Sign Out</Text>
         </TouchableOpacity>

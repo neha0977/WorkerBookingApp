@@ -62,15 +62,15 @@ const HomeHeader = ({ location }) => {
         <TouchableOpacity
           style={styles.notificationStyle}
           onPress={() => navigation.navigate("NotificationScreen")}  >
-          <MaterialCommunityIcons name="bell" color={"black"} size={18} />
+          <MaterialCommunityIcons name="bell" color={COLOR.Primary_Color} size={18} />
         </TouchableOpacity>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.notificationStyle}
           onPress={() => handleLogout()}
         >
           <MaterialCommunityIcons name="logout" color={"black"} size={18} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );

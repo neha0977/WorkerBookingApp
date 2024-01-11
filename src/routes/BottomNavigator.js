@@ -4,6 +4,7 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import SearchScreen from "../screens/SearchScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import {COLOR} from "../utils/commonstyles/Color"
 import HomeScreen from "../screens/HomeScreen";
 const Tab = createMaterialBottomTabNavigator();
 const BottomNavigator = () => {
@@ -19,7 +20,7 @@ const BottomNavigator = () => {
         options={{
           tabBarLabel: "Home",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home" color={color} size={26} />
+            <MaterialCommunityIcons name="home" color={COLOR.Primary_Color} size={26} />
           ),
         }}
       />
@@ -31,7 +32,7 @@ const BottomNavigator = () => {
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="card-search-outline"
-              color={color}
+              color={COLOR.Primary_Color}
               size={26}
             />
           ),
@@ -43,7 +44,7 @@ const BottomNavigator = () => {
         options={{
           tabBarLabel: "Profile",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="account" color={color} size={26} />
+            <MaterialCommunityIcons name="account" color={COLOR.Primary_Color} size={26} />
           ),
         }}
       />
