@@ -3,11 +3,14 @@ import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { STYLES } from "../utils/commonstyles/Style";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const SplashScreen = () => {
   const navigation = useNavigation();
+
   useEffect(() => {
     addData();
   }, [1]);
+
   const addData = async () => {
     const userid = await AsyncStorage.getItem("userid");
     console.log(userid);
@@ -25,7 +28,7 @@ const SplashScreen = () => {
         });
       }
     }, 2000);
-  };
+  };  
 
   return (
     <SafeAreaView style={[STYLES.container, { alignItems: "center" }]}>

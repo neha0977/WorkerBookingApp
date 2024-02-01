@@ -8,9 +8,9 @@ const CommonButton = ({title, onPress = () => {}}) => {
       onPress={onPress}
       activeOpacity={0.7}
       style={{
-        height: 45,
+        height: 40,
         width: '100%',
-        backgroundColor: COLOR.Primary_Color,
+        backgroundColor: COLOR.New_button,
         marginVertical: 20,
         justifyContent: 'center',
         alignItems: 'center',

@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect} from "react";
 import {
   View,
   Text,
@@ -15,7 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { COLOR } from "../utils/commonstyles/Color";
 import { signUp } from "../utils/databaseHelper/FireBase";
 import { STYLES } from "../utils/commonstyles/Style";
-const SignUpScreen = () => {
+const SignUpScreen = ({route}) => {
   const navigation = useNavigation();
   const [inputs, setInputs] = React.useState({
     email: "",
@@ -78,6 +78,10 @@ const SignUpScreen = () => {
     }, 3000);
   };
 
+  useEffect(() => {
+   console.log(route.params.type)
+  }, [])
+
   const handleOnchange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
   };
@@ -85,11 +89,11 @@ const SignUpScreen = () => {
     setErrors((prevState) => ({ ...prevState, [input]: error }));
   };
   return (
-    <SafeAreaView style={{ backgroundColor: COLOR.white, flex: 1 }}>
+    <SafeAreaView style={{ backgroundColor: COLOR.New_Primary, flex: 1 }}>
       <Loader visible={loading} />
       <ScrollView
         contentContainerStyle={{ paddingTop: 50, paddingHorizontal: 20 }} >
-        <Text style={{ color: COLOR.black, fontSize: 40, fontWeight: "bold" }}>
+        <Text style={{ color: COLOR.New_button, fontSize: 40, fontWeight: "bold" }}>
           Register
         </Text>
         <Text style={{ color: COLOR.grey, fontSize: 18, marginVertical: 10 }}>
@@ -139,7 +143,7 @@ const SignUpScreen = () => {
           </Text> 
           <Text
             onPress={() => navigation.navigate("SignInScreen")}
-            style={[STYLES.btbLogText,{marginLeft:5,color:COLOR.Primary_Color,fontWeight:'500'}]}>
+            style={[STYLES.btbLogText,{marginLeft:5,color:COLOR.New_button,fontWeight:'500'}]}>
             Login
           </Text>
           </View>

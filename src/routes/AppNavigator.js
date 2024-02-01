@@ -24,6 +24,7 @@ import BookedService from "../screens/BookedService";
 
 import AddressScreen from "../screens/AddressScreen";
 import AddressListScreen from "../screens/AddressListScreen";
+import UserTypeScreen from "../screens/UserTypeScreen";
 const AppNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
@@ -43,7 +44,11 @@ const AppNavigator = () => {
           component={OnboardingScreen}
           options={{ headerShows: false }}
         />
-
+          <Stack.Screen
+          name="UserTypeScreen"
+          component={UserTypeScreen}
+          options={{ headerShows: false }}
+        />
         <Stack.Screen
           options={{ headerShows: false }}
           name="SignInScreen"

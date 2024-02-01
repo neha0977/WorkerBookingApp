@@ -30,7 +30,7 @@ const CommonTextInput = ({
       >
         <MaterialCommunityIcons
           name={iconName}
-          style={{ color: COLOR.Primary_Color, fontSize: 22, marginRight: 10 }}
+          style={{ color: COLOR.New_Primary, fontSize: 22, marginRight: 10 }}
         />
         {/* <Icon
           name={iconName}
@@ -44,14 +44,14 @@ const CommonTextInput = ({
           }}
           onBlur={() => setIsFocused(false)}
           secureTextEntry={hidePassword}
-          style={{ color: COLOR.darkBlue, flex: 1 }}
+          style={{ color: COLOR.New_Primary, flex: 1 }}
           {...props}
         />
         {password && (
           <MaterialCommunityIcons
             onPress={() => setHidePassword(!hidePassword)}
             name={hidePassword ? "eye-outline" : "eye-off-outline"}
-            style={{ color: COLOR.Primary_Color, fontSize: 22 }}
+            style={{ color: COLOR.New_Primary, fontSize: 22 }}
           />
           // <Icon
           //   onPress={() => setHidePassword(!hidePassword)}
@@ -73,10 +73,11 @@ const style = StyleSheet.create({
   label: {
     marginVertical: 1,
     fontSize: 14,
-    color: COLOR.black,
+    color: COLOR.New_button,
+    marginBottom:10
   },
   inputContainer: {
-    height: 45,
+    height: 40,
     backgroundColor: COLOR.light,
     flexDirection: "row",
     paddingHorizontal: 15,

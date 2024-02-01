@@ -2,7 +2,7 @@ import { COLOR } from "./Color";
 
 export const STYLES = {
   container: {
-    backgroundColor: "#fff",
+    backgroundColor: COLOR.New_Primary,
     flex: 1,
     justifyContent: "center",
     alignContent: "center",
@@ -15,7 +15,7 @@ export const STYLES = {
   },
   //Sign In screen design
   mainContainer: {
-    backgroundColor: COLOR.white,
+    backgroundColor: COLOR.New_Primary,
     flex: 1
   },
   logView: {
@@ -23,7 +23,7 @@ export const STYLES = {
     paddingHorizontal: 20,
   },
   logText: {
-    color: COLOR.black,
+    color: COLOR.New_button,
     fontSize: 28,
     fontWeight: "bold"
   },
@@ -36,7 +36,7 @@ export const STYLES = {
     marginVertical: 20
   },
   btbLogText: {
-    color: COLOR.black,
+    color: COLOR.grey,
     fontWeight: "bold",
     textAlign: "center",
     fontSize: 15,

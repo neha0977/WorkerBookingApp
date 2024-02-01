@@ -67,7 +67,7 @@ const SignInScreen = () => {
     <SafeAreaView style={STYLES.mainContainer}>
       <Loader visible={loading} />
       <Image
-        source={require("../assets/AppLogo/logotwo.png")}
+        source={require("../assets/AppLogo/logo.png")}
         style={[STYLES.AppLogo, { alignSelf: "center" }]}
       />
       <View style={STYLES.logView}>
@@ -99,24 +99,24 @@ const SignInScreen = () => {
             onPress={() => navigation.navigate("ForgotPassword")}
             style={[
               STYLES.btbLogText,
-              { color: COLOR.Primary_Color, fontWeight: "500", fontSize: 12 },
+              { color: COLOR.New_button, fontWeight: "500", fontSize: 12 },
             ]}>
             Forgot Password ?
           </Text>
           <CommonButton title={CONSTANTS.log_in} onPress={validate} />
           <View style={{ flexDirection: "row", justifyContent: "center" }}>
             <Text
-              onPress={() => navigation.navigate("SignUpScreen")}
+              onPress={() => navigation.navigate("UserTypeScreen")}
               style={[STYLES.btbLogText, { fontWeight: "regular" }]} >
               Don't have account?
             </Text>
             <Text
-              onPress={() => navigation.navigate("SignUpScreen")}
+              onPress={() => navigation.navigate("UserTypeScreen")}
               style={[
                 STYLES.btbLogText,
                 {
                   marginLeft: 5,
-                  color: COLOR.Primary_Color,
+                  color: COLOR.New_button,
                   fontWeight: "500",
                 },
               ]}
