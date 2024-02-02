@@ -5,17 +5,17 @@ import {
   TouchableOpacity,
   View,
   Alert,
+  Dimensions,
   Image,
-  Dimensions
 } from "react-native";
 import React from "react";
 import CommonHeader from "../components/common/CommonHeader";
 import { COLOR } from "../utils/commonstyles/Color";
 import auth from "@react-native-firebase/auth";
-import { IMAGES, getImageFromURL } from "../resources/images";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { getImageFromURL, IMAGES } from "../resources/images";
 const { width, height } = Dimensions.get("window");
 const SIZES = {
   base: 10,
@@ -57,29 +57,163 @@ const ProfileScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLOR.white }}>
       <CommonHeader title={"Profile"} />
-      <TouchableOpacity onPress={() => navigation.navigate("BookingHistory")}>
-          <Text>Booking history</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("BookedService")}>
-          <Text>Booked Service</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={{marginTop:'2%',marginHorizontal:15}}>
-          <Text style={{color:COLOR.black,fontSize:14}}>Privacy policy</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={{marginTop:'2%',marginHorizontal:15}}>
-          <Text style={{color:COLOR.black,fontSize:14}}>AboutUs</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={{marginTop:'2%',marginHorizontal:15}} onPress={() => signOutUser()}>
-          <Text style={{color:COLOR.black,fontSize:14}}>Sign Out</Text>
+      <View style={{ flexDirection: "column" }}>
+        <View
+          style={{
+            height: 180,
+            backgroundColor: COLOR.Primary_Color,
+            justifyContent: "center",
+            alignItems: "center",
+            borderBottomLeftRadius: 20,
+            borderBottomRightRadius: 20,
+          }}
+        >
+          <Image
+            style={{
+              width: 80,
+              
+              height: 80,
+              borderRadius: 50,
+            }}
+            resizeMode="contain"
+            source={require("../assets/AppLogo/logotwo.png")}
+            //source={getImageFromURL(IMAGES.LOGO)}
+          />
+          <View
+            style={{
+              alignContent: "center",
+              alignItems: "center",
+              marginTop: 15,
+            }}
+          >
+            {/* <Text style={{ color: COLOR.white, fontSize: 15 }}>NEHA</Text> */}
+            <Text style={{ color: COLOR.white, fontSize: 15, marginTop: 5 }}>
+              {user}
+            </Text>
+          </View>
+        </View>
+
+        <View style={{ marginTop: 10, marginHorizontal: 10 }}>
+          <TouchableOpacity
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+            onPress={() => navigation.navigate("BookingHistory")}
+          >
+            <Text
+              style={{
+                color: COLOR.black,
+                fontSize: 14,
+                marginLeft: SIZES.base,
+                fontWeight: 500,
+              }}
+            >
+              Booking history
+            </Text>
+            <MaterialCommunityIcons
+              name="chevron-right"
+              style={{ fontSize: 20, color: COLOR.black, marginLeft: 2 }}
+            />
           </TouchableOpacity>
-      <View style={{ alignItems: "center", justifyContent: "center",flex:1 }}>
-        <Text>welcome:  {user}</Text>
-        <TouchableOpacity onPress={() => signOutUser}>
-          <Text>Sign Out</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginVertical: 10,
+            }}
+            onPress={() => navigation.navigate("BookedService")}
+          >
+            <Text
+              style={{
+                color: COLOR.black,
+                fontSize: 14,
+                marginLeft: SIZES.base,
+                fontWeight: 500,
+              }}
+            >
+              Booked Service
+            </Text>
+            <MaterialCommunityIcons
+              name="chevron-right"
+              style={{ fontSize: 20, color: COLOR.black, marginLeft: 2 }}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+            onPress={() => navigation.navigate("BookedService")}
+          >
+            <Text
+              style={{
+                color: COLOR.black,
+                fontSize: 14,
+                marginLeft: SIZES.base,
+                fontWeight: 500,
+              }}
+            >
+              Privacy policy
+            </Text>
+            <MaterialCommunityIcons
+              name="chevron-right"
+              style={{ fontSize: 20, color: COLOR.black, marginLeft: 2 }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+            onPress={() => navigation.navigate("BookedService")}
+          >
+            <Text
+              style={{
+                color: COLOR.black,
+                fontSize: 14,
+                marginLeft: SIZES.base,
+                fontWeight: 500,
+                marginVertical: 10,
+              }}
+            >
+              AboutUs
+            </Text>
+            <MaterialCommunityIcons
+              name="chevron-right"
+              style={{ fontSize: 20, color: COLOR.black, marginLeft: 2 }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+            onPress={() => signOutUser()}
+          >
+            <Text
+              style={{
+                color: COLOR.black,
+                fontSize: 14,
+                marginLeft: SIZES.base,
+                fontWeight: 500,
+              }}
+            >
+              Log Out
+            </Text>
+            <MaterialCommunityIcons
+              name="chevron-right"
+              style={{ fontSize: 20, color: COLOR.black, marginLeft: 2 }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-    
-     
     </SafeAreaView>
   );
 };
