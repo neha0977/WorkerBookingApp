@@ -8,10 +8,11 @@ export const STYLES = {
     alignContent: "center",
   },
   AppLogo: {
-    height: 200,
+    height: 180,
     width: '100%',
     resizeMode:'contain',
-    paddingTop:'5%'
+    marginTop:18
+    // paddingTop:'10%'
   },
   //Sign In screen design
   mainContainer: {
@@ -44,7 +45,7 @@ export const STYLES = {
   containerForgotpass: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: COLOR.light_purple,
+    backgroundColor: COLOR.New_Primary,
     flexDirection: "column",
   },backbtnView: {
     width: 40,
@@ -52,24 +53,29 @@ export const STYLES = {
     position: "absolute",
     top: 20,
     left: 20,
-    backgroundColor: "white",
+    backgroundColor: COLOR.New_button,
     elevation: 5,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 20,
-  },  backicon: {
+  }, 
+   backicon: {
     height: "50%",
     width: "50%",
-  }, forgorPassText: {
+  }, 
+  forgorPassText: {
     fontSize: 20,
-    color: "#000",
+    color: COLOR.New_button,
     marginHorizontal: "7%",
     fontWeight: "500",
-  },forgotPassSubText: {
+  },
+  forgotPassSubText: {
     fontSize: 15,
     marginHorizontal: "7%",
     marginVertical: 10,
-  },  dotContainer: {
+    color:COLOR.grey
+  }, 
+   dotContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

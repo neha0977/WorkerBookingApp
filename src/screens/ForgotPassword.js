@@ -61,10 +61,11 @@ const ForgotPassword = ({ navigation }) => {
         <CommonTextInput
           placeholder={CONSTANTS.enter_email}
           value={email}
+          label={"Email"}
           onChangeText={(txt) => setEmail(txt)}
         />
       </View>
-
+                                                                                                                                                                                                                                          
       <View style={{ marginTop: "8%" }}>
         <TouchableOpacity
           onPress={() => handleforgotPassword(email)}
@@ -72,7 +73,7 @@ const ForgotPassword = ({ navigation }) => {
           style={{
             height: 45,
             width: "100%",
-            backgroundColor: COLOR.Primary_Color,
+            backgroundColor: COLOR.New_button,
             marginVertical: 20,
             justifyContent: "center",
             alignItems: "center",
