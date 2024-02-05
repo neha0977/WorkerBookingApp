@@ -36,15 +36,16 @@ const AppNavigator = () => {
       >
         <Stack.Screen
           options={{ headerShown: false }}
+          name="OnboardingScreen"
+          component={OnboardingScreen}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
           name="SplashScreen"
           component={SplashScreen}
         />
+        
         <Stack.Screen
-          name="OnboardingScreen"
-          component={OnboardingScreen}
-          options={{ headerShows: false }}
-        />
-          <Stack.Screen
           name="UserTypeScreen"
           component={UserTypeScreen}
           options={{ headerShows: false }}
@@ -166,7 +167,7 @@ const AppNavigator = () => {
             title: "AddressScreen",
           }}
         />
-          <Stack.Screen
+        <Stack.Screen
           options={{ headerShows: false }}
           name="AddressListScreen"
           component={AddressListScreen}

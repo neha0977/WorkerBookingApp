@@ -4,19 +4,20 @@ export const CONSTANTS = {
   enter_password: "Please input password",
   something_wrong: "Something went wrong",
   log_in: "Sign In",
-  welcome_back:"Welcome back !!",
+  welcome_back: "Welcome back !!",
   enter_data: " Enter Your Details to Login",
   place_email: "Enter your email address",
-  place_password:"Enter your password",
+  place_password: "Enter your password",
   forget_password_main_text: "Forgot Password?",
   forget_password_sub_text:
   "Don’t worry you can re-create your password by using your email. Please enter your email to continue the process —",
   forgot_button_text: "Forget Password",
-  dummy_txt:"Service Provider app can be used to make create applications faster to save your time, for user interface kit in android and ios devices, It contains have more than 50 Screens with a different type of UI."
-  
+  dummy_txt:
+    "Service Provider app can be used to make create applications faster to save your time, for user interface kit in android and ios devices, It contains have more than 50 Screens with a different type of UI.",
+  Main_text: "Registration as ?",
 };
 
-import { getImageFromURL ,IMAGES} from "../../resources/images";
+import { getImageFromURL, IMAGES } from "../../resources/images";
 export const catogeryList = [
   {
     id: 0,
