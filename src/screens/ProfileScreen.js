@@ -71,12 +71,12 @@ const ProfileScreen = () => {
           <Image
             style={{
               width: 80,
-              
+
               height: 80,
               borderRadius: 50,
             }}
             resizeMode="contain"
-            source={require("../assets/AppLogo/logotwo.png")}
+            source={getImageFromURL(IMAGES.LOGO)}
             //source={getImageFromURL(IMAGES.LOGO)}
           />
           <View

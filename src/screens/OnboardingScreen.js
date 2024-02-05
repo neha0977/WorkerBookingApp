@@ -10,8 +10,8 @@ import {
   Dimensions,
 } from "react-native";
 import { COLOR } from "../utils/commonstyles/Color";
-import AntDesignIcons from "react-native-vector-icons/AntDesign";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { getImageFromURL, IMAGES } from "../resources/images";
 const { width, height } = Dimensions.get("window");
 const SIZES = {
   base: 10,
@@ -21,23 +21,23 @@ const SIZES = {
 const data = [
   {
     _id: "1",
-    title: "Play The Beat",
+    title: "Let's get started",
     description: "Most beginner producers learn make creating by simple beats.",
-    img: require("../assets/AppLogo/logotwo.png"),
+    img: getImageFromURL(IMAGES.LOGO),
   },
   {
     _id: "2",
-    title: "Live The Life",
+    title: "Ensure trust and safety",
     description:
       "In our daily lives, we often rush tasks trying to get them finish.",
-    img: require("../assets/AppLogo/logo.png"),
+    img: getImageFromURL(IMAGES.LOGO),
   },
   {
     _id: "3",
-    title: "Capture The Moment",
+    title: "Share a bit about yourself and your services",
     description:
       "You are not alone. You have unique ability to go to another world.",
-    img: require("../assets/AppLogo/logo.png"),
+    img: getImageFromURL(IMAGES.LOGO),
   },
 ];
 const OnboardingScreen = ({ navigation }) => {
@@ -113,9 +113,10 @@ const OnboardingScreen = ({ navigation }) => {
             <Text
               style={{
                 fontSize: 15,
-                color: COLOR.Primary_Color,
+                color: COLOR.White,
                 opacity: currentPage == data.length - 1 ? 0 : 1,
-              }} >
+              }}
+            >
               Skip
             </Text>
           </TouchableOpacity>
@@ -149,8 +150,8 @@ const OnboardingScreen = ({ navigation }) => {
                     borderRadius: 5,
                     backgroundColor:
                       index == currentPage
-                        ? COLOR.Primary_Color
-                        : COLOR.Primary_Color + "20",
+                        ? COLOR.New_button
+                        : COLOR.New_button + "20",
                     marginRight: 8,
                   }}
                 />
@@ -170,19 +171,18 @@ const OnboardingScreen = ({ navigation }) => {
                 width: 38,
                 height: 38,
                 borderRadius: 30,
-                backgroundColor: COLOR.Primary_Color,
+                backgroundColor: COLOR.New_button,
               }}
               activeOpacity={0.1}
             >
-            <MaterialCommunityIcons
+              <MaterialCommunityIcons
                 name="chevron-right"
                 style={{ fontSize: 25, color: COLOR.white }}
               />
               {/* <MaterialCommunityIcons
                 name="chevron-right"
                 style={{ fontSize: 18, color: COLOR.white, opacity: 0.3 }}
-              />
-               */}
+              /> */}
             </TouchableOpacity>
           ) : (
             // Get Started Button
@@ -191,23 +191,24 @@ const OnboardingScreen = ({ navigation }) => {
                 paddingHorizontal: SIZES.base * 2,
                 height: 45,
                 borderRadius: 30,
-                backgroundColor: COLOR.Primary_Color,
+                backgroundColor: COLOR.New_button,
                 flexDirection: "row",
                 justifyContent: "center",
                 alignItems: "center",
               }}
-              onPress={() => navigation.navigate("SignInScreen")} >
+              onPress={() => navigation.navigate("UserTypeScreen")}
+            >
               <Text
                 style={{
                   color: COLOR.white,
                   fontSize: 12,
                   marginLeft: SIZES.base,
-                  fontWeight:500
+                  fontWeight: 500,
                 }}
               >
                 Get Started
               </Text>
-              {/* <MaterialCommunityIcons
+              <MaterialCommunityIcons
                 name="chevron-right"
                 style={{
                   fontSize: 18,
@@ -215,7 +216,7 @@ const OnboardingScreen = ({ navigation }) => {
                   opacity: 0.3,
                   marginLeft: SIZES.base,
                 }}
-              /> */}
+              />
               <MaterialCommunityIcons
                 name="chevron-right"
                 style={{ fontSize: 25, color: COLOR.white, marginLeft: 2 }}
@@ -252,9 +253,16 @@ const OnboardingScreen = ({ navigation }) => {
           style={{
             paddingHorizontal: SIZES.base * 4,
             marginVertical: SIZES.base * 4,
-          }}>
+          }}
+        >
           <Text
-            style={{ fontSize: 23, textAlign: "center", fontWeight: "500",color:'black' }} >
+            style={{
+              fontSize: 23,
+              textAlign: "center",
+              fontWeight: "500",
+              color: COLOR.New_button,
+            }}
+          >
             {item.title}
           </Text>
           <Text
@@ -264,8 +272,8 @@ const OnboardingScreen = ({ navigation }) => {
               textAlign: "center",
               marginTop: 15,
               lineHeight: 28,
-              fontWeight:500,
-              color:COLOR.Primary_Color
+              fontWeight: 500,
+              color: COLOR.Background_Color,
             }}
           >
             {item.description}
@@ -279,7 +287,7 @@ const OnboardingScreen = ({ navigation }) => {
     <View
       style={{
         flex: 1,
-        backgroundColor: COLOR.Background_Color,
+        backgroundColor: COLOR.New_Primary,
         justifyContent: "center",
       }}
     >
@@ -305,7 +313,6 @@ const OnboardingScreen = ({ navigation }) => {
         initialNumToRender={1}
         extraData={SIZES.width}
       />
-
       {/* BOTTOM SECTION - pagination & next or GetStarted button */}
       {renderBottomSection()}
     </View>

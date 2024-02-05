@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { STYLES } from "../utils/commonstyles/Style";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { IMAGES, getImageFromURL } from "../resources/images";
 
 const SplashScreen = () => {
   const navigation = useNavigation();
@@ -28,14 +29,11 @@ const SplashScreen = () => {
         });
       }
     }, 2000);
-  };  
+  };
 
   return (
     <SafeAreaView style={[STYLES.container, { alignItems: "center" }]}>
-      <Image
-        source={require("../assets/AppLogo/logo.png")}
-        style={STYLES.AppLogo}
-      />
+      <Image source={getImageFromURL(IMAGES.LOGO)} style={STYLES.AppLogo} />
     </SafeAreaView>
   );
 };
