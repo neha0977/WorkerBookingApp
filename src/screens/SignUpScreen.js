@@ -22,6 +22,7 @@ const SignUpScreen = ({route}) => {
     fullname: "",
     phone: "",
     password: "",
+    type: route.params.type
   });
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);

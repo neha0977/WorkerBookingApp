@@ -14,7 +14,7 @@ import { COLOR } from "../../utils/commonstyles/Color";
 const CommonHeader = ({ title }) => {
   const navigation = useNavigation();
   return (
-    <SafeAreaView style={{ backgroundColor: COLOR.white }}>
+    <SafeAreaView style={{ backgroundColor: COLOR.New_Primary }}>
       <View style={styles.container}>
         <TouchableOpacity
           style={{
@@ -27,7 +27,7 @@ const CommonHeader = ({ title }) => {
           <Image
             source={getImageFromURL(IMAGES.BACK_ICON)}
             resizeMode={"center"}
-            style={{ width: 15, height: 15 }}
+            style={{ width: 15, height: 15 ,tintColor:COLOR.New_button}}
 
           />
         </TouchableOpacity>
@@ -51,13 +51,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     height: 60,
-    backgroundColor: COLOR.fade_purple,
+    backgroundColor: COLOR.Header_color,
     elevation: 1,
     borderColor: "grey",
   },
   title: {
     fontSize: 16,
-    color: COLOR.black,
+    color: COLOR.New_button,
     fontWeight: "500",
     textAlign: "center",
   },

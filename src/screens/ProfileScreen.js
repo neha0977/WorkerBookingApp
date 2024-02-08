@@ -61,7 +61,7 @@ const ProfileScreen = () => {
         <View
           style={{
             height: 180,
-            backgroundColor: COLOR.Primary_Color,
+            backgroundColor: COLOR.New_Primary,
             justifyContent: "center",
             alignItems: "center",
             borderBottomLeftRadius: 20,
@@ -87,7 +87,7 @@ const ProfileScreen = () => {
             }}
           >
             {/* <Text style={{ color: COLOR.white, fontSize: 15 }}>NEHA</Text> */}
-            <Text style={{ color: COLOR.white, fontSize: 15, marginTop: 5 }}>
+            <Text style={{ color: COLOR.New_button, fontSize: 15, marginTop: 5 }}>
               {user}
             </Text>
           </View>
@@ -104,7 +104,7 @@ const ProfileScreen = () => {
           >
             <Text
               style={{
-                color: COLOR.black,
+                color: COLOR.New_Primary,
                 fontSize: 14,
                 marginLeft: SIZES.base,
                 fontWeight: 500,
@@ -128,7 +128,7 @@ const ProfileScreen = () => {
           >
             <Text
               style={{
-                color: COLOR.black,
+                color: COLOR.New_Primary, 
                 fontSize: 14,
                 marginLeft: SIZES.base,
                 fontWeight: 500,
@@ -152,7 +152,7 @@ const ProfileScreen = () => {
           >
             <Text
               style={{
-                color: COLOR.black,
+                color: COLOR.New_Primary,
                 fontSize: 14,
                 marginLeft: SIZES.base,
                 fontWeight: 500,
@@ -175,14 +175,14 @@ const ProfileScreen = () => {
           >
             <Text
               style={{
-                color: COLOR.black,
+                color: COLOR.New_Primary,
                 fontSize: 14,
                 marginLeft: SIZES.base,
                 fontWeight: 500,
                 marginVertical: 10,
               }}
             >
-              AboutUs
+              About us
             </Text>
             <MaterialCommunityIcons
               name="chevron-right"
@@ -199,7 +199,7 @@ const ProfileScreen = () => {
           >
             <Text
               style={{
-                color: COLOR.black,
+                color: COLOR.New_Primary,
                 fontSize: 14,
                 marginLeft: SIZES.base,
                 fontWeight: 500,

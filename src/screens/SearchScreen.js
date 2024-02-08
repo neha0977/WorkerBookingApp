@@ -22,7 +22,7 @@ const SearchScreen = () => {
     onSearch(searchText);
   };
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLOR.New_Primary }}>
       <CommonHeader title={"Search"} />
       <View
         style={{

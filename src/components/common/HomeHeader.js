@@ -62,7 +62,7 @@ const HomeHeader = ({ location }) => {
         <TouchableOpacity
           style={styles.notificationStyle}
           onPress={() => navigation.navigate("NotificationScreen")}  >
-          <MaterialCommunityIcons name="bell" color={COLOR.Primary_Color} size={18} />
+          <MaterialCommunityIcons name="bell" color={COLOR.White} size={18} />
         </TouchableOpacity>
 
         {/* <TouchableOpacity
@@ -83,15 +83,15 @@ const styles = StyleSheet.create({
     height: 60,
     alignItems: "center",
     // backgroundColor: '#EEE8F5',
-    backgroundColor: COLOR.white,
+    backgroundColor: COLOR.New_Primary,
     elevation: 1,
     borderColor: "grey",
   },
   notificationStyle: {
     width: 30,
     height: 30,
-    backgroundColor: "#f0f0f0",
-    borderColor: "#f0f0f0",
+    backgroundColor: COLOR.New_button,
+    borderColor:  COLOR.New_button,
     borderWidth: 1,
     borderRadius: 40,
     marginRight: 16,

@@ -20,12 +20,12 @@ const UserTypeScreen = () => {
         <CommonButton
           title="Service provider"
           onPress={() =>
-            navigation.navigate("SignUpScreen", { type: "provider" })
+            navigation.navigate("SignUpScreen", { type: "Provider" })
           }
         />
         <CommonButton
           title="Service user"
-          onPress={() => navigation.navigate("SignUpScreen", { type: "user" })}
+          onPress={() => navigation.navigate("SignUpScreen", { type: "User" })}
         />
       </View>
     </SafeAreaView>

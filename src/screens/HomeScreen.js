@@ -1,74 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import { View, Text, Button, FlatList } from "react-native";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
-// import {
-//   getAppointmentsByUser,
-//   bookAppointment,
-//   cancelAppointment,
-// } from "../utils/databaseHelper/FireBase";
-
-// const HomeScreen = () => {
-//   const [appointments, setAppointments] = useState([]);
-
-//   useEffect(() => {
-//     fetchAppointments();
-//   }, []); // Removed unnecessary dependency
-
-//   const fetchAppointments = async () => {
-//     try {
-//       const userid = await AsyncStorage.getItem("userid");
-//       console.log(userid);
-//       const userAppointments = await getAppointmentsByUser(userid);
-//       setAppointments(userAppointments);
-//     } catch (error) {
-//       console.error("Error fetching appointments:", error);
-//     }
-//   };
-
-//   const handleBookAppointment = async () => {
-//     try {
-//       const userid = await AsyncStorage.getItem("userid");
-//       // Replace 'providerId' and 'selectedDate' with actual values
-//       await bookAppointment(userid, "providerId", "selectedDate");
-//       fetchAppointments(); // Refresh the list of appointments
-//     } catch (error) {
-//       console.error("Error booking appointment:", error);
-//     }
-//   };
-
-//   const handleCancelAppointment = async (appointmentId) => {
-//     try {
-//       await cancelAppointment(appointmentId);
-//       fetchAppointments(); // Refresh the list of appointments
-//     } catch (error) {
-//       console.error("Error canceling appointment:", error);
-//     }
-//   };
-
-//   return (
-//     <View>
-//       <Text>Appointments:</Text>
-//       <FlatList
-//         data={appointments}
-//         keyExtractor={(item) => String(item.id)}
-//         renderItem={({ item }) => (
-//           <View>
-//             <Text>{item.date}</Text>
-//             <Text>Status: {item.status}</Text>
-//             <Button
-//               title="Cancel"
-//               onPress={() => handleCancelAppointment(item.id)}
-//             />
-//           </View>
-//         )}
-//       />
-//       <Button title="Book Appointment" onPress={handleBookAppointment} />
-//       <Button title="Refresh Appointments" onPress={fetchAppointments} />
-//     </View>
-//   );
-// };
-
-// export default HomeScreen;
 
 import {
   SafeAreaView,
@@ -88,7 +17,10 @@ import { IMAGES, getImageFromURL } from "../resources/images";
 import { COLOR } from "../utils/commonstyles/Color";
 import CommonHeader from "../components/common/CommonHeader";
 import HomeHeader from "../components/common/HomeHeader";
+import { getCategories } from "../utils/databaseHelper/FireBase";
 const { width } = Dimensions.get("window");
+
+
 const catogeryList = [
   {
     id: 0,
@@ -164,6 +96,8 @@ const HomeScreen = ({ navigation }) => {
     }
     return color;
   };
+
+ 
   const renderItem = ({ item, index }) => (
     <Image source={item} style={{ width, height: 200 }} resizeMode="cover" />
   );
@@ -177,13 +111,13 @@ const HomeScreen = ({ navigation }) => {
         borderRadius: 5,
         marginHorizontal: 5,
         backgroundColor:
-          index === currentIndex ? COLOR.Primary_Color : "#D3D3D3",
+          index === currentIndex ? COLOR.New_button : "#D3D3D3",
       }}
     />
   );
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor:COLOR.New_Primary  }}>
       <HomeHeader />
       <ScrollView>
         <View style={{ flexDirection: "column" }}>
@@ -217,7 +151,7 @@ const HomeScreen = ({ navigation }) => {
         <Text
           style={{
             fontSize: 17,
-            color: COLOR.black,
+            color: COLOR.New_button,
             fontWeight: "500",
             marginStart: 10,
             marginTop: 10,
@@ -308,7 +242,7 @@ const HomeScreen = ({ navigation }) => {
               <Text
                 style={{
                   fontSize: 17,
-                  color: COLOR.black,
+                  color: COLOR.New_button,
                   fontWeight: "500",
                 }}
               >
@@ -322,20 +256,18 @@ const HomeScreen = ({ navigation }) => {
                 <Text
                   style={{
                     fontSize: 12,
-                    color: "red",
+                    color: COLOR.New_button,
                     marginRight: 5,
                     alignSelf: "center",
-                  }}
-                >
-                  {" "}
-                  See all{" "}
+                  }} >
+                See all
                 </Text>
                 <View
                   style={{
                     width: 20,
                     height: 20,
-                    backgroundColor: "#f0f0f0",
-                    borderColor: "#f0f0f0",
+                    backgroundColor: COLOR.New_button,
+                    borderColor: COLOR.New_button,
                     borderWidth: 1,
                     borderRadius: 40,
                     marginRight: 16,

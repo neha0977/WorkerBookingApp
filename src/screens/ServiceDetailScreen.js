@@ -123,7 +123,7 @@ const ServiceDetailScreen = ({ navigation }) => {
                 fontSize: 9,
                 fontWeight: "600",
                 marginTop: 8,
-                color: COLOR.Primary_Color,
+                color: COLOR.New_Primary,
               }}
             >
               VIEW DETAILS {" >"}
@@ -145,7 +145,7 @@ const ServiceDetailScreen = ({ navigation }) => {
             style={{
               padding: 2,
               borderRadius: 4,
-              borderColor: COLOR.Primary_Color,
+              borderColor: COLOR.New_Primary,
               borderWidth: 1,
             }}
             onPress={() => {
@@ -161,7 +161,7 @@ const ServiceDetailScreen = ({ navigation }) => {
           >
             <Text
               style={{
-                color: COLOR.Primary_Color,
+                color: COLOR.New_Primary,
                 fontSize: 12,
                 alignSelf: "center",
                 paddingHorizontal: 5,
@@ -273,7 +273,7 @@ const ServiceDetailScreen = ({ navigation }) => {
           style={{
             fontSize: 15,
             fontWeight: "bold",
-            color: COLOR.black,
+            color: COLOR.New_Primary,
             alignSelf: "center",
           }}
         >
@@ -311,7 +311,7 @@ const ServiceDetailScreen = ({ navigation }) => {
             style={{
               height: 220,
               width: "100%",
-              backgroundColor: COLOR.blue,
+              backgroundColor: COLOR.grey,
               justifyContent: "center",
               borderRadius: 10,
             }}
@@ -329,7 +329,7 @@ const ServiceDetailScreen = ({ navigation }) => {
               fontSize: 15,
               marginTop: 10,
               fontWeight: "500",
-              color: COLOR.black,
+              color: COLOR.New_button,
             }}
           >
             Men's Grooming
@@ -343,7 +343,7 @@ const ServiceDetailScreen = ({ navigation }) => {
               style={{
                 fontSize: 13,
                 fontWeight: 500,
-                color: COLOR.black,
+                color: COLOR.grey,
                 marginHorizontal: 3,
               }}
             >
@@ -355,17 +355,15 @@ const ServiceDetailScreen = ({ navigation }) => {
                 justifyContent: "center",
                 right: 0,
                 position: "absolute",
-                backgroundColor: "white",
+                backgroundColor: COLOR.New_button,
                 borderRadius: 15,
                 height: 25,
                 elevation: 3,
               }}
             >
               <Text
-                style={{ fontSize: 10, color: COLOR.Primary_Color, padding: 5 }}
-              >
-                {" "}
-                2K bookings{" "}
+                style={{ fontSize: 10, color: COLOR.White, padding: 5,fontWeight:'500' }}
+              >   2K bookings{" "}
               </Text>
             </View>
           </View>
@@ -374,7 +372,7 @@ const ServiceDetailScreen = ({ navigation }) => {
             style={{
               fontSize: 13,
               fontWeight: 400,
-              color: COLOR.black,
+              color: COLOR.grey,
               marginHorizontal: 3,
               marginTop: "5%",
             }}
@@ -386,7 +384,7 @@ const ServiceDetailScreen = ({ navigation }) => {
             style={{
               fontSize: 14,
               fontWeight: 500,
-              color: COLOR.black,
+              color: COLOR.New_button,
               marginHorizontal: 3,
               marginTop: "5%",
             }}
@@ -414,7 +412,7 @@ const ServiceDetailScreen = ({ navigation }) => {
           width: width,
           height: 50,
           flexDirection: "row",
-          backgroundColor: COLOR.Primary_Color,
+          backgroundColor: COLOR.New_button,
           padding: 10,
           borderTopLeftRadius: 15,
           borderTopRightRadius: 15,
@@ -460,7 +458,7 @@ const ServiceDetailScreen = ({ navigation }) => {
         >
           <Text
             style={{
-              color: COLOR.Primary_Color,
+              color: COLOR.New_button,
               fontSize: 12,
               paddingHorizontal: 5,
               fontWeight: "500",

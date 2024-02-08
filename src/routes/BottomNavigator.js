@@ -11,8 +11,9 @@ const BottomNavigator = () => {
   return (
     <Tab.Navigator
       initialRouteName="HomeScreen"
-      activeColor="#4e016b"
-      barStyle={{ backgroundColor: COLOR.light_purple }}
+      activeColor={COLOR.New_button}
+      inactiveColor={COLOR.grey}
+      barStyle={{ backgroundColor: COLOR.Header_color }}
     >
       <Tab.Screen
         name="HomeScreen"
@@ -20,7 +21,7 @@ const BottomNavigator = () => {
         options={{
           tabBarLabel: "Home",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home" color={COLOR.Primary_Color} size={26} />
+            <MaterialCommunityIcons name="home"  color={COLOR.New_button} size={26} />
           ),
         }}
       />
@@ -32,7 +33,7 @@ const BottomNavigator = () => {
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="card-search-outline"
-              color={COLOR.Primary_Color}
+              color={COLOR.New_button}
               size={26}
             />
           ),
@@ -44,7 +45,7 @@ const BottomNavigator = () => {
         options={{
           tabBarLabel: "Profile",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="account" color={COLOR.Primary_Color} size={26} />
+            <MaterialCommunityIcons name="account" color={COLOR.New_button} size={26} />
           ),
         }}
       />

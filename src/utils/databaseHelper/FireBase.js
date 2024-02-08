@@ -3,6 +3,7 @@ import { Alert, ToastAndroid } from "react-native";
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export const signIn = async (input, navigation) => {
   console.log("input", input);
   let { email: email, password: password } = input;
@@ -43,8 +44,9 @@ export const signUp = async (input) => {
     email: email,
     phone: phone,
     password: password,
+    type:type,
   } = input;
-  console.log("input", fullname, email, phone, password);
+  console.log("input", type,fullname, email, phone, password);
   try {
     // Create a new user in Firebase Authentication
     const authResult = await auth().createUserWithEmailAndPassword(
@@ -54,11 +56,13 @@ export const signUp = async (input) => {
     // Get the UID of the newly created user
     const uid = authResult.user.uid;
     // Create a new document in Firestore for the user
-    await firestore().collection("users").doc(uid).set({
+    await firestore().collection("Users").doc(uid).set({
+      uid:uid,
       email,
       phone,
       fullname,
       password,
+      type
     });
     ToastAndroid.show("Signed up successfully!", ToastAndroid.SHORT);
   } catch (err) {
@@ -119,3 +123,39 @@ export const getAppointmentsByUser = async (userId) => {
     throw error;
   }
 };
+
+const categoryCollection = firestore().collection("categories");
+export const getCategories = async () => {
+  try {
+    const snapshot = await categoryCollection
+      // .where("userId", "==", userId)
+      .get();
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    throw error;
+  }
+};
+
+// const fetchData = async () => {
+//   let Userid = await AsyncStorage.getItem("@UID");
+//   try {
+//     const collectionRef = firestore().collection("categoryCollection");
+//     const snapshot = await collectionRef.get();
+//     const dataListArray = [];
+//     var arrUserFilter = [];
+//     snapshot.forEach((doc) => {
+//       const data = doc._data.Players;
+//       if (data && Array.isArray(data)) {
+//         dataListArray.push(...data);
+//         arrUserFilter = dataListArray.filter((x) => {
+//           return x.userId == Userid;
+//         });
+//       }
+//     });
+//     // console.log("arrUserFilter:", arrUserFilter);
+//     setAppointmentData(arrUserFilter);
+//   } catch (error) {
+//     console.error("Error fetching data:", error);
+//   }
+// };

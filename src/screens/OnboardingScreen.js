@@ -53,6 +53,7 @@ const OnboardingScreen = ({ navigation }) => {
     setCurrentPage(viewableItems[0].index);
   }, [viewableItems]);
 
+
   const handleNext = () => {
     if (currentPage == data.length - 1) return;
 
@@ -113,12 +114,9 @@ const OnboardingScreen = ({ navigation }) => {
             <Text
               style={{
                 fontSize: 15,
-                color: COLOR.White,
+                color: COLOR.New_button,
                 opacity: currentPage == data.length - 1 ? 0 : 1,
-              }}
-            >
-              Skip
-            </Text>
+              }}  > Skip  </Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -196,7 +194,7 @@ const OnboardingScreen = ({ navigation }) => {
                 justifyContent: "center",
                 alignItems: "center",
               }}
-              onPress={() => navigation.navigate("UserTypeScreen")}
+              onPress={() => navigation.navigate("SignInScreen")}
             >
               <Text
                 style={{
