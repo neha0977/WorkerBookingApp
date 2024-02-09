@@ -1,43 +1,93 @@
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   TouchableOpacity,
-  Image,
   TextInput,
+  FlatList,
+  Text,
 } from "react-native";
-import React, { useState } from "react";
-import { getImageFromURL, IMAGES } from "../resources/images";
+import React, { useState, useEffect } from "react";
 import { COLOR } from "../utils/commonstyles/Color";
 import CommonHeader from "../components/common/CommonHeader";
-import { Searchbar } from "react-native-paper";
+import Icon from "react-native-vector-icons/FontAwesome";
+import Loader from "../components/common/Loader";
+import firestore from "@react-native-firebase/firestore";
 const SearchScreen = () => {
   const [searchText, setSearchText] = useState("");
-  const [searchQuery, setSearchQuery] = React.useState("");
-
-  const onChangeSearch = (query) => setSearchQuery(query);
-  const handleSearch = () => {
-    // Perform any action related to search (e.g., filtering data)
-    onSearch(searchText);
+  const [isLoading, setisLoading] = useState(false);
+  const [filteredDataSource, setFilteredDataSource] = useState([]);
+  const [masterDataSource, setMasterDataSource] = useState([]);
+  const [service, setService] = useState([]);
+  useEffect(() => {
+    getServices();
+  }, []);
+  const getServices = async () => {
+    setisLoading(true);
+    const querySanp = await firestore().collection("ServicesList").get();
+    setisLoading(false);
+    const services = querySanp.docs.map((docSnap) => docSnap.data());
+    setService(services);
+    setFilteredDataSource(services);
+    setMasterDataSource(services);
+    setisLoading(false);
   };
+  const searchFilterFunction = (text) => {
+    if (text) {
+      const newData = masterDataSource.filter(function (item) {
+        const itemData = item.serviceName
+          ? item.serviceName.toUpperCase()
+          : "".toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilteredDataSource(newData);
+      setSearchText(text);
+    } else {
+      setFilteredDataSource(masterDataSource);
+      setSearchText(text);
+    }
+  };
+  const ItemView = ({ item }) => {
+    return (
+      <TouchableOpacity>
+        <View style={styles.mycard}>
+          {/* <Image
+                    source={item.image !== null ? { uri: item.image } : require('../Images/user.png')}
+                    style={styles.img} /> */}
+          <View>
+            <Text style={styles.text}>{item.serviceName}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLOR.New_Primary }}>
+    <SafeAreaView>
       <CommonHeader title={"Search"} />
-      <View
-        style={{
-          width: "90%",
-          alignItems: "center",
-          flex: 1,
-          alignSelf: "center",
-          marginTop: "5%"  }} >
-        <Searchbar
-        style={{borderRadius:11,backgroundColor:COLOR.light_purple,borderColor:COLOR.Primary_Color,borderWidth:1}}
-          placeholder="Search"
-          onChangeText={onChangeSearch}
-          value={searchQuery}
+
+      <View style={styles.searchContainer}>
+        <Icon name="search" size={15} color="#777" style={styles.searchIcon} />
+        <TextInput
+          style={styles.input}
+          placeholder="Search..."
+          value={searchText}
+          onChangeText={(text) => searchFilterFunction(text)}
         />
       </View>
+      {filteredDataSource.length > 0 ? (
+        <FlatList
+          data={filteredDataSource}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={ItemView}
+        />
+      ) : (
+        <View style={{ alignItems: "center" }}>
+          <Text style={styles.text}> Not Found </Text>
+        </View>
+      )}
+      <Loader visible={isLoading} />
     </SafeAreaView>
   );
 };
@@ -45,27 +95,39 @@ const SearchScreen = () => {
 export default SearchScreen;
 
 const styles = StyleSheet.create({
-  container: {
+  searchContainer: {
     flexDirection: "row",
-    alignItems: "center",
-    padding: 8,
-    backgroundColor: COLOR.white,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 10,
+    marginHorizontal: 20,
+    borderWidth: 0.5,
+    height: 40,
+    width: "90%",
+    marginTop: "2%",
+    borderColor: COLOR.grey,
+  },
+  searchIcon: {
+    marginTop: 10,
+    marginStart: 10,
   },
   input: {
-    flex: 1,
-    height: 40,
-    marginHorizontal: "5%",
-    borderWidth: 1,
-    flexDirection: "row",
-    borderColor: "#f0f0f0",
-    backgroundColor: "#f0f0f0",
-    alignSelf: "center",
-    justifyContent: "center",
-    borderRadius: 10,
+    fontSize: 16,
+    marginStart: 10,
+    padding: 3,
   },
-  icon: {
-    width: 18,
-    height: 18,
-    alignSelf: "center",
+  text: {
+    fontSize: 18,
+    marginLeft: 15,
+  },
+  mycard: {
+    flexDirection: "row",
+    padding: 4,
+    backgroundColor: "white",
+    borderBottomColor: "grey",
+    borderRadius: 10,
+    marginVertical: 5,
+    marginHorizontal: 20,
+    marginTop: 10,
+    elevation: 5,
   },
 });

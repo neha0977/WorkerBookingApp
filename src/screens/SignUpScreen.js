@@ -1,4 +1,4 @@
-import React,{useEffect} from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -15,7 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { COLOR } from "../utils/commonstyles/Color";
 import { signUp } from "../utils/databaseHelper/FireBase";
 import { STYLES } from "../utils/commonstyles/Style";
-const SignUpScreen = ({route}) => {
+const SignUpScreen = ({ route }) => {
   const navigation = useNavigation();
   const [inputs, setInputs] = React.useState({
     email: "",
@@ -69,10 +69,10 @@ const SignUpScreen = ({route}) => {
     setTimeout(() => {
       try {
         setLoading(false);
-        signUp(inputs);
+        signUp(inputs, route.params.type);
         setTimeout(() => {
           navigation.navigate("SignInScreen");
-        }, 2000);
+        }, 1000);
       } catch (error) {
         Alert.alert("Error", "Something went wrong");
       }
@@ -80,8 +80,8 @@ const SignUpScreen = ({route}) => {
   };
 
   useEffect(() => {
-   console.log(route.params.type)
-  }, [])
+    console.log(route.params.type);
+  }, []);
 
   const handleOnchange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
@@ -93,8 +93,11 @@ const SignUpScreen = ({route}) => {
     <SafeAreaView style={{ backgroundColor: COLOR.New_Primary, flex: 1 }}>
       <Loader visible={loading} />
       <ScrollView
-        contentContainerStyle={{ paddingTop: 50, paddingHorizontal: 20 }} >
-        <Text style={{ color: COLOR.New_button, fontSize: 40, fontWeight: "bold" }}>
+        contentContainerStyle={{ paddingTop: 50, paddingHorizontal: 20 }}
+      >
+        <Text
+          style={{ color: COLOR.New_button, fontSize: 40, fontWeight: "bold" }}
+        >
           Register
         </Text>
         <Text style={{ color: COLOR.grey, fontSize: 18, marginVertical: 10 }}>
@@ -136,19 +139,23 @@ const SignUpScreen = ({route}) => {
             password
           />
           <CommonButton title="Register" onPress={validate} />
-          <View style={{flexDirection:'row',justifyContent:'center'}}>
-          <Text
-            onPress={() => navigation.navigate("SignInScreen")}
-            style={[STYLES.btbLogText,{fontWeight:'regular'}]} >
-            Already have an account ?
-          </Text> 
-          <Text
-            onPress={() => navigation.navigate("SignInScreen")}
-            style={[STYLES.btbLogText,{marginLeft:5,color:COLOR.New_button,fontWeight:'500'}]}>
-            Login
-          </Text>
+          <View style={{ flexDirection: "row", justifyContent: "center" }}>
+            <Text
+              onPress={() => navigation.navigate("SignInScreen")}
+              style={[STYLES.btbLogText, { fontWeight: "regular" }]}
+            >
+              Already have an account ?
+            </Text>
+            <Text
+              onPress={() => navigation.navigate("SignInScreen")}
+              style={[
+                STYLES.btbLogText,
+                { marginLeft: 5, color: COLOR.New_button, fontWeight: "500" },
+              ]}
+            >
+              Login
+            </Text>
           </View>
-        
         </View>
       </ScrollView>
     </SafeAreaView>

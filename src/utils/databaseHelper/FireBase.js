@@ -37,16 +37,14 @@ export const signIn = async (input, navigation) => {
   }
 };
 
-export const signUp = async (input) => {
-  console.log("input", input);
+export const signUp = async (input, loginType) => {
   let {
     fullname: fullname,
     email: email,
     phone: phone,
     password: password,
-    type:type,
   } = input;
-  console.log("input", type,fullname, email, phone, password);
+
   try {
     // Create a new user in Firebase Authentication
     const authResult = await auth().createUserWithEmailAndPassword(
@@ -56,13 +54,15 @@ export const signUp = async (input) => {
     // Get the UID of the newly created user
     const uid = authResult.user.uid;
     // Create a new document in Firestore for the user
-    await firestore().collection("Users").doc(uid).set({
-      uid:uid,
-      email,
-      phone,
-      fullname,
-      password,
-      type
+    await firestore().collection("users").doc(uid).set({
+      Name: fullname,
+      MobileNumber: phone,
+      emailAddress: email,
+      Password: password,
+      type: loginType,
+      profileImg: "",
+      userId:uid,
+      Address:'',
     });
     ToastAndroid.show("Signed up successfully!", ToastAndroid.SHORT);
   } catch (err) {
@@ -136,26 +136,3 @@ export const getCategories = async () => {
     throw error;
   }
 };
-
-// const fetchData = async () => {
-//   let Userid = await AsyncStorage.getItem("@UID");
-//   try {
-//     const collectionRef = firestore().collection("categoryCollection");
-//     const snapshot = await collectionRef.get();
-//     const dataListArray = [];
-//     var arrUserFilter = [];
-//     snapshot.forEach((doc) => {
-//       const data = doc._data.Players;
-//       if (data && Array.isArray(data)) {
-//         dataListArray.push(...data);
-//         arrUserFilter = dataListArray.filter((x) => {
-//           return x.userId == Userid;
-//         });
-//       }
-//     });
-//     // console.log("arrUserFilter:", arrUserFilter);
-//     setAppointmentData(arrUserFilter);
-//   } catch (error) {
-//     console.error("Error fetching data:", error);
-//   }
-// };
