@@ -14,7 +14,7 @@ const Loader = ({visible = false}) => {
     visible && (
       <View style={[style.container, {height, width}]}>
         <View style={style.loader}>
-          <ActivityIndicator size="large" color={COLOR.blue} />
+          <ActivityIndicator size="large" color={COLOR.New_button} />
           <Text style={{marginLeft: 10, fontSize: 16}}>Loading...</Text>
         </View>
       </View>

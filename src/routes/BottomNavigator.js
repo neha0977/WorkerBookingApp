@@ -4,7 +4,7 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import SearchScreen from "../screens/SearchScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-import {COLOR} from "../utils/commonstyles/Color"
+import { COLOR } from "../utils/commonstyles/Color";
 import HomeScreen from "../screens/HomeScreen";
 const Tab = createMaterialBottomTabNavigator();
 const BottomNavigator = () => {
@@ -13,15 +13,22 @@ const BottomNavigator = () => {
       initialRouteName="HomeScreen"
       activeColor={COLOR.New_button}
       inactiveColor={COLOR.grey}
-      barStyle={{ backgroundColor: COLOR.Header_color }}
+      activeBackgroundColor="#c4461c"
+      inactiveBackgroundColor="#b55031"
+      barStyle={{ backgroundColor: COLOR.New_Primary }}
     >
       <Tab.Screen
+        tabBarColor="blue"
         name="HomeScreen"
         component={HomeScreen}
         options={{
           tabBarLabel: "Home",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home"  color={COLOR.New_button} size={26} />
+            <MaterialCommunityIcons
+              name="home"
+              color={COLOR.New_button}
+              size={26}
+            />
           ),
         }}
       />
@@ -45,7 +52,11 @@ const BottomNavigator = () => {
         options={{
           tabBarLabel: "Profile",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="account" color={COLOR.New_button} size={26} />
+            <MaterialCommunityIcons
+              name="account"
+              color={COLOR.New_button}
+              size={26}
+            />
           ),
         }}
       />
