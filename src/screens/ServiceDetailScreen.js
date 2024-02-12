@@ -94,11 +94,8 @@ const ServiceDetailScreen = ({ navigation }) => {
               fontSize: 11,
               fontWeight: "300",
               color: COLOR.Text_Color,
-            }}
-          >
-            {" "}
-            {item.catlegory}{" "}
-          </Text>
+            }} > {item.catlegory} </Text>
+
           <View style={{ marginTop: 10, flexDirection: "row" }}>
             <Image
               source={require("../assets/img/star.png")}
@@ -137,8 +134,8 @@ const ServiceDetailScreen = ({ navigation }) => {
           flexDirection: "column",
           marginLeft: 10,
           justifyContent: "space-between",
-        }}
-      >
+        }}>
+
         {/* //Add button */}
         {!showQuantityItemIds.includes(item.id) && (
           <TouchableOpacity
@@ -157,8 +154,7 @@ const ServiceDetailScreen = ({ navigation }) => {
               setShowQuantityItemIds((prevIds) => [...prevIds, item.id]);
 
               calculateTotalPrice();
-            }}
-          >
+            }} >
             <Text
               style={{
                 color: COLOR.New_Primary,
@@ -269,6 +265,7 @@ const ServiceDetailScreen = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
         )}
+
         <Text
           style={{
             fontSize: 15,
@@ -280,6 +277,7 @@ const ServiceDetailScreen = ({ navigation }) => {
           {item.price}
         </Text>
       </View>
+
     </View>
   );
 
@@ -468,6 +466,7 @@ const ServiceDetailScreen = ({ navigation }) => {
             View cart
           </Text>
         </TouchableOpacity>
+     
       </View>
     </SafeAreaView>
   );

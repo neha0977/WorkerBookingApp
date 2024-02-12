@@ -6,8 +6,9 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  Modal
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import CommonHeader from "../components/common/CommonHeader";
 import { getImageFromURL, IMAGES } from "../resources/images";
 import { COLOR } from "../utils/commonstyles/Color";
@@ -73,7 +74,9 @@ const catogeryList = [
     image: getImageFromURL(IMAGES.TRASHING),
   },
 ];
-const AllCategories = () => {
+const AllCategories = ({route}) => {
+  // const [catlist, setCatList] = useState(route.params.items)
+  // console.log(route.params.item,"jahsgdjhsgd")
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <CommonHeader title={"Categories"} />
@@ -134,6 +137,8 @@ const AllCategories = () => {
           }}
         />
       </View>
+
+       
     </SafeAreaView>
   );
 };

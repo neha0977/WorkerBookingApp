@@ -1,4 +1,3 @@
-
 import {
   SafeAreaView,
   Text,
@@ -10,6 +9,7 @@ import {
   Dimensions,
   ImageBackground,
   ScrollView,
+  Modal,
 } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
 import { STYLES } from "../utils/commonstyles/Style";
@@ -18,8 +18,8 @@ import { COLOR } from "../utils/commonstyles/Color";
 import CommonHeader from "../components/common/CommonHeader";
 import HomeHeader from "../components/common/HomeHeader";
 import { getCategories } from "../utils/databaseHelper/FireBase";
+import firestore from "@react-native-firebase/firestore";
 const { width } = Dimensions.get("window");
-
 
 const catogeryList = [
   {
@@ -77,7 +77,8 @@ const HomeScreen = ({ navigation }) => {
   ];
   const flatListRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-
+  const [catlist, setCatList] = useState([]);
+  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   useEffect(() => {
     const intervalId = setInterval(() => {
       const newIndex = (currentIndex + 1) % imageList.length;
@@ -88,6 +89,77 @@ const HomeScreen = ({ navigation }) => {
     return () => clearInterval(intervalId);
   }, [currentIndex, imageList.length]);
 
+  useEffect(() => {
+    // FechCategory();
+    getCategories();
+    getServices();
+  }, [1]);
+
+  const getCategories = async () => {
+    try {
+      const snapshot = await firestore().collection("categories").get();
+
+      setCatList(snapshot._docs);
+      console.log(catlist, "NEW");
+      // snapshot.forEach((doc) => {
+      //   // const data = doc._data;
+      //  const arrNew =[];
+      //  arrNew.push(doc)
+      //   setCatList(arrNew)
+      //   // console.log(catlist.length,"CCCCC")
+      // });
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      throw error;
+    }
+  };
+
+  const getServices = async () => {
+    try {
+      const snapshot = await firestore().collection("ServicesList").get();
+
+      // setCatList(snapshot._docs)
+      console.log(snapshot._docs, "NEW SERVICES");
+      // snapshot.forEach((doc) => {
+      //   // const data = doc._data;
+      //  const arrNew =[];
+      //  arrNew.push(doc)
+      //   setCatList(arrNew)
+      //   // console.log(catlist.length,"CCCCC")
+      // });
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      throw error;
+    }
+  };
+
+  const showBottomSheet = () => {
+    // setSelectedItem(item);
+    // if (item) {
+    //   setserviceName(item.serviceName);
+    //   setserviceCat(item.serviceCat);
+    //   setservicePrice(item.servicePrice);
+    //   setserviceDuration(item.serviceDuration);
+    //   setServiceDetails(item.serviceDetails);
+    // } else {
+    //   setserviceName("");
+    //   setserviceCat("");
+    //   setservicePrice("");
+    //   setserviceDuration("");
+    //   setServiceDetails("");
+    // }
+    setIsBottomSheetVisible(true);
+  };
+
+  const hideBottomSheet = () => {
+    setIsBottomSheetVisible(false);
+    // setSelectedItem(null);
+    // setserviceName("");
+    // setserviceCat("");
+    // setservicePrice("");
+    // setserviceDuration("");
+    // setServiceDetails("");
+  };
   const getRandomColor = () => {
     const letters = "0123456789ABCDEF";
     let color = "#";
@@ -97,7 +169,6 @@ const HomeScreen = ({ navigation }) => {
     return color;
   };
 
- 
   const renderItem = ({ item, index }) => (
     <Image source={item} style={{ width, height: 200 }} resizeMode="cover" />
   );
@@ -110,14 +181,13 @@ const HomeScreen = ({ navigation }) => {
         height: 8,
         borderRadius: 5,
         marginHorizontal: 5,
-        backgroundColor:
-          index === currentIndex ? COLOR.New_button : "#D3D3D3",
+        backgroundColor: index === currentIndex ? COLOR.New_button : "#D3D3D3",
       }}
     />
   );
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor:COLOR.New_Primary  }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLOR.New_Primary }}>
       <HomeHeader />
       <ScrollView>
         <View style={{ flexDirection: "column" }}>
@@ -163,7 +233,7 @@ const HomeScreen = ({ navigation }) => {
 
         <View style={{ alignItems: "center" }}>
           <FlatList
-            data={catogeryList}
+            data={catlist}
             numColumns={4}
             horizontal={false}
             showsHorizontalScrollIndicator={false}
@@ -185,17 +255,18 @@ const HomeScreen = ({ navigation }) => {
                     elevation: 5,
                   }}
                   onPress={() => {
-                    if (item.image !== "") {
-                      // Alert.alert("INFO PAGE");
-                      navigation.navigate("ServiceDetailScreen");
-                    } else {
-                      navigation.navigate("AllCategories");
-                    }
+                    // if (item._data.CategoryImage !== "") {
+                    //   // Alert.alert("INFO PAGE");
+                    //   navigation.navigate("ServiceDetailScreen");
+                    // } else {
+                    showBottomSheet();
+                    // navigation.navigate("AllCategories");
+                    // }
                   }}
                 >
-                  {item.image !== "" ? (
+                  {item._data.CategoryImage !== "" ? (
                     <Image
-                      source={item.image}
+                      source={item._data.CategoryImage}
                       resizeMode={"contain"}
                       style={{
                         width: "70%",
@@ -203,22 +274,28 @@ const HomeScreen = ({ navigation }) => {
                       }}
                     />
                   ) : (
-                    <Text style={{ textAlign: "center", color: COLOR.black }}>
-                      {item.name}
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        color: COLOR.New_Primary,
+                        fontSize: 12,
+                      }}
+                    >
+                      {item._data.CategoryName}
                     </Text>
                   )}
-                  {item.image == "" ? (
+                  {item._data.CategoryImage == "" ? (
                     ""
                   ) : (
                     <Text
                       style={{
-                        fontSize: 12,
+                        fontSize: 10,
                         textAlign: "center",
                         marginTop: 4,
-                        color: COLOR.black,
+                        color: COLOR.New_Primary,
                       }}
                     >
-                      {item.name}
+                      {item._data.CategoryName}
                     </Text>
                   )}
                 </TouchableOpacity>
@@ -246,7 +323,6 @@ const HomeScreen = ({ navigation }) => {
                   fontWeight: "500",
                 }}
               >
-                {" "}
                 Popular Services
               </Text>
               <TouchableOpacity
@@ -259,8 +335,9 @@ const HomeScreen = ({ navigation }) => {
                     color: COLOR.New_button,
                     marginRight: 5,
                     alignSelf: "center",
-                  }} >
-                See all
+                  }}
+                >
+                  See all
                 </Text>
                 <View
                   style={{
@@ -353,6 +430,7 @@ const HomeScreen = ({ navigation }) => {
             </View>
           </View>
         </View>
+
         <TouchableOpacity
           // onPress={() => navigation.navigate("ServiceDetailScreen")}
           onPress={() => navigation.navigate("BookingHistory")}
@@ -360,6 +438,149 @@ const HomeScreen = ({ navigation }) => {
           <Text>details</Text>
         </TouchableOpacity>
       </ScrollView>
+
+      {/* For Categories  */}
+      <Modal
+        visible={isBottomSheetVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => {
+          setIsBottomSheetVisible(!isBottomSheetVisible);
+        }}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "flex-end", // Ensures the modal content sticks to the bottom
+            backgroundColor: "rgba(0,0,0,0.5)",
+          }}
+        >
+          {/* Close Button - Positioned just above the modal view */}
+          <TouchableOpacity 
+          onPress={() => setIsBottomSheetVisible(false)}>
+            <Image
+              source={require("../assets/img/close.png")}
+              resizeMode={"contain"}
+              style={{
+                width: 30,
+                height: 30,
+                alignSelf: "center",
+                tintColor: "white",
+                alignItems: "center",
+              }}
+            />
+          </TouchableOpacity>
+
+          {/* Modal View */}
+          <View
+            style={{
+              backgroundColor: COLOR.THEME,
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
+              padding: 35,
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 4,
+              elevation: 5,
+              width: "100%", // Full width
+            }}
+          >
+            {/* Content View */}
+            <View
+              style={{
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}>
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: COLOR.New_button,
+                  fontWeight: "500",
+                  fontSize: 17,
+                  textTransform: "capitalize",
+                }}>
+                All categories
+              </Text>
+
+              <View style={{ alignItems: "center" }}>
+                <FlatList
+                  data={catlist}
+                  numColumns={3}
+                  horizontal={false}
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={(item, index) => index}
+                  renderItem={({ item }) => {
+                    return (
+                      <TouchableOpacity
+                        style={{
+                          alignItems: "center",
+                          borderWidth: 1,
+                          borderRadius: 10,
+                          borderColor: "#F0F0F0",
+                          backgroundColor: "white",
+                          width: Platform.OS === "android" ? 75 : 90,
+                          height: Platform.OS === "android" ? 75 : 90,
+                          margin: 13,
+                          padding: 10,
+                          justifyContent: "center",
+                          elevation: 5,
+                        }}
+                        onPress={() => {
+                          // if (item._data.CategoryImage !== "") {
+                          //   // Alert.alert("INFO PAGE");
+                            navigation.navigate("ServiceDetailScreen");
+                            hideBottomSheet();
+                          // } else {
+                          // showBottomSheet();
+                          // navigation.navigate("AllCategories");
+                          // }
+                        }}>
+                        {item._data.CategoryImage !== "" ? (
+                          <Image
+                            source={item._data.CategoryImage}
+                            resizeMode={"contain"}
+                            style={{
+                              width: "70%",
+                              height: "70%",
+                            }}
+                          />
+                        ) : (
+                          <Text
+                            style={{
+                              textAlign: "center",
+                              color: COLOR.New_Primary,
+                              fontSize: 12,
+                            }}>
+                            {item._data.CategoryName}
+                          </Text>
+                        )}
+                        {item._data.CategoryImage == "" ? (
+                          ""
+                        ) : (
+                          <Text
+                            style={{
+                              fontSize: 10,
+                              textAlign: "center",
+                              marginTop: 4,
+                              color: COLOR.New_Primary,
+                            }}
+                          >
+                            {item._data.CategoryName}
+                          </Text>
+                        )}
+                      </TouchableOpacity>
+                    );
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };

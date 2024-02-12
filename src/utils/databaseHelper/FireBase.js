@@ -124,13 +124,24 @@ export const getAppointmentsByUser = async (userId) => {
   }
 };
 
-const categoryCollection = firestore().collection("categories");
 export const getCategories = async () => {
   try {
-    const snapshot = await categoryCollection
-      // .where("userId", "==", userId)
+    const snapshot = await firestore().collection("categories")
       .get();
-    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      snapshot.forEach((doc) => {
+        const data = doc._data;
+        
+        // if (data && Array.isArray(data)) {
+// console.log(...data,"DDD")
+          // dataListArray.push(...data);
+        //   arrUserFilter = dataListArray.filter((x) => {
+        //     return x.userId == Userid;
+        //   });
+        // }
+        return data;
+      });
+      // console.log(snapshot)
+    // return data;
   } catch (error) {
     console.error("Error fetching categories:", error);
     throw error;

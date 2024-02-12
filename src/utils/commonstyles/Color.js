@@ -9,6 +9,8 @@ export const COLOR = {
   light_purple:"#FBFAFE",
   fade_purple:"#EEE8F5",
   white: "#ffffff",
+  THEME: "#011824",
+  ALERT: "red",
   txt_olive:"#7c7c5a",
   black: "#000",
   blue: "#5D5FEE",
