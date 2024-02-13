@@ -12,44 +12,84 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import CommonHeader from "../components/common/CommonHeader";
+import firestore from "@react-native-firebase/firestore";
 import { STYLES } from "../utils/commonstyles/Style";
 import { COLOR } from "../utils/commonstyles/Color";
 import { CONSTANTS } from "../utils/constants/StaticContent";
 const { width } = Dimensions.get("window");
 
-const ServiceDetailScreen = ({ navigation }) => {
-  const servicePackages = [
-    {
-      id: "1",
-      name: "Basic Package",
-      catlegory: "Men's haircut",
-      price: "$10",
-    },
-    {
-      id: "2",
-      name: "Standard Package",
-      catlegory: "Men's Beard Shave",
-      price: "$20",
-    },
-    {
-      id: "3",
-      name: "Premium Package",
-      catlegory: "Men's face care",
-      price: "$30",
-    },
-    {
-      id: "4",
-      name: "Standard Package",
-      catlegory: "Men's hair color",
-      price: "$10",
-    },
-    { id: "5", name: "Premium Package", catlegory: "Men's spa", price: "$60" },
-    // Add more service packages as needed
-  ];
+const ServiceDetailScreen = ({ navigation,route }) => {
+  // const servicePackages = [
+  //   {
+  //     id: "1",
+  //     name: "Basic Package",
+  //     catlegory: "Men's haircut",
+  //     price: "$10",
+  //   },
+  //   {
+  //     id: "2",
+  //     name: "Standard Package",
+  //     catlegory: "Men's Beard Shave",
+  //     price: "$20",
+  //   },
+  //   {
+  //     id: "3",
+  //     name: "Premium Package",
+  //     catlegory: "Men's face care",
+  //     price: "$30",
+  //   },
+  //   {
+  //     id: "4",
+  //     name: "Standard Package",
+  //     catlegory: "Men's hair color",
+  //     price: "$10",
+  //   },
+  //   { id: "5", name: "Premium Package", catlegory: "Men's spa", price: "$60" },
+  //   // Add more service packages as needed
+  // ];
   const [itemQuantities, setItemQuantities] = useState({});
   const [showQuantityItemIds, setShowQuantityItemIds] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [setItem, setSetItem] = useState([]);
+  const [servicePackages, setServicePackages] = useState([]);
+  useEffect(() => {
+    getServices();
+  }, [1]);
+
+
+  const getServices = async () => {
+    try {
+      // Assuming route.params.id contains the CategoryId you want to filter by
+      const categoryId = route.params.id;
+  
+      // Query the collection where serviceCategory.CategoryId matches the categoryId
+      const snapshot = await firestore().collection("ServicesList")
+                        .where("serviceCategory.CategoryId", "==", categoryId)
+                        .get();
+  
+      if (!snapshot.empty) {
+        // Initialize an array to hold the services
+        const servicesList = [];
+        
+        // Iterate over each document in the snapshot
+        snapshot.forEach(doc => {
+          // Add the service data to the servicesList array, including the document ID
+          servicesList.push({ id: doc.id, ...doc.data() });
+        });
+  
+        // Log the filtered services list or set it to your state
+        console.log(servicesList, "Filtered SERVICES");
+        setServicePackages(servicesList);
+        // setCatList(servicesList); // Uncomment this line if you want to set the services list to a state
+      } else {
+        console.log("No matching documents.");
+      }
+    } catch (error) {
+      console.error("Error fetching services by category ID:", error);
+      throw error;
+    }
+  };
+  // {id:item._data.categoryId, description: item._data.CategoryDescription , catName:item._data.CategoryName}
 
   const renderItem = ({ item }) => (
     <View
@@ -65,7 +105,7 @@ const ServiceDetailScreen = ({ navigation }) => {
     >
       <View style={{ flexDirection: "row", justifyContent: "center" }}>
         <Image
-          source={require("../assets/img/men.jpg")}
+          src={item.serviceImage}
           style={{
             height: 70,
             width: 70,
@@ -87,14 +127,14 @@ const ServiceDetailScreen = ({ navigation }) => {
               color: COLOR.Text_Color,
             }}
           >
-            {item.name}
+            {item.serviceName}
           </Text>
           <Text
             style={{
               fontSize: 11,
               fontWeight: "300",
               color: COLOR.Text_Color,
-            }} > {item.catlegory} </Text>
+            }} > {item.serviceCategory.CategoryName} </Text>
 
           <View style={{ marginTop: 10, flexDirection: "row" }}>
             <Image
@@ -274,7 +314,7 @@ const ServiceDetailScreen = ({ navigation }) => {
             alignSelf: "center",
           }}
         >
-          {item.price}
+          {item.servicePrice}
         </Text>
       </View>
 
@@ -291,7 +331,7 @@ const ServiceDetailScreen = ({ navigation }) => {
   const calculateTotalPrice = () => {
     let total = 0;
     servicePackages.forEach((item) => {
-      total += (itemQuantities[item.id] || 0) * parseInt(item.price.slice(1));
+      total += (itemQuantities[item.id] || 0) * parseInt(item.servicePrice.slice(1));
     });
     setTotalPrice(total);
   };
@@ -330,7 +370,7 @@ const ServiceDetailScreen = ({ navigation }) => {
               color: COLOR.New_button,
             }}
           >
-            Men's Grooming
+         {route.params.catName}
           </Text>
           <View style={{ marginTop: 5, flexDirection: "row" }}>
             <Image
@@ -375,7 +415,8 @@ const ServiceDetailScreen = ({ navigation }) => {
               marginTop: "5%",
             }}
           >
-            {CONSTANTS.dummy_txt}
+          {route.params.description}
+            {/* {CONSTANTS.dummy_txt} */}
           </Text>
 
           <Text

@@ -54,20 +54,20 @@ const catogeryList = [
   },
 ];
 
-const popularServices = [
-  {
-    id: 0,
-    title: "Wall Painting",
-    subTitle: "Painter",
-    image: getImageFromURL(IMAGES.PAINTER),
-  },
-  {
-    id: 1,
-    title: "Salon For Men",
-    subTitle: "Barber",
-    image: getImageFromURL(IMAGES.BARBAR),
-  },
-];
+// const popularServices = [
+//   {
+//     id: 0,
+//     title: "Wall Painting",
+//     subTitle: "Painter",
+//     image: getImageFromURL(IMAGES.PAINTER),
+//   },
+//   {
+//     id: 1,
+//     title: "Salon For Men",
+//     subTitle: "Barber",
+//     image: getImageFromURL(IMAGES.BARBAR),
+//   },
+// ];
 const HomeScreen = ({ navigation }) => {
   const imageList = [
     require("../assets/img/men.jpg"),
@@ -78,6 +78,7 @@ const HomeScreen = ({ navigation }) => {
   const flatListRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [catlist, setCatList] = useState([]);
+  const [popularServices, setPopularServices] = useState([]);
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -98,16 +99,7 @@ const HomeScreen = ({ navigation }) => {
   const getCategories = async () => {
     try {
       const snapshot = await firestore().collection("categories").get();
-
       setCatList(snapshot._docs);
-      console.log(catlist, "NEW");
-      // snapshot.forEach((doc) => {
-      //   // const data = doc._data;
-      //  const arrNew =[];
-      //  arrNew.push(doc)
-      //   setCatList(arrNew)
-      //   // console.log(catlist.length,"CCCCC")
-      // });
     } catch (error) {
       console.error("Error fetching categories:", error);
       throw error;
@@ -117,16 +109,8 @@ const HomeScreen = ({ navigation }) => {
   const getServices = async () => {
     try {
       const snapshot = await firestore().collection("ServicesList").get();
-
-      // setCatList(snapshot._docs)
-      console.log(snapshot._docs, "NEW SERVICES");
-      // snapshot.forEach((doc) => {
-      //   // const data = doc._data;
-      //  const arrNew =[];
-      //  arrNew.push(doc)
-      //   setCatList(arrNew)
-      //   // console.log(catlist.length,"CCCCC")
-      // });
+      setPopularServices(snapshot._docs)
+      // console.log(popularServices, "NEW");
     } catch (error) {
       console.error("Error fetching categories:", error);
       throw error;
@@ -255,25 +239,18 @@ const HomeScreen = ({ navigation }) => {
                     elevation: 5,
                   }}
                   onPress={() => {
-                    // if (item._data.CategoryImage !== "") {
-                    //   // Alert.alert("INFO PAGE");
-                    //   navigation.navigate("ServiceDetailScreen");
-                    // } else {
                     showBottomSheet();
-                    // navigation.navigate("AllCategories");
-                    // }
-                  }}
-                >
-                  {item._data.CategoryImage !== "" ? (
+                  }}>
+                  {/* {item._data.CategoryImage !== "" ? ( */}
                     <Image
-                      source={item._data.CategoryImage}
+                      src={item._data.CategoryImage}
                       resizeMode={"contain"}
                       style={{
                         width: "70%",
                         height: "70%",
                       }}
                     />
-                  ) : (
+                  {/* ) : ( */}
                     <Text
                       style={{
                         textAlign: "center",
@@ -283,8 +260,8 @@ const HomeScreen = ({ navigation }) => {
                     >
                       {item._data.CategoryName}
                     </Text>
-                  )}
-                  {item._data.CategoryImage == "" ? (
+                  {/* )} */}
+                  {/* {item._data.CategoryImage == "" ? (
                     ""
                   ) : (
                     <Text
@@ -297,7 +274,7 @@ const HomeScreen = ({ navigation }) => {
                     >
                       {item._data.CategoryName}
                     </Text>
-                  )}
+                  )} */}
                 </TouchableOpacity>
               );
             }}
@@ -396,9 +373,9 @@ const HomeScreen = ({ navigation }) => {
                       >
                         <Image
                           resizeMode="contain"
-                          source={item.image}
+                          src={item._data.serviceImage}
                           style={{
-                            height: 50,
+                            height: 80,
                             width: 50,
                           }}
                         />
@@ -411,7 +388,7 @@ const HomeScreen = ({ navigation }) => {
                           marginLeft: 5,
                         }}
                       >
-                        {item.title}
+                        {item._data.serviceName}
                       </Text>
                       <Text
                         style={{
@@ -421,7 +398,7 @@ const HomeScreen = ({ navigation }) => {
                           marginBottom: 5,
                         }}
                       >
-                        {item.subTitle}
+                        {item._data.serviceCategory.CategoryName}
                       </Text>
                     </View>
                   );
@@ -532,7 +509,10 @@ const HomeScreen = ({ navigation }) => {
                         onPress={() => {
                           // if (item._data.CategoryImage !== "") {
                           //   // Alert.alert("INFO PAGE");
-                            navigation.navigate("ServiceDetailScreen");
+                          // [{"_data": {"CategoryDescription": "All categories in the grooming for unisex", "CategoryImage": "", "CategoryName": "Grooming",
+                          //  "categoryId": "5z8dQDocZlzPuNb8M91V"} 
+                          // {"_data": {"CategoryDescription": "beauty Saloon", "CategoryImage": "", "CategoryName": "Beauty ", "categoryId": "yqqihdtpWbQ45vtX1i2z"}
+                            navigation.navigate("ServiceDetailScreen",{id:item._data.categoryId, description: item._data.CategoryDescription , catName:item._data.CategoryName});
                             hideBottomSheet();
                           // } else {
                           // showBottomSheet();
