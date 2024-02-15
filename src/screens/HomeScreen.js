@@ -19,6 +19,7 @@ import CommonHeader from "../components/common/CommonHeader";
 import HomeHeader from "../components/common/HomeHeader";
 import { getCategories } from "../utils/databaseHelper/FireBase";
 import firestore from "@react-native-firebase/firestore";
+import defaultImage from "../assets/AppLogo/logo.png";
 const { width } = Dimensions.get("window");
 
 const catogeryList = [
@@ -54,20 +55,6 @@ const catogeryList = [
   },
 ];
 
-// const popularServices = [
-//   {
-//     id: 0,
-//     title: "Wall Painting",
-//     subTitle: "Painter",
-//     image: getImageFromURL(IMAGES.PAINTER),
-//   },
-//   {
-//     id: 1,
-//     title: "Salon For Men",
-//     subTitle: "Barber",
-//     image: getImageFromURL(IMAGES.BARBAR),
-//   },
-// ];
 const HomeScreen = ({ navigation }) => {
   const imageList = [
     require("../assets/img/men.jpg"),
@@ -109,7 +96,7 @@ const HomeScreen = ({ navigation }) => {
   const getServices = async () => {
     try {
       const snapshot = await firestore().collection("ServicesList").get();
-      setPopularServices(snapshot._docs)
+      setPopularServices(snapshot._docs);
       // console.log(popularServices, "NEW");
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -240,41 +227,29 @@ const HomeScreen = ({ navigation }) => {
                   }}
                   onPress={() => {
                     showBottomSheet();
-                  }}>
-                  {/* {item._data.CategoryImage !== "" ? ( */}
-                    <Image
-                      src={item._data.CategoryImage}
-                      resizeMode={"contain"}
-                      style={{
-                        width: "70%",
-                        height: "70%",
-                      }}
-                    />
-                  {/* ) : ( */}
-                    <Text
-                      style={{
-                        textAlign: "center",
-                        color: COLOR.New_Primary,
-                        fontSize: 12,
-                      }}
-                    >
-                      {item._data.CategoryName}
-                    </Text>
-                  {/* )} */}
-                  {/* {item._data.CategoryImage == "" ? (
-                    ""
-                  ) : (
-                    <Text
-                      style={{
-                        fontSize: 10,
-                        textAlign: "center",
-                        marginTop: 4,
-                        color: COLOR.New_Primary,
-                      }}
-                    >
-                      {item._data.CategoryName}
-                    </Text>
-                  )} */}
+                  }}
+                >
+                  <Image
+                    source={
+                      item._data.CategoryImage
+                        ? { uri: item._data.CategoryImage }
+                        : defaultImage
+                    }
+                    resizeMode="contain"
+                    style={{
+                      width: "70%",
+                      height: "70%",
+                    }}
+                  />
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: COLOR.New_Primary,
+                      fontSize: 11,
+                    }}
+                  >
+                    {item._data.CategoryName}
+                  </Text>
                 </TouchableOpacity>
               );
             }}
@@ -373,7 +348,12 @@ const HomeScreen = ({ navigation }) => {
                       >
                         <Image
                           resizeMode="contain"
-                          src={item._data.serviceImage}
+                          source={
+                            item._data.serviceImage
+                              ? { uri: item._data.serviceImage }
+                              : defaultImage
+                          }
+                          // src={item._data.serviceImage}
                           style={{
                             height: 80,
                             width: 50,
@@ -433,8 +413,7 @@ const HomeScreen = ({ navigation }) => {
           }}
         >
           {/* Close Button - Positioned just above the modal view */}
-          <TouchableOpacity 
-          onPress={() => setIsBottomSheetVisible(false)}>
+          <TouchableOpacity onPress={() => setIsBottomSheetVisible(false)}>
             <Image
               source={require("../assets/img/close.png")}
               resizeMode={"contain"}
@@ -471,7 +450,8 @@ const HomeScreen = ({ navigation }) => {
               style={{
                 flexDirection: "column",
                 justifyContent: "space-between",
-              }}>
+              }}
+            >
               <Text
                 style={{
                   textAlign: "center",
@@ -479,7 +459,8 @@ const HomeScreen = ({ navigation }) => {
                   fontWeight: "500",
                   fontSize: 17,
                   textTransform: "capitalize",
-                }}>
+                }}
+              >
                 All categories
               </Text>
 
@@ -499,59 +480,41 @@ const HomeScreen = ({ navigation }) => {
                           borderRadius: 10,
                           borderColor: "#F0F0F0",
                           backgroundColor: "white",
-                          width: Platform.OS === "android" ? 75 : 90,
-                          height: Platform.OS === "android" ? 75 : 90,
+                          width: Platform.OS === "android" ? 75 : 85,
+                          height: Platform.OS === "android" ? 70 : 80,
                           margin: 13,
-                          padding: 10,
+                          padding: 8,
                           justifyContent: "center",
                           elevation: 5,
                         }}
                         onPress={() => {
-                          // if (item._data.CategoryImage !== "") {
-                          //   // Alert.alert("INFO PAGE");
-                          // [{"_data": {"CategoryDescription": "All categories in the grooming for unisex", "CategoryImage": "", "CategoryName": "Grooming",
-                          //  "categoryId": "5z8dQDocZlzPuNb8M91V"} 
-                          // {"_data": {"CategoryDescription": "beauty Saloon", "CategoryImage": "", "CategoryName": "Beauty ", "categoryId": "yqqihdtpWbQ45vtX1i2z"}
-                            navigation.navigate("ServiceDetailScreen",{id:item._data.categoryId, description: item._data.CategoryDescription , catName:item._data.CategoryName});
-                            hideBottomSheet();
-                          // } else {
-                          // showBottomSheet();
-                          // navigation.navigate("AllCategories");
-                          // }
+                          navigation.navigate("ServiceDetailScreen", {
+                            id: item._data.categoryId,
+                            description: item._data.CategoryDescription,
+                            catName: item._data.CategoryName,
+                          });
+                          hideBottomSheet();
                         }}>
-                        {item._data.CategoryImage !== "" ? (
                           <Image
-                            source={item._data.CategoryImage}
+                            source={
+                              item._data.CategoryImage
+                                ? { uri: item._data.CategoryImage }
+                                : defaultImage
+                            }
                             resizeMode={"contain"}
                             style={{
                               width: "70%",
                               height: "70%",
                             }}
                           />
-                        ) : (
                           <Text
                             style={{
                               textAlign: "center",
                               color: COLOR.New_Primary,
-                              fontSize: 12,
+                              fontSize: 11,
                             }}>
                             {item._data.CategoryName}
                           </Text>
-                        )}
-                        {item._data.CategoryImage == "" ? (
-                          ""
-                        ) : (
-                          <Text
-                            style={{
-                              fontSize: 10,
-                              textAlign: "center",
-                              marginTop: 4,
-                              color: COLOR.New_Primary,
-                            }}
-                          >
-                            {item._data.CategoryName}
-                          </Text>
-                        )}
                       </TouchableOpacity>
                     );
                   }}

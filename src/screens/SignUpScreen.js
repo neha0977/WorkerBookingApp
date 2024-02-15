@@ -86,6 +86,7 @@ const SignUpScreen = ({ route }) => {
   const handleOnchange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
   };
+  
   const handleError = (error, input) => {
     setErrors((prevState) => ({ ...prevState, [input]: error }));
   };

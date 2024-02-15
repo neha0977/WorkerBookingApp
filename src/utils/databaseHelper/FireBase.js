@@ -147,3 +147,24 @@ export const getCategories = async () => {
     throw error;
   }
 };
+
+// Function to add an item to the cart
+export const addItemToCart = async (userId, newItem) => {
+  const userCartRef = firestore().collection('Carts').doc(userId);
+
+  await firestore().runTransaction(async (transaction) => {
+    const userCartDoc = await transaction.get(userCartRef);
+
+    if (!userCartDoc.exists) {
+      throw "Document does not exist!";
+    }
+
+    const cartData = userCartDoc.data();
+    const updatedItems = [...cartData.items, newItem]; // Add new item to items array
+    const updatedTotalPrice = updatedItems.reduce((total, item) => total + item.price, 0); // Calculate new total price
+
+    // Update cart document with new items array and total price
+    transaction.update(userCartRef, { items: updatedItems, totalPrice: updatedTotalPrice });
+  });
+};
+

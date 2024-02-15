@@ -18,78 +18,46 @@ import { COLOR } from "../utils/commonstyles/Color";
 import { CONSTANTS } from "../utils/constants/StaticContent";
 const { width } = Dimensions.get("window");
 
-const ServiceDetailScreen = ({ navigation,route }) => {
-  // const servicePackages = [
-  //   {
-  //     id: "1",
-  //     name: "Basic Package",
-  //     catlegory: "Men's haircut",
-  //     price: "$10",
-  //   },
-  //   {
-  //     id: "2",
-  //     name: "Standard Package",
-  //     catlegory: "Men's Beard Shave",
-  //     price: "$20",
-  //   },
-  //   {
-  //     id: "3",
-  //     name: "Premium Package",
-  //     catlegory: "Men's face care",
-  //     price: "$30",
-  //   },
-  //   {
-  //     id: "4",
-  //     name: "Standard Package",
-  //     catlegory: "Men's hair color",
-  //     price: "$10",
-  //   },
-  //   { id: "5", name: "Premium Package", catlegory: "Men's spa", price: "$60" },
-  //   // Add more service packages as needed
-  // ];
+const ServiceDetailScreen = ({ navigation, route }) => {
   const [itemQuantities, setItemQuantities] = useState({});
   const [showQuantityItemIds, setShowQuantityItemIds] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [setItem, setSetItem] = useState([]);
   const [servicePackages, setServicePackages] = useState([]);
   useEffect(() => {
     getServices();
   }, [1]);
 
-
   const getServices = async () => {
     try {
       // Assuming route.params.id contains the CategoryId you want to filter by
       const categoryId = route.params.id;
-  
+
       // Query the collection where serviceCategory.CategoryId matches the categoryId
-      const snapshot = await firestore().collection("ServicesList")
-                        .where("serviceCategory.CategoryId", "==", categoryId)
-                        .get();
-  
+      const snapshot = await firestore()
+        .collection("ServicesList")
+        .where("serviceCategory.CategoryId", "==", categoryId)
+        .get();
+
       if (!snapshot.empty) {
         // Initialize an array to hold the services
         const servicesList = [];
-        
         // Iterate over each document in the snapshot
-        snapshot.forEach(doc => {
+        snapshot.forEach((doc) => {
           // Add the service data to the servicesList array, including the document ID
           servicesList.push({ id: doc.id, ...doc.data() });
         });
-  
         // Log the filtered services list or set it to your state
         console.log(servicesList, "Filtered SERVICES");
         setServicePackages(servicesList);
-        // setCatList(servicesList); // Uncomment this line if you want to set the services list to a state
       } else {
         console.log("No matching documents.");
+        setServicePackages([]);
       }
     } catch (error) {
       console.error("Error fetching services by category ID:", error);
       throw error;
     }
   };
-  // {id:item._data.categoryId, description: item._data.CategoryDescription , catName:item._data.CategoryName}
 
   const renderItem = ({ item }) => (
     <View
@@ -100,9 +68,7 @@ const ServiceDetailScreen = ({ navigation,route }) => {
         marginVertical: 8,
         backgroundColor: "white",
         borderRadius: 8,
-        elevation: 1,
-      }}
-    >
+        elevation: 1 }}>
       <View style={{ flexDirection: "row", justifyContent: "center" }}>
         <Image
           src={item.serviceImage}
@@ -118,15 +84,13 @@ const ServiceDetailScreen = ({ navigation,route }) => {
             flexDirection: "column",
             marginLeft: 10,
             alignSelf: "center",
-          }}
-        >
+          }} >
           <Text
             style={{
               fontSize: 13,
               fontWeight: "500",
               color: COLOR.Text_Color,
-            }}
-          >
+            }}>
             {item.serviceName}
           </Text>
           <Text
@@ -134,7 +98,8 @@ const ServiceDetailScreen = ({ navigation,route }) => {
               fontSize: 11,
               fontWeight: "300",
               color: COLOR.Text_Color,
-            }} > {item.serviceCategory.CategoryName} </Text>
+            }} > {item.serviceCategory.CategoryName}
+          </Text>
 
           <View style={{ marginTop: 10, flexDirection: "row" }}>
             <Image
@@ -146,12 +111,7 @@ const ServiceDetailScreen = ({ navigation,route }) => {
                 fontSize: 11,
                 fontWeight: 500,
                 color: COLOR.black,
-                marginHorizontal: 3,
-              }}
-            >
-              {" "}
-              4.5{" "}
-            </Text>
+                marginHorizontal: 3 }} >0</Text>
           </View>
 
           <TouchableOpacity>
@@ -161,8 +121,7 @@ const ServiceDetailScreen = ({ navigation,route }) => {
                 fontWeight: "600",
                 marginTop: 8,
                 color: COLOR.New_Primary,
-              }}
-            >
+              }}>
               VIEW DETAILS {" >"}
             </Text>
           </TouchableOpacity>
@@ -175,13 +134,14 @@ const ServiceDetailScreen = ({ navigation,route }) => {
           marginLeft: 10,
           justifyContent: "space-between",
         }}>
-
         {/* //Add button */}
         {!showQuantityItemIds.includes(item.id) && (
           <TouchableOpacity
             style={{
               padding: 2,
               borderRadius: 4,
+              justifyContent:'center',
+              alignItems:'center',
               borderColor: COLOR.New_Primary,
               borderWidth: 1,
             }}
@@ -194,18 +154,16 @@ const ServiceDetailScreen = ({ navigation,route }) => {
               setShowQuantityItemIds((prevIds) => [...prevIds, item.id]);
 
               calculateTotalPrice();
-            }} >
+            }}>
             <Text
               style={{
                 color: COLOR.New_Primary,
                 fontSize: 12,
+                alignItems:'center',
                 alignSelf: "center",
                 paddingHorizontal: 5,
                 fontWeight: "500",
-              }}
-            >
-              {" "}
-              ADD
+              }} > ADD
             </Text>
           </TouchableOpacity>
         )}
@@ -217,7 +175,8 @@ const ServiceDetailScreen = ({ navigation,route }) => {
               paddingHorizontal: 6,
               paddingVertical: 4,
               borderRadius: 4,
-              borderColor: COLOR.Primary_Color,
+              justifyContent:'center',
+              borderColor: COLOR.New_button,
               borderWidth: 1,
               flexDirection: "row",
             }}
@@ -232,9 +191,10 @@ const ServiceDetailScreen = ({ navigation,route }) => {
                 source={require("../assets/img/plus.png")}
                 style={{
                   alignSelf: "center",
+                  alignItems:'center',
                   height: 9,
                   width: 9,
-                  tintColor: COLOR.Primary_Color,
+                  tintColor: COLOR.New_button,
                 }}
               />
             </TouchableOpacity>
@@ -244,8 +204,9 @@ const ServiceDetailScreen = ({ navigation,route }) => {
                 marginHorizontal: 10,
                 alignSelf: "center",
                 fontSize: 13,
+                alignItems:'center',
                 fontWeight: "500",
-                color: COLOR.Primary_Color,
+                color: COLOR.New_button,
               }}
             >
               {itemQuantities[item.id]}{" "}
@@ -260,10 +221,11 @@ const ServiceDetailScreen = ({ navigation,route }) => {
               <Image
                 source={require("../assets/img/minus.png")}
                 style={{
+                  alignItems:'center',
                   alignSelf: "center",
                   height: 9,
                   width: 9,
-                  tintColor: COLOR.Primary_Color,
+                  tintColor: COLOR.New_button,
                 }}
               />
             </TouchableOpacity>
@@ -271,18 +233,17 @@ const ServiceDetailScreen = ({ navigation,route }) => {
         )}
 
         {itemQuantities[item.id] <= 0 && (
+    
           <TouchableOpacity
             style={{
               padding: 2,
               borderRadius: 4,
-              borderColor: COLOR.Primary_Color,
+              borderColor: COLOR.New_Primary,
               borderWidth: 1,
             }}
             onPress={() => {
-              // console.warn("item", item);
-              // const arr = [];
-              // let newArr = arr.push(item);
-              // setItem(newArr);
+                  // console.log(item.id,"sdhgshjdg")
+           
               const newQuantities = { ...itemQuantities };
               newQuantities[item.id] = (newQuantities[item.id] || 0) + 1;
               setItemQuantities(newQuantities);
@@ -290,10 +251,11 @@ const ServiceDetailScreen = ({ navigation,route }) => {
               // Preserve existing item IDs in showQuantityItemIds
               setShowQuantityItemIds((prevIds) => [...prevIds, item.id]);
               calculateTotalPrice();
-            }} >
+            }}
+          >
             <Text
               style={{
-                color: COLOR.Primary_Color,
+                color: COLOR.New_Primary,
                 fontSize: 12,
                 alignSelf: "center",
                 paddingHorizontal: 5,
@@ -312,12 +274,10 @@ const ServiceDetailScreen = ({ navigation,route }) => {
             fontWeight: "bold",
             color: COLOR.New_Primary,
             alignSelf: "center",
-          }}
-        >
+          }} >
           {item.servicePrice}
         </Text>
       </View>
-
     </View>
   );
 
@@ -331,7 +291,8 @@ const ServiceDetailScreen = ({ navigation,route }) => {
   const calculateTotalPrice = () => {
     let total = 0;
     servicePackages.forEach((item) => {
-      total += (itemQuantities[item.id] || 0) * parseInt(item.servicePrice.slice(1));
+      total +=
+        (itemQuantities[item.id] || 0) * parseInt(item.servicePrice.slice(1));
     });
     setTotalPrice(total);
   };
@@ -368,9 +329,8 @@ const ServiceDetailScreen = ({ navigation,route }) => {
               marginTop: 10,
               fontWeight: "500",
               color: COLOR.New_button,
-            }}
-          >
-         {route.params.catName}
+            }}>
+            {route.params.catName}
           </Text>
           <View style={{ marginTop: 5, flexDirection: "row" }}>
             <Image
@@ -383,11 +343,7 @@ const ServiceDetailScreen = ({ navigation,route }) => {
                 fontWeight: 500,
                 color: COLOR.grey,
                 marginHorizontal: 3,
-              }}
-            >
-              {" "}
-              4.5{" "}
-            </Text>
+              }} > 0 </Text>
             <View
               style={{
                 justifyContent: "center",
@@ -397,12 +353,14 @@ const ServiceDetailScreen = ({ navigation,route }) => {
                 borderRadius: 15,
                 height: 25,
                 elevation: 3,
-              }}
-            >
+              }}>
               <Text
-                style={{ fontSize: 10, color: COLOR.White, padding: 5,fontWeight:'500' }}
-              >   2K bookings{" "}
-              </Text>
+                style={{
+                  fontSize: 10,
+                  color: COLOR.White,
+                  padding: 5,
+                  fontWeight: "500",
+                }} > 0 bookings </Text>
             </View>
           </View>
 
@@ -413,9 +371,8 @@ const ServiceDetailScreen = ({ navigation,route }) => {
               color: COLOR.grey,
               marginHorizontal: 3,
               marginTop: "5%",
-            }}
-          >
-          {route.params.description}
+            }}>
+            {route.params.description}
             {/* {CONSTANTS.dummy_txt} */}
           </Text>
 
@@ -426,19 +383,26 @@ const ServiceDetailScreen = ({ navigation,route }) => {
               color: COLOR.New_button,
               marginHorizontal: 3,
               marginTop: "5%",
-            }}
-          >
-            {" "}
-            Packages
-          </Text>
+            }} > Services  </Text>
           <View style={{ marginTop: 10 }}>
             <FlatList
               data={servicePackages}
               keyExtractor={(item) => item.id}
               renderItem={renderItem}
+              ListEmptyComponent={
+                <View
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100%",
+                  }}>
+                  <Text style={{color:COLOR.white,fontSize:19, fontWeight:'800',marginTop:'15%'}}>Data not found</Text>
+                </View>
+              }
               contentContainerStyle={{
                 flexGrow: 1,
-                justifyContent: "center",
+                justifyContent:
+                  servicePackages.length > 0 ? "flex-start" : "center",
               }}
             />
           </View>
@@ -446,6 +410,7 @@ const ServiceDetailScreen = ({ navigation,route }) => {
       </ScrollView>
 
       {/* //Service cart view */}
+      {servicePackages.length > 0 && (
       <View
         style={{
           width: width,
@@ -457,8 +422,7 @@ const ServiceDetailScreen = ({ navigation,route }) => {
           borderTopRightRadius: 15,
           elevation: 5,
           justifyContent: "space-between",
-        }}
-      >
+        }}>
         <Text
           style={{
             color: COLOR.white,
@@ -494,7 +458,7 @@ const ServiceDetailScreen = ({ navigation,route }) => {
                 ToastAndroid.SHORT
               );
           }}
-        >
+           >
           <Text
             style={{
               color: COLOR.New_button,
@@ -507,8 +471,8 @@ const ServiceDetailScreen = ({ navigation,route }) => {
             View cart
           </Text>
         </TouchableOpacity>
-     
       </View>
+      )}
     </SafeAreaView>
   );
 };

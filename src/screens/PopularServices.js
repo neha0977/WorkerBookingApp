@@ -13,6 +13,7 @@ import { getImageFromURL, IMAGES } from "../resources/images";
 import CommonHeader from "../components/common/CommonHeader";
 import { COLOR } from "../utils/commonstyles/Color";
 import firestore from "@react-native-firebase/firestore";
+import defaultImage from "../assets/AppLogo/logo.png";
 // const popularServices = [
 //   {
 //     id: 0,
@@ -117,7 +118,11 @@ const PopularServices = () => {
                   }}>
                   <Image
                     resizeMode="contain"
-                    src={item._data.serviceImage}
+                    source={
+                      item._data.serviceImage
+                        ? { uri: item._data.serviceImage }
+                        : defaultImage
+                    }
                     style={{
                       height: 60,
                       width: 60,

@@ -66,7 +66,7 @@ const ServiceCartScreen = ({ route, navigation }) => {
               style={{
                 fontSize: 13,
                 fontWeight: "500",
-                color: COLOR.Text_Color,
+                color: COLOR.White,
               }}
             >
               {item.name}
@@ -75,7 +75,7 @@ const ServiceCartScreen = ({ route, navigation }) => {
               style={{
                 fontSize: 11,
                 fontWeight: "300",
-                color: COLOR.Text_Color,
+                color: COLOR.White,
               }}
             >
               {item.catlegory}
@@ -85,7 +85,7 @@ const ServiceCartScreen = ({ route, navigation }) => {
                 style={{
                   fontSize: 11,
                   fontWeight: 500,
-                  color: COLOR.black,
+                  color: COLOR.White,
                   marginHorizontal: 3,
                 }}
               >
@@ -96,7 +96,7 @@ const ServiceCartScreen = ({ route, navigation }) => {
                 style={{
                   fontSize: 11,
                   fontWeight: 600,
-                  color: COLOR.black,
+                  color: COLOR.White,
                   marginHorizontal: 3,
                 }}
               >
@@ -107,7 +107,7 @@ const ServiceCartScreen = ({ route, navigation }) => {
                 style={{
                   fontSize: 11,
                   fontWeight: 500,
-                  color: COLOR.black,
+                  color: COLOR.White,
                   marginHorizontal: 3,
                 }}
               >
@@ -121,7 +121,7 @@ const ServiceCartScreen = ({ route, navigation }) => {
                   fontSize: 9,
                   fontWeight: "600",
                   marginTop: 8,
-                  color: COLOR.Primary_Color,
+                  color: COLOR.New_button,
                 }}
               >
                 Service Charge: 10
@@ -144,9 +144,7 @@ const ServiceCartScreen = ({ route, navigation }) => {
               borderRadius: 4,
               borderColor: COLOR.dark_red,
               borderWidth: 1,
-            }}
-            onPress={() => handleRemoveItem(item.id)}
-          >
+            }} onPress={() => handleRemoveItem(item.id)}>
             <Text
               style={{
                 color: COLOR.dark_red,
@@ -155,15 +153,10 @@ const ServiceCartScreen = ({ route, navigation }) => {
                 paddingHorizontal: 5,
                 paddingVertical: 2,
                 fontWeight: "500",
-              }}
-            >
-              {" "}
-              REMOVE
-            </Text>
+              }}>REMOVE</Text>
           </TouchableOpacity>
         </View>
       </View>
-
       <View style={{ backgroundColor: COLOR.grey, height: 1, width: width }} />
     </View>
   );
@@ -197,14 +190,13 @@ const ServiceCartScreen = ({ route, navigation }) => {
           width: width,
           height: 50,
           flexDirection: "row",
-          backgroundColor: COLOR.Primary_Color,
+          backgroundColor: COLOR.New_button,
           padding: 10,
           borderTopLeftRadius: 15,
           borderTopRightRadius: 15,
           elevation: 5,
           justifyContent: "space-between",
-        }}
-      >
+        }}>
         <Text
           style={{
             color: COLOR.white,
@@ -212,9 +204,8 @@ const ServiceCartScreen = ({ route, navigation }) => {
             fontWeight: "500",
             alignSelf: "center",
             paddingLeft: 20,
-          }}
-        >
-          {/* Calculate total price based on selected package and quantity */}$
+          }}>
+          {/* Calculate total price based on selected package and quantity */}
           {route.params.totalPrice}
         </Text>
 
