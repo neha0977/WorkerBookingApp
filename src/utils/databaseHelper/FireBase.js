@@ -34,33 +34,6 @@ export const signIn = async (input, navigation, type) => {
       console.error("Error getting user profile:", error);
     }
   } catch (error) {
-    // try {
-    //   const userCredential = await auth().signInWithEmailAndPassword(
-    //     email.trim(),
-    //     password
-    //   );
-
-    //   const user = userCredential.user;
-    //   console.log(user, "user");
-    //   const userDataSnapshot = await firestore()
-    //     .collection("users")
-    //     .doc(user.uid)
-    //     .get();
-
-    //   console.log(userDataSnapshot, "userData");
-    //   if (userDataSnapshot.exists) {
-    //     // User data exists
-    //     const userData = userDataSnapshot.data(); // prRename userDataSnapshot to avoid redeclaration
-    //     const userType = userData.type;
-    //     console.log("Data Stored", userData, "neh", userType);
-    //     AsyncStorage.setItem("userid", user.uid);
-    //     ToastAndroid.show("Login successfully!", ToastAndroid.SHORT);
-    //     getUserData(user.uid, navigation); // Assuming this function is defined elsewhere
-    //   } else {
-    //     // No user data found
-    //     ToastAndroid.show("No user data found", ToastAndroid.SHORT);
-    //   }
-    // }
     if (error.code === "auth/invalid-email")
       ToastAndroid.show("That email address is invalid!", ToastAndroid.SHORT);
     else if (error.code === "auth/user-not-found")
@@ -213,21 +186,20 @@ export const getAppointmentsByUser = async (userId) => {
 
 export const getCategories = async () => {
   try {
-    const snapshot = await firestore().collection("categories")
-      .get();
-      snapshot.forEach((doc) => {
-        const data = doc._data;
-        
-        // if (data && Array.isArray(data)) {
-// console.log(...data,"DDD")
-          // dataListArray.push(...data);
-        //   arrUserFilter = dataListArray.filter((x) => {
-        //     return x.userId == Userid;
-        //   });
-        // }
-        return data;
-      });
-      // console.log(snapshot)
+    const snapshot = await firestore().collection("categories").get();
+    snapshot.forEach((doc) => {
+      const data = doc._data;
+
+      // if (data && Array.isArray(data)) {
+      // console.log(...data,"DDD")
+      // dataListArray.push(...data);
+      //   arrUserFilter = dataListArray.filter((x) => {
+      //     return x.userId == Userid;
+      //   });
+      // }
+      return data;
+    });
+    // console.log(snapshot)
     // return data;
   } catch (error) {
     console.error("Error fetching categories:", error);
@@ -237,7 +209,7 @@ export const getCategories = async () => {
 
 // Function to add an item to the cart
 export const addItemToCart = async (userId, newItem) => {
-  const userCartRef = firestore().collection('Carts').doc(userId);
+  const userCartRef = firestore().collection("Carts").doc(userId);
 
   await firestore().runTransaction(async (transaction) => {
     const userCartDoc = await transaction.get(userCartRef);
@@ -248,10 +220,106 @@ export const addItemToCart = async (userId, newItem) => {
 
     const cartData = userCartDoc.data();
     const updatedItems = [...cartData.items, newItem]; // Add new item to items array
-    const updatedTotalPrice = updatedItems.reduce((total, item) => total + item.price, 0); // Calculate new total price
+    const updatedTotalPrice = updatedItems.reduce(
+      (total, item) => total + item.price,
+      0
+    ); // Calculate new total price
 
     // Update cart document with new items array and total price
-    transaction.update(userCartRef, { items: updatedItems, totalPrice: updatedTotalPrice });
+    transaction.update(userCartRef, {
+      items: updatedItems,
+      totalPrice: updatedTotalPrice,
+    });
   });
 };
 
+// Function to add item to cart
+// const addItemToCart = async (userId, item) => {
+//   try {
+//     await firebase.firestore().collection('carts').doc(userId).collection('items').add(item);
+//     console.log('Item added to cart successfully!');
+//   } catch (error) {
+//     console.error('Error adding item to cart:', error);
+//   }
+// };
+
+// Function to remove item from cart
+const removeItemFromCart = async (userId, itemId) => {
+  try {
+    await firebase
+      .firestore()
+      .collection("carts")
+      .doc(userId)
+      .collection("items")
+      .doc(itemId)
+      .delete();
+    console.log("Item removed from cart successfully!");
+  } catch (error) {
+    console.error("Error removing item from cart:", error);
+  }
+};
+
+const getCartItems = async () => {
+  const userId = await AsyncStorage.getItem("userid");
+  try {
+    const cartItemsRef = firestore()
+      .collection("carts")
+      .doc(userId)
+      .collection("items");
+    const snapshot = await cartItemsRef.get();
+    const cartItems = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    return cartItems;
+  } catch (error) {
+    console.log("Error getting cart items:", error.message);
+    return []; // Return an empty array in case of an error
+  }
+};
+
+const removeFromCart = async (itemId) => {
+  const userId = await AsyncStorage.getItem("userid");
+  try {
+    // Reference the document for the item in the user's cart
+    const cartItemRef = firestore()
+      .collection("carts")
+      .doc(userId)
+      .collection("items")
+      .doc(itemId);
+
+    // Delete the document from the Firestore database
+    await cartItemRef.delete();
+
+    console.log("Item removed from cart successfully.");
+  } catch (error) {
+    console.log("Error removing item from cart:", error.message);
+  }
+};
+
+const addToCart = async (itemId, quantity) => {
+  const userId = await AsyncStorage.getItem("userid");
+  try {
+    // Reference the document for the item in the user's cart
+    const cartItemRef = firestore()
+      .collection("carts")
+      .doc(userId)
+      .collection("items")
+      .doc(itemId);
+
+    // Check if the item already exists in the cart
+    const cartItemSnapshot = await cartItemRef.get();
+    if (cartItemSnapshot.exists) {
+      // If the item exists, update its quantity
+      const currentQuantity = cartItemSnapshot.data().quantity || 0;
+      await cartItemRef.update({ quantity: currentQuantity + quantity });
+    } else {
+      // If the item does not exist, create a new document for it in the cart
+      await cartItemRef.set({ quantity });
+    }
+
+    console.log("Item added to cart successfully.");
+  } catch (error) {
+    console.log("Error adding item to cart:", error.message);
+  }
+};
