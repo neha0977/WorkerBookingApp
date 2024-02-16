@@ -55,7 +55,7 @@ const SearchScreen = () => {
           {/* <Image
                     source={item.image !== null ? { uri: item.image } : require('../Images/user.png')}
                     style={styles.img} /> */}
-          <View>
+          <View style={{alignItems:'center',alignSelf:'center'}} >
             <Text style={styles.text}>{item.serviceName}</Text>
           </View>
         </View>
@@ -116,18 +116,20 @@ const styles = StyleSheet.create({
     padding: 3,
   },
   text: {
-    fontSize: 18,
+    fontSize: 12,
     marginLeft: 15,
+    color:COLOR.New_Primary,
+    fontWeight:'500'
   },
   mycard: {
     flexDirection: "row",
-    padding: 4,
+    height:35,
     backgroundColor: "white",
-    borderBottomColor: "grey",
-    borderRadius: 10,
+    // borderBottomColor: "grey",
+    borderRadius: 6,
     marginVertical: 5,
     marginHorizontal: 20,
     marginTop: 10,
-    elevation: 5,
+    elevation: 1,
   },
 });

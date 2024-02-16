@@ -23,7 +23,9 @@ const SIZES = {
   height,
 };
 const ProfileScreen = () => {
+
   const user = auth()._user.email;
+  
   const navigation = useNavigation();
   const signOutUser = () => {
     Alert.alert(
@@ -54,6 +56,7 @@ const ProfileScreen = () => {
       { cancelable: false }
     );
   };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLOR.white }}>
       <CommonHeader title={"Profile"} />
@@ -66,12 +69,10 @@ const ProfileScreen = () => {
             alignItems: "center",
             borderBottomLeftRadius: 20,
             borderBottomRightRadius: 20,
-          }}
-        >
+          }}>
           <Image
             style={{
               width: 80,
-
               height: 80,
               borderRadius: 50,
             }}
@@ -99,19 +100,14 @@ const ProfileScreen = () => {
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-between",
-            }}
-            onPress={() => navigation.navigate("BookingHistory")}
-          >
+            }} onPress={() => navigation.navigate("BookingHistory")}>
             <Text
               style={{
                 color: COLOR.New_Primary,
                 fontSize: 14,
                 marginLeft: SIZES.base,
                 fontWeight: 500,
-              }}
-            >
-              Booking history
-            </Text>
+              }} >  Booking history </Text>
             <MaterialCommunityIcons
               name="chevron-right"
               style={{ fontSize: 20, color: COLOR.black, marginLeft: 2 }}
