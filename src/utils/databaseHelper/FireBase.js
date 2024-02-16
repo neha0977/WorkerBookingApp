@@ -4,26 +4,63 @@ import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const signIn = async (input, navigation) => {
+export const signIn = async (input, navigation, type) => {
   console.log("input", input);
-  let { email: email, password: password } = input;
-
+  let { email, password } = input;
+  console.log(email, password);
   try {
-    const authResult = await auth().signInWithEmailAndPassword(
-      email.trim(),
+    const userCredential = await auth().signInWithEmailAndPassword(
+      email,
       password
     );
-    console.log(authResult, authResult.user.uid);
-    AsyncStorage.setItem("userid", authResult.user.uid);
-    console.log("DAta Stored");
-    ToastAndroid.show("Login successfully!", ToastAndroid.SHORT);
-    setTimeout(() => {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "HomeScreen" }],
-      });
-    }, 2000);
+    const user = userCredential.user;
+
+    try {
+      const doc = await firestore().collection("users").doc(user.uid).get();
+
+      if (doc.exists) {
+        const userData = doc.data();
+        const userType = userData.type;
+        console.log(userType, "///");
+        if (userType === "Provider") {
+          navigation.navigate("HomeProvider");
+        } else {
+          navigation.navigate("HomeScreen");
+        }
+      } else {
+        console.error("No such document!");
+      }
+    } catch (error) {
+      console.error("Error getting user profile:", error);
+    }
   } catch (error) {
+    // try {
+    //   const userCredential = await auth().signInWithEmailAndPassword(
+    //     email.trim(),
+    //     password
+    //   );
+
+    //   const user = userCredential.user;
+    //   console.log(user, "user");
+    //   const userDataSnapshot = await firestore()
+    //     .collection("users")
+    //     .doc(user.uid)
+    //     .get();
+
+    //   console.log(userDataSnapshot, "userData");
+    //   if (userDataSnapshot.exists) {
+    //     // User data exists
+    //     const userData = userDataSnapshot.data(); // prRename userDataSnapshot to avoid redeclaration
+    //     const userType = userData.type;
+    //     console.log("Data Stored", userData, "neh", userType);
+    //     AsyncStorage.setItem("userid", user.uid);
+    //     ToastAndroid.show("Login successfully!", ToastAndroid.SHORT);
+    //     getUserData(user.uid, navigation); // Assuming this function is defined elsewhere
+    //   } else {
+    //     // No user data found
+    //     ToastAndroid.show("No user data found", ToastAndroid.SHORT);
+    //   }
+    // }
     if (error.code === "auth/invalid-email")
       ToastAndroid.show("That email address is invalid!", ToastAndroid.SHORT);
     else if (error.code === "auth/user-not-found")
@@ -37,23 +74,26 @@ export const signIn = async (input, navigation) => {
   }
 };
 
-export const signUp = async (input, loginType) => {
-  let {
-    fullname: fullname,
-    email: email,
-    phone: phone,
-    password: password,
-  } = input;
+export const signUp = async (input, loginType, navigation) => {
+  console.log("input, loginType, navigation", input, loginType);
+
+  let { fullname, email, phone, password } = input;
 
   try {
-    // Create a new user in Firebase Authentication
     const authResult = await auth().createUserWithEmailAndPassword(
       email.trim(),
       password
     );
-    // Get the UID of the newly created user
+    const user = authResult.user; // Fixed typo: userCredential.user should be authResult.user
+    console.log("user", user);
+
+    await user.updateProfile({
+      displayName: fullname,
+      userType: (loginType = "Provider" ? "Provider" : "User"),
+    });
+
     const uid = authResult.user.uid;
-    // Create a new document in Firestore for the user
+
     await firestore().collection("users").doc(uid).set({
       Name: fullname,
       MobileNumber: phone,
@@ -61,28 +101,75 @@ export const signUp = async (input, loginType) => {
       Password: password,
       type: loginType,
       profileImg: "",
-      userId:uid,
-      Address:'',
+      userId: uid,
+      Address: "",
     });
+
     ToastAndroid.show("Signed up successfully!", ToastAndroid.SHORT);
+    setTimeout(() => {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "SignInScreen" }],
+      });
+    }, 1000);
   } catch (err) {
     if (err.code === "auth/email-already-in-use") {
       ToastAndroid.show(
         "That email address is already in use!",
         ToastAndroid.SHORT
       );
-    }
-    if (err.code === "auth/invalid-email") {
+    } else if (err.code === "auth/invalid-email") {
+      // Changed to else if
       ToastAndroid.show("That email address is invalid!", ToastAndroid.SHORT);
+    } else {
+      // Handle other errors
+      console.error("Error signing up: ", err.message);
     }
   }
 };
 
-export const signOut = async () => {
+export const signOut = async (navigation) => {
+  AsyncStorage.clear()
+    .then(() => {
+      auth()
+        .signOut()
+        .then(() => {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "UserTypeScreen" }],
+          });
+        });
+    })
+    .catch((error) => {
+      console.error("Error signing out:", error);
+    });
+};
+
+const userCollection = firestore().collection("users");
+export const getUserData = async (userId, navigation) => {
   try {
-    await auth().signOut();
+    const snapshot = await userCollection.where("userId", "==", userId).get();
+    const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    data.filter((item) => {
+      console.log("item,", item);
+      if (item.type == "Provider") {
+        AsyncStorage.setItem("providerid", userId);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "HomeProvider" }],
+        });
+      } else {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "HomeScreen" }],
+        });
+      }
+    });
+    //  console.log("snapshot", snapshot);
+    //return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   } catch (error) {
-    console.error("Error signing out:", error);
+    console.error("Error fetching appointments:", error);
+    throw error;
   }
 };
 
