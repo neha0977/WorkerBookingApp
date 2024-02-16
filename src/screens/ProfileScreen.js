@@ -16,6 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { getImageFromURL, IMAGES } from "../resources/images";
+import { signOut } from "../utils/databaseHelper/FireBase";
 const { width, height } = Dimensions.get("window");
 const SIZES = {
   base: 10,
@@ -40,16 +41,7 @@ const ProfileScreen = () => {
         {
           text: "yes",
           onPress: () => {
-            AsyncStorage.clear().then(() => {
-              auth()
-                .signOut()
-                .then(() => {
-                  navigation.reset({
-                    index: 0,
-                    routes: [{ name: "SignInScreen" }],
-                  });
-                });
-            });
+            signOut(navigation);
           },
         },
       ],
@@ -88,7 +80,9 @@ const ProfileScreen = () => {
             }}
           >
             {/* <Text style={{ color: COLOR.white, fontSize: 15 }}>NEHA</Text> */}
-            <Text style={{ color: COLOR.New_button, fontSize: 15, marginTop: 5 }}>
+            <Text
+              style={{ color: COLOR.New_button, fontSize: 15, marginTop: 5 }}
+            >
               {user}
             </Text>
           </View>
@@ -124,7 +118,7 @@ const ProfileScreen = () => {
           >
             <Text
               style={{
-                color: COLOR.New_Primary, 
+                color: COLOR.New_Primary,
                 fontSize: 14,
                 marginLeft: SIZES.base,
                 fontWeight: 500,

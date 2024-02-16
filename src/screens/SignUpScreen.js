@@ -22,7 +22,7 @@ const SignUpScreen = ({ route }) => {
     fullname: "",
     phone: "",
     password: "",
-    type: route.params.type
+    type: route.params.type,
   });
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);
@@ -69,10 +69,7 @@ const SignUpScreen = ({ route }) => {
     setTimeout(() => {
       try {
         setLoading(false);
-        signUp(inputs, route.params.type);
-        setTimeout(() => {
-          navigation.navigate("SignInScreen");
-        }, 1000);
+        signUp(inputs, route.params.type, navigation);
       } catch (error) {
         Alert.alert("Error", "Something went wrong");
       }

@@ -25,6 +25,7 @@ import BookedService from "../screens/BookedService";
 import AddressScreen from "../screens/AddressScreen";
 import AddressListScreen from "../screens/AddressListScreen";
 import UserTypeScreen from "../screens/UserTypeScreen";
+import HomeProvider from "../screens/providerScreens/HomeProvider";
 const AppNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
@@ -34,7 +35,6 @@ const AppNavigator = () => {
           headerShown: false,
         }}
       >
-        
         <Stack.Screen
           options={{ headerShown: false }}
           name="SplashScreen"
@@ -59,121 +59,81 @@ const AppNavigator = () => {
           options={{ headerShows: false }}
           name="SignUpScreen"
           component={SignUpScreen}
-          option={{
-            title: "HomeScreen",
-          }}
         />
         <Stack.Screen
           options={{ headerShows: false }}
           name="HomeScreen"
           component={BottomNavigator}
-          option={{
-            title: "HomeScreen",
-          }}
         />
         <Stack.Screen
           options={{ headerShows: false }}
           name="AllCategories"
           component={AllCategories}
-          option={{
-            title: "HomeScreen",
-          }}
         />
         <Stack.Screen
           options={{ headerShows: false }}
           name="PopularServices"
           component={PopularServices}
-          option={{
-            title: "HomeScreen",
-          }}
         />
         <Stack.Screen
           options={{ headerShows: false }}
           name="SearchScreen"
           component={SearchScreen}
-          option={{
-            title: "HomeScreen",
-          }}
         />
         <Stack.Screen
           options={{ headerShows: false }}
           name="ServiceDetailScreen"
           component={ServiceDetailScreen}
-          option={{
-            title: "ServiceDetailScreen",
-          }}
         />
         <Stack.Screen
           options={{ headerShows: false }}
           name="ForgotPassword"
           component={ForgotPassword}
-          option={{
-            title: "HomeScreen",
-          }}
         />
         <Stack.Screen
           options={{ headerShows: false }}
           name="ProfileScreen"
           component={ProfileScreen}
-          option={{
-            title: "HomeScreen",
-          }}
         />
         <Stack.Screen
           options={{ headerShows: false }}
           name="NotificationScreen"
           component={NotificationScreen}
-          option={{
-            title: "HomeScreen",
-          }}
         />
         <Stack.Screen
           options={{ headerShows: false }}
           name="BookingScreen"
           component={BookingScreen}
-          option={{
-            title: "HomeScreen",
-          }}
         />
         <Stack.Screen
           options={{ headerShows: false }}
           name="ServiceCartScreen"
           component={ServiceCartScreen}
-          option={{
-            title: "ServiceCartScreen",
-          }}
         />
         <Stack.Screen
           options={{ headerShows: false }}
           name="BookingHistory"
           component={BookingHistory}
-          option={{
-            title: "BookingHistory",
-          }}
         />
         <Stack.Screen
           options={{ headerShows: false }}
           name="BookedService"
           component={BookedService}
-          option={{
-            title: "BookedService",
-          }}
         />
         <Stack.Screen
           options={{ headerShows: false }}
           name="AddressScreen"
           component={AddressScreen}
-          option={{
-            title: "AddressScreen",
-          }}
         />
         <Stack.Screen
           options={{ headerShows: false }}
           name="AddressListScreen"
           component={AddressListScreen}
-          option={{
-            title: "AddressScreen",
-          }}
+        />
+        <Stack.Screen
+          options={{ headerShows: false }}
+          name="HomeProvider"
+          component={HomeProvider}
         />
       </Stack.Navigator>
     </NavigationContainer>
@@ -182,4 +142,3 @@ const AppNavigator = () => {
 
 export default AppNavigator;
 
-const styles = StyleSheet.create({});
