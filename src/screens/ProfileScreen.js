@@ -124,7 +124,7 @@ const ProfileScreen = () => {
                 fontWeight: 500,
               }}
             >
-              Booked Service
+              On going booking service
             </Text>
             <MaterialCommunityIcons
               name="chevron-right"

@@ -9,234 +9,284 @@ import {
   ImageBackground,
   TouchableOpacity,
   ToastAndroid,
+  StyleSheet,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import CommonHeader from "../components/common/CommonHeader";
-import { STYLES } from "../utils/commonstyles/Style";
 import { COLOR } from "../utils/commonstyles/Color";
-import { CONSTANTS } from "../utils/constants/StaticContent";
-import { IMAGES, getImageFromURL } from "../resources/images";
 const { width } = Dimensions.get("window");
-
+import firestore from "@react-native-firebase/firestore";
+import auth from "@react-native-firebase/auth";
 const ServiceCartScreen = ({ route, navigation }) => {
-  console.log(
-    "{route.params.showQuantityItemIds}",
-    route.params.itemQuantities
-  );
-  const [itemQuantities, setItemQuantities] = useState({});
-  const [showQuantityItemIds, setShowQuantityItemIds] = useState([]);
+  const [itemList, setitemList] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [servicePackages, setServicePackages] = useState([
-    {
-      id: "1",
-      name: "Basic Package",
-      catlegory: "Men's haircut",
-      price: "$10",
-    },
-    {
-      id: "2",
-      name: "Standard Package",
-      catlegory: "Men's Beard Shave",
-      price: "$20",
-    },
-  ]);
-  const removeFromCart = (itemId) => {
-    const updatedWishlist = wishlistItems.filter((item) => item.id !== itemId);
-    setWishlistItems(updatedWishlist);
+  useEffect(() => {
+    getBookedServices();
+  }, []);
+  useEffect(() => {
+    calculateTotalPrice();
+  }, [itemList]);
+  const calculateTotalPrice = () => {
+    let totalPrice = 0;
+    itemList.forEach((item) => {
+      totalPrice += parseFloat(item.serviceItem.servicePrice);
+    });
+    setTotalPrice(totalPrice);
   };
-  const renderItem = ({ item }) => (
-    <View style={{ flexDirection: "column" }}>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          padding: 10,
-          marginVertical: 8,
-        }}
-      >
-        <View style={{ flexDirection: "row", justifyContent: "center" }}>
-          <View
-            style={{
-              flexDirection: "column",
-              marginLeft: 10,
-              alignSelf: "center",
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 13,
-                fontWeight: "500",
-                color: COLOR.White,
-              }}
-            >
-              {item.name}
-            </Text>
-            <Text
-              style={{
-                fontSize: 11,
-                fontWeight: "300",
-                color: COLOR.White,
-              }}
-            >
-              {item.catlegory}
-            </Text>
-            <View style={{ marginTop: 10, flexDirection: "row" }}>
-              <Text
-                style={{
-                  fontSize: 11,
-                  fontWeight: 500,
-                  color: COLOR.White,
-                  marginHorizontal: 3,
-                }}
-              >
-                {item.price}
-              </Text>
+  const getBookedServices = async () => {
+    const Userid = auth().currentUser.uid;
+    try {
+      const categoryId = route.params.id;
+      const snapshot = await firestore()
+        .collection("serviceBooking")
+        .where("userID", "==", Userid)
+        .get();
 
-              <Text
-                style={{
-                  fontSize: 11,
-                  fontWeight: 600,
-                  color: COLOR.White,
-                  marginHorizontal: 3,
-                }}
-              >
-                |
+      if (!snapshot.empty) {
+        const servicesList = [];
+        snapshot.forEach((doc) => {
+          servicesList.push({ id: doc.id, ...doc.data() });
+        });
+        setitemList(servicesList);
+        console.log("servicesList", servicesList);
+      } else {
+        console.log("No matching documents.");
+        setitemList([]);
+      }
+    } catch (error) {
+      console.error("Error fetching services by category ID:", error);
+    }
+  };
+  const removeFromServiceCart = async (itemId) => {
+    try {
+      const docRef = firestore().collection("serviceBooking").doc(itemId);
+      await docRef.delete();
+      console.log("Service successfully deleted!");
+      getBookedServices();
+    } catch (error) {
+      console.error("Error removing document: ", error);
+    }
+  };
+  const renderItem = ({ item }) => {
+    console.log("item", item);
+    return (
+      <View style={styles.listContainer}>
+        <View style={styles.listItemView}>
+          <View style={styles.renderView}>
+            <Image
+              src={item.serviceItem.serviceImage}
+              style={styles.imageStyle}
+            />
+            <View style={styles.nameView}>
+              <Text style={styles.itemName}>
+                {item.serviceItem.serviceName}
               </Text>
-
-              <Text
-                style={{
-                  fontSize: 11,
-                  fontWeight: 500,
-                  color: COLOR.White,
-                  marginHorizontal: 3,
-                }}
-              >
-                1 hr 30 mins
+              <Text style={styles.itemDetails}>
+                {item.serviceItem.serviceDetails}
               </Text>
+              <Text style={styles.itemCategory}>
+                {item.serviceItem.serviceCategory.CategoryName}
+              </Text>
+              <View style={{ marginTop: 2, flexDirection: "row" }}>
+                <Text style={styles.itemPrice}>
+                  {item.serviceItem.servicePrice}
+                </Text>
+                <Text style={styles.lineStyle}>|</Text>
+                <Text style={styles.itemTime}>
+                  {item.serviceItem.serviceDuration}
+                </Text>
+              </View>
+              <Text style={styles.serviceCharge}>Service Charge: 10</Text>
             </View>
-
-            <TouchableOpacity>
-              <Text
-                style={{
-                  fontSize: 9,
-                  fontWeight: "600",
-                  marginTop: 8,
-                  color: COLOR.New_button,
-                }}
-              >
-                Service Charge: 10
-              </Text>
-            </TouchableOpacity>
           </View>
-        </View>
-
-        <View
-          style={{
-            flexDirection: "column",
-            marginLeft: 10,
-            justifyContent: "space-between",
-          }}
-        >
           {/* //Remove button */}
           <TouchableOpacity
-            style={{
-              padding: 2,
-              borderRadius: 4,
-              borderColor: COLOR.dark_red,
-              borderWidth: 1,
-            }} onPress={() => handleRemoveItem(item.id)}>
-            <Text
-              style={{
-                color: COLOR.dark_red,
-                fontSize: 10,
-                alignSelf: "center",
-                paddingHorizontal: 5,
-                paddingVertical: 2,
-                fontWeight: "500",
-              }}>REMOVE</Text>
+            style={styles.removeBtnView}
+            onPress={() => removeFromServiceCart(item.id)}
+          >
+            <Text style={styles.removeText}>REMOVE</Text>
           </TouchableOpacity>
         </View>
       </View>
-      <View style={{ backgroundColor: COLOR.grey, height: 1, width: width }} />
-    </View>
-  );
+    );
+  };
 
   const handleRemoveItem = (itemId) => {
-    // Filter out the item with the specified id and update the state
     setServicePackages((prevPackages) =>
       prevPackages.filter((item) => item.id !== itemId)
     );
   };
   return (
-    <SafeAreaView style={STYLES.containerForgotpass}>
+    <SafeAreaView style={styles.container}>
       <CommonHeader title="Service cart" />
       <ScrollView>
-        <View style={{ flexDirection: "column", marginHorizontal: "5%" }}>
-          <FlatList
-            data={servicePackages}
-            keyExtractor={(item) => item.id}
-            renderItem={renderItem}
-            contentContainerStyle={{
-              flexGrow: 1,
-              justifyContent: "center",
-            }}
-          />
-        </View>
+        <FlatList
+          data={itemList}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+          ListEmptyComponent={() => (
+            <View>
+              <Text style={styles.emptyText}>Cart Is Empty</Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("HomeScreen")}
+              >
+                <Text
+                  style={[
+                    styles.serviceCharge,
+                    { textAlign: "center", fontSize: 16 },
+                  ]}
+                >
+                  Continue...
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: "center",
+          }}
+        />
       </ScrollView>
 
       {/* //Service cart view */}
-      <View
-        style={{
-          width: width,
-          height: 50,
-          flexDirection: "row",
-          backgroundColor: COLOR.New_button,
-          padding: 10,
-          borderTopLeftRadius: 15,
-          borderTopRightRadius: 15,
-          elevation: 5,
-          justifyContent: "space-between",
-        }}>
-        <Text
-          style={{
-            color: COLOR.white,
-            fontSize: 12,
-            fontWeight: "500",
-            alignSelf: "center",
-            paddingLeft: 20,
-          }}>
-          {/* Calculate total price based on selected package and quantity */}
-          {route.params.totalPrice}
-        </Text>
-
-        <TouchableOpacity
-          style={{
-            backgroundColor: COLOR.light_purple,
-            paddingHorizontal: 5,
-            paddingVertical: 4,
-            borderRadius: 5,
-            height: 26,
-            alignSelf: "center",
-          }}
-          onPress={() => {
-            navigation.navigate("BookingScreen");
-          }}
-        >
-          <Text
-            style={{
-              color: COLOR.Primary_Color,
-              fontSize: 12,
-              paddingHorizontal: 5,
-              fontWeight: "500",
-              alignSelf: "center",
+      {totalPrice > 0 && (
+        <View style={styles.bottomPiceView}>
+          <Text style={styles.priceText}>Total: ${totalPrice.toFixed(2)}</Text>
+          <TouchableOpacity
+            style={styles.slotBtnView}
+            onPress={() => {
+              navigation.navigate("BookingScreen");
             }}
           >
-            Select Slot
-          </Text>
-        </TouchableOpacity>
-      </View>
+            <Text style={styles.slotBtnTxt}>Select Slot</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
 
 export default ServiceCartScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLOR.white,
+  },
+  listContainer: {
+    backgroundColor: COLOR.white,
+    elevation: 2,
+    borderRadius: 10,
+    borderWidth: 0.5,
+    borderColor: COLOR.grey,
+    margin: 8,
+  },
+  listItemView: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 10,
+    marginVertical: 8,
+  },
+  renderView: { flexDirection: "row", width: "70%" },
+  nameView: {
+    flexDirection: "column",
+    marginLeft: 10,
+    alignSelf: "center",
+  },
+  itemName: {
+    fontSize: 12,
+    fontWeight: "500",
+    color: COLOR.black,
+  },
+  itemCategory: {
+    fontSize: 11,
+    fontWeight: "400",
+    color: COLOR.black,
+    marginTop: 2,
+  },
+  itemPrice: {
+    fontSize: 10,
+    fontWeight: "500",
+    color: COLOR.black,
+  },
+  lineStyle: {
+    fontSize: 10,
+    color: COLOR.black,
+    marginHorizontal: 3,
+  },
+  itemTime: {
+    fontSize: 10,
+    fontWeight: "500",
+    color: COLOR.black,
+  },
+  imageStyle: {
+    height: 70,
+    width: 70,
+    borderRadius: 8,
+    alignSelf: "center",
+  },
+  itemDetails: {
+    fontSize: 10,
+    maxWidth: "300",
+    textAlign: "left",
+    marginTop: 2,
+  },
+  serviceCharge: {
+    fontSize: 10,
+    fontWeight: "600",
+    marginTop: 2,
+    color: COLOR.New_button,
+  },
+  removeBtnView: {
+    borderRadius: 4,
+    borderColor: COLOR.dark_red,
+    borderWidth: 0.3,
+    height: 25,
+  },
+  removeText: {
+    color: COLOR.dark_red,
+    fontSize: 10,
+    fontWeight: "500",
+    textAlign: "center",
+    padding: 5,
+  },
+  bottomPiceView: {
+    width: width,
+    height: 50,
+    flexDirection: "row",
+    backgroundColor: COLOR.New_button,
+    padding: 10,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    elevation: 5,
+    justifyContent: "space-between",
+  },
+  priceText: {
+    color: COLOR.white,
+    fontSize: 10,
+    fontWeight: "500",
+    alignSelf: "center",
+    paddingLeft: 20,
+  },
+  slotBtnView: {
+    backgroundColor: COLOR.light_purple,
+    paddingHorizontal: 5,
+    paddingVertical: 4,
+    borderRadius: 5,
+    height: 26,
+    alignSelf: "center",
+  },
+  slotBtnTxt: {
+    color: COLOR.black,
+    fontSize: 12,
+    paddingHorizontal: 5,
+    fontWeight: "500",
+    alignSelf: "center",
+  },
+  emptyText: {
+    textAlign: "center",
+    marginTop: 20,
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+});

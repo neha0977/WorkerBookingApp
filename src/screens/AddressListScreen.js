@@ -14,12 +14,12 @@ import { COLOR } from "../utils/commonstyles/Color";
 const AddressListScreen = ({ navigation, route }) => {
   const { addresses, onRemoveAddress } = route.params;
 
-  const removeAddress = React.useCallback(
-    (index) => {
-      onRemoveAddress(index);
-    },
-    [onRemoveAddress]
-  );
+  // const removeAddress = React.useCallback(
+  //   (index) => {
+  //     onRemoveAddress(index);
+  //   },
+  //   [onRemoveAddress]
+  // );
   console.log("addresses", addresses);
   return (
     <SafeAreaView style={{ backgroundColor: COLOR.white, flex: 1 }}>

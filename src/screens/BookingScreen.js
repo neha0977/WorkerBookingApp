@@ -7,326 +7,288 @@ import {
   TouchableOpacity,
   ToastAndroid,
   Alert,
+  KeyboardAvoidingView,
+  TextInput,
+  StyleSheet,
 } from "react-native";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import CommonHeader from "../components/common/CommonHeader";
 import { COLOR } from "../utils/commonstyles/Color";
-import { Calendar } from "react-native-calendars";
-import CommonButton from "../components/common/CommonButton";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
+import CalendarPicker from "react-native-calendar-picker";
+import moment from "moment";
+import auth from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
 const BookingScreen = ({ navigation }) => {
-  const initDate = "2024-01-01";
-  const [selected, setSelected] = useState("");
-  const [timeSelect, setTimeSelect] = useState("");
-  const [Index, setIndex] = useState(-1);
-  const [Times, setTimes] = useState([
-    {
-      id: 0,
-      title: "AM",
-      time: "06:00 AM",
-      isSelected: false,
-    },
-    {
-      id: 1,
-      title: "AM",
-      time: "08:00 AM",
-      isSelected: false,
-    },
-    {
-      id: 3,
-      title: "AM",
-      time: "10:00 AM",
-      isSelected: false,
-    },
-    {
-      id: 4,
-      title: "PM",
-      time: "12:00 PM",
-      isSelected: false,
-    },
-    {
-      id: 5,
-      title: "PM",
-      time: "14:00 PM",
-      isSelected: false,
-    },
-    {
-      id: 7,
-      title: "PM",
-      time: "16:00 PM",
-      isSelected: false,
-    },
-    {
-      id: 8,
-      title: "PM",
-      time: "18:00 PM",
-      isSelected: false,
-    },
-    {
-      id: 9,
-      title: "PM",
-      time: "19:00 PM",
-      isSelected: false,
-    },
-    {
-      id: 10,
-      title: "PM",
-      time: "20:00 PM",
-      isSelected: false,
-    },
-    {
-      id: 11,
-      title: "PM",
-      time: "21:00 PM",
-      isSelected: false,
-    },
-  ]);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [timeList, setTimeList] = useState([]);
+  const [seletedTime, setSeletedTime] = useState();
+  const [SuggestionNote, setSuggestionNote] = useState("");
+  const [selectedStartDate, setSelectedStartDate] = useState(null);
+  const [itemList, setitemList] = useState([]);
+  useEffect(() => {
+    getBookedServices();
+  }, []);
+  useEffect(() => {
+    getTime();
+  }, []);
+  const getBookedServices = async () => {
+    const Userid = auth().currentUser.uid;
+    try {
+      const snapshot = await firestore()
+        .collection("serviceBooking")
+        .where("userID", "==", Userid)
+        .get();
 
-  const marked = useMemo(
-    () => ({
-      [selected]: {
-        selected: true,
-        selectedColor: COLOR.fade_purple,
-        selectedTextColor: COLOR.Primary_Color,
-      },
-    }),
-    [selected]
-  );
-  const handleProced = () => {
-    // if (!selected) {
-    //   ToastAndroid.show("Please select date", ToastAndroid.SHORT);
-    // }
-    navigation.navigate("BookedService");
+      if (!snapshot.empty) {
+        const servicesList = [];
+        snapshot.forEach((doc) => {
+          servicesList.push({ id: doc.id, ...doc.data() });
+        });
+        setitemList(servicesList);
+        console.log("servicesList", servicesList);
+      } else {
+        console.log("No matching documents.");
+        setitemList([]);
+      }
+    } catch (error) {
+      console.error("Error fetching services by category ID:", error);
+    }
   };
-  const handleItemPress = (item, index) => {
-    console.log(item);
-    setSelectedItem(item.id === selectedItem ? null : item.id);
+  const onDateChange = (date) => {
+    // Format a date
+    const formattedDate = moment(date).format("DD-MM-YYYY");
+    console.log(formattedDate);
+    setSelectedStartDate(formattedDate);
   };
-  const timeListRender = ({ item, index }) => {
-    return (
-      <TouchableOpacity
-        style={{
-          flexDirection: "row",
-          backgroundColor: COLOR.white,
-          borderRadius: 5,
-          elevation: 3,
-          marginHorizontal: 10,
-          padding: 12,
-          marginVertical: 10,
-          alignItems: "center",
-          borderColor:
-            selectedItem === item.id ? COLOR.Primary_Color : "#e3e3e3",
-          borderWidth: 0.5,
-        }}
-        onPress={() => {
-          handleItemPress(item, index);
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 12,
-            color: selectedItem === item.id ? COLOR.Primary_Color : COLOR.black,
-            fontWeight: "500",
-            textAlign: "center",
-          }}
-        >
-          {" "}
-          {item.time}
-        </Text>
-      </TouchableOpacity>
-    );
+
+  const getTime = () => {
+    const timeList = [];
+    for (let i = 8; i <= 12; i++) {
+      timeList.push({
+        time: i + ":00 AM",
+      });
+      timeList.push({
+        time: i + ":30 AM",
+      });
+    }
+    for (let i = 1; i <= 7; i++) {
+      timeList.push({
+        time: i + ":00 PM",
+      });
+      timeList.push({
+        time: i + ":30 PM",
+      });
+    }
+    setTimeList(timeList);
   };
+  const handleProced = async () => {
+    const userName = auth().currentUser.displayName;
+    const userId = auth().currentUser.uid;
+
+    if (!seletedTime || !selectedStartDate) {
+      ToastAndroid.show("Please select date and time", ToastAndroid.SHORT);
+      return;
+    }
+    try {
+      await firestore().collection("serviceBooking").doc(userId).update({
+        userName,
+        seletedTime,
+        selectedStartDate,
+        SuggestionNote,
+      });
+      ToastAndroid.show("Service added successfully!", ToastAndroid.SHORT);
+      navigation.navigate("BookedSucesssfullyScreen", {
+        status: "success",
+      });
+    } catch (error) {
+      console.error("Error adding service: ", error);
+      navigation.navigate("BookedSucesssfullyScreen", {
+        status: "failed",
+      });
+    }
+
+    // If you want to navigate after updating the booking:
+    //  navigation.navigate("BookedService");
+  };
+
   return (
-    <SafeAreaView style={{ backgroundColor: COLOR.white, flex: 1 }}>
+    <SafeAreaView style={styles.conatiner}>
       <CommonHeader title={"Booking"} />
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* address section */}
         <View style={{ margin: 10 }}>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+          <View style={styles.addressView}>
             <View style={{ flexDirection: "row" }}>
               <MaterialCommunityIcons
                 name="map-marker"
                 color={"black"}
                 size={20}
               />
-              <Text
-                style={{ fontWeight: "bold", color: COLOR.black, fontSize: 18 }}
-              >
-                Service at
-              </Text>
+              <Text style={styles.serviceAtText}>Service at</Text>
             </View>
             <TouchableOpacity
-              style={{
-                padding: 2,
-                borderRadius: 4,
-                borderColor: COLOR.Primary_Color,
-                borderWidth: 1,
-              }}
+              style={styles.changeBtnView}
               onPress={() => {
                 Alert.alert("Chnaged");
-                //navigation.navigate("AddressScreen");
+                // navigation.navigate("AddressScreen");
               }}
             >
-              <Text
-                style={{
-                  color: COLOR.Primary_Color,
-                  fontSize: 10,
-                  alignSelf: "center",
-                  paddingHorizontal: 5,
-                  paddingVertical: 2,
-                  fontWeight: "500",
-                }}
-              >
-                {" "}
-                CHANGE
-              </Text>
+              <Text style={styles.chnageText}> CHANGE</Text>
             </TouchableOpacity>
           </View>
-          <Text
-            style={{
-              maxWidth: "50%",
-              color: COLOR.black,
-              marginTop: 5,
-              lineHeight: 25,
-              marginStart: 5,
-            }}
-          >
+          <Text style={styles.addressText}>
             J-38, 3rd floor, Noida sector 63, Uttar Pradesh, India{" "}
           </Text>
         </View>
-        <View
-          style={{
-            borderColor: "#e3e3e3",
-            borderWidth: 0.5,
-            padding: 0,
-            backgroundColor: "#e3e3e3",
-          }}
-        />
-        <Calendar
-          initialDate={initDate}
-          minDate="2024-01-01"
-          maxDate="2024-02-30"
-          disableAllTouchEventsForDisabledDays={true}
-          markedDates={marked}
-          onDayPress={(day) => {
-            console.log("day", day);
-            setSelected(day.dateString);
-            // onDaySelect && onDaySelect(day);
-          }}
-          onDayLongPress={(day) => console.log("onDayLongPress", day)}
-          onMonthChange={(date) => console.log("onMonthChange", date)}
-          onPressArrowLeft={(goToPreviousMonth) => {
-            console.log("onPressArrowLeft");
-            goToPreviousMonth();
-          }}
-          onPressArrowRight={(goToNextMonth) => {
-            console.log("onPressArrowRight");
-            goToNextMonth();
-          }}
-          style={{
-            borderRadius: 5,
-            margin: 10,
-            elevation: 5,
-            borderWidth: 1,
-            borderColor: COLOR.white,
-          }}
-          theme={{
-            backgroundColor: "#ffffff",
-            calendarBackground: "#ffffff",
-            selectedDayBackgroundColor: "red",
-            selectedDayTextColor: "red",
-            todayTextColor: COLOR.Primary_Color,
-            dayTextColor: "#000000",
-            textDayFontWeight: "500",
-            textDayFontSize: 12,
-            textDisabledColor: "#d9e",
-            textSectionTitleColor: COLOR.Primary_Color,
-            selectedDayTextColor: "black",
-            //todayTextColor: COLOR.white,
-            // todayBackgroundColor: COLOR.Primary_Color,
-            selectedDotColor: "red",
-            monthTextColor: "#000",
-            textMonthFontWeight: "bold",
-            textDayHeaderFontWeight: "bold",
-            "stylesheet.calendar.header": {
-              header: {
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                textDayHeaderFontSize: 20,
-              },
-              week: {
-                marginTop: 20,
-                flexDirection: "row",
-                justifyContent: "space-between",
-                //Here I can change only the background week days
-              },
-            },
-            // textDayFontSize: 14,
-            // textMonthFontSize: 16,
-            // textDayHeaderFontSize: 14,
-            // textDayColor: "#000000",
-          }}
-        />
-        <Text
-          style={{
-            fontSize: 15,
-            color: COLOR.black,
-            fontWeight: "500",
-            margin: 10,
-          }}
-        >
-          {" "}
-          Select Date
-        </Text>
-
-        <FlatList
-          data={Times}
-          keyExtractor={(item, index) => index}
-          numColumns={4}
-          showsVerticalScrollIndicator={false}
-          renderItem={(item, index) => timeListRender(item, index)}
-        />
-        <View
-          style={{
-            width: "90%",
-            alignItems: "center",
-            justifyContent: "center",
-            alignSelf: "center",
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => handleProced()}
-            activeOpacity={0.7}
-            style={{
-              height: 45,
-              width: "100%",
-              backgroundColor: COLOR.Primary_Color,
-              marginVertical: 20,
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 10,
-              elevation: 5,
-            }}
-          >
-            <Text
-              style={{ color: COLOR.white, fontWeight: "bold", fontSize: 15 }}
-            >
-              Proceed
-            </Text>
-          </TouchableOpacity>
+        <View style={styles.Line} />
+        {/* calender sectioon */}
+        <View style={styles.calenderContainer}>
+          <CalendarPicker
+            onDateChange={onDateChange}
+            width={300}
+            startFromMonday={true}
+            minDate={Date.now()}
+            todayBackgroundColor={COLOR.New_button}
+            todayTextStyle={{ color: COLOR.white }}
+            selectedDayTextColor={COLOR.white}
+            selectedDayColor={COLOR.New_button}
+          />
         </View>
+        <Text style={styles.heading}> Select Date</Text>
+        <KeyboardAvoidingView>
+          {/* date */}
+          <FlatList
+            data={timeList}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item, index }) => (
+              <TouchableOpacity
+                style={{ marginRight: 5 }}
+                onPress={() => {
+                  setSeletedTime(item.time);
+                }}
+              >
+                <Text
+                  style={[
+                    seletedTime == item.time
+                      ? styles.selectedTime
+                      : styles.unSelectedtime,
+                  ]}
+                >
+                  {" "}
+                  {item.time}
+                </Text>
+              </TouchableOpacity>
+            )}
+          />
+
+          {/* note section */}
+          <View style={{ paddingTop: 5 }}>
+            <Text style={styles.heading}> Any Suggestion Note</Text>
+            <TextInput
+              placeholder="Note"
+              style={styles.noteTextArea}
+              multiline={true}
+              numberOfLines={4}
+              onChangeText={(note) => setSuggestionNote(note)}
+            />
+          </View>
+          {/* confirmaton button */}
+          <TouchableOpacity
+            style={{ marginTop: 15, marginBottom: 20 }}
+            onPress={() => handleProced()}
+          >
+            <Text style={styles.confirmButton}>Confirm & Book</Text>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
       </ScrollView>
     </SafeAreaView>
   );
 };
 
 export default BookingScreen;
- 
+const styles = StyleSheet.create({
+  conatiner: { backgroundColor: COLOR.white, flex: 1 },
+  addressView: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  serviceAtText: { fontWeight: "bold", color: COLOR.black, fontSize: 18 },
+  changeBtnView: {
+    padding: 2,
+    borderRadius: 4,
+    borderColor: COLOR.New_button,
+    borderWidth: 1,
+  },
+  chnageText: {
+    color: COLOR.New_button,
+    fontSize: 10,
+    alignSelf: "center",
+    paddingHorizontal: 5,
+    paddingVertical: 2,
+    fontWeight: "500",
+  },
+  addressText: {
+    maxWidth: "50%",
+    color: COLOR.black,
+    marginTop: 5,
+    lineHeight: 25,
+    marginStart: 5,
+  },
+  Line: {
+    borderColor: "#e3e3e3",
+    borderWidth: 0.5,
+  },
+  heading: {
+    fontSize: 15,
+    color: COLOR.black,
+    fontWeight: "500",
+    margin: 10,
+  },
+  selectedTime: {
+    padding: 5,
+    borderWidth: 1,
+    borderColor: COLOR.New_button,
+    borderRadius: 99,
+    paddingHorizontal: 15,
+    color: COLOR.white,
+    backgroundColor: COLOR.New_button,
+    marginStart: 10,
+  },
+  unSelectedtime: {
+    padding: 5,
+    borderWidth: 0.5,
+    borderColor: COLOR.New_button,
+    borderRadius: 99,
+    paddingHorizontal: 15,
+    color: COLOR.black,
+    marginStart: 15,
+  },
+  noteTextArea: {
+    borderWidth: 1,
+    borderRadius: 15,
+    textAlignVertical: "top",
+    padding: 20,
+    fontSize: 16,
+    borderColor: COLOR.New_button,
+    marginHorizontal: 15,
+  },
+  confirmButton: {
+    textAlign: "center",
+    fontSize: 17,
+    backgroundColor: COLOR.New_button,
+    color: COLOR.white,
+    padding: 13,
+    borderRadius: 10,
+    elevation: 2,
+    marginHorizontal: 20,
+  },
+  calenderContainer: {
+    backgroundColor: "#f3e3bc",
+    padding: 10,
+    borderRadius: 15,
+    marginHorizontal: 25,
+    marginTop: 8,
+  },
+});
