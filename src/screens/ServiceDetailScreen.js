@@ -88,7 +88,7 @@ const ServiceDetailScreen = ({ navigation, route }) => {
         .collection("serviceBooking")
         .doc(userID)
         .set(
-          { quantity: 1, serviceItem, userID, rating: "", review: "" },
+          { quantity: 1, serviceItem, userID, rating: "", review: "",bookingCount:"" },
           { merge: true }
         );
 
@@ -106,34 +106,6 @@ const ServiceDetailScreen = ({ navigation, route }) => {
       console.error("Error adding service: ", error);
     }
   };
-
-  // const handleAddService = async (serviceItem) => {
-  //   const userid = AsyncStorage.getItem("userid");
-  //   const userID = auth().currentUser.uid;
-  //   console.log("serviceId", serviceItem, userid, userID);
-  //   try {
-  //     await firestore()
-  //       .collection("serviceBooking")
-  //       .doc(userID)
-  //       .set(
-  //         { quantity: 1, serviceItem, userID, rating: "", review: "" },
-  //         { merge: true }
-  //       );
-  //     setQuantity(1);
-  //     setCartItems([...cartItems, serviceItem]);
-
-  //     const totalPrice = cartItems.reduce((acc, curr) => {
-  //       console.log(acc, curr);
-  //       return acc + parseFloat(curr.servicePrice);
-  //     }, 0);
-  //     console.log("totalPrice", totalPrice);
-  //     setTotalPrice(totalPrice);
-
-  //     ToastAndroid.show("Service added successfully!", ToastAndroid.SHORT);
-  //   } catch (error) {
-  //     console.error("Error adding service: ", error);
-  //   }
-  // };
 
   const handleIncreaseQuantity = async (serviceId) => {
     try {
@@ -382,9 +354,10 @@ const ServiceDetailScreen = ({ navigation, route }) => {
             style={{
               fontSize: 13,
               fontWeight: 400,
-              color: COLOR.grey,
+              color: COLOR.New_Primary,
               marginHorizontal: 3,
               marginTop: "5%",
+              letterSpacing: 0.3,
             }}
           >
             {route.params.description}

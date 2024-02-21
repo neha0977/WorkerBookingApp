@@ -56,8 +56,8 @@ const BookedService = () => {
     const Userid = auth().currentUser.uid;
     try {
       const snapshot = await firestore()
-        .collection("serviceBooked")
-        .where("userId", "==", Userid)
+        .collection("serviceBooking")
+        .where("userID", "==", Userid)
         .get();
 
       if (!snapshot.empty) {
@@ -78,69 +78,23 @@ const BookedService = () => {
   const renderItem = ({ item }) => {
     console.log(item, "item");
     return (
-      <View style={{ flexDirection: "column" }}>
-        <Text
-          style={{
-            color: COLOR.Text_Color,
-            fontSize: 13,
-            marginTop: 15,
-            fontWeight: "700",
-          }}
-        >
-          Men's grooming @ 380 coloring
-        </Text>
-        <Text
-          style={{ color: COLOR.Text_Color, fontSize: 13, fontWeight: "400" }}
-        >
-          Hair coloring :- Above shoulder
-        </Text>
-        <View
-          style={{
-            justifyContent: "space-between",
-            flexDirection: "row",
-            marginTop: 15,
-            marginHorizontal: "5%",
-          }}
-        >
-          <View style={{ flexDirection: "column" }}>
-            <Text
-              style={{ color: COLOR.Text_Color, fontSize: 11, marginTop: 5 }}
-            >
-              Service time
-            </Text>
-            <Text
-              style={{ color: COLOR.Text_Color, fontSize: 11, marginTop: 5 }}
-            >
-              Category
-            </Text>
-            <Text
-              style={{ color: COLOR.Text_Color, fontSize: 11, marginTop: 5 }}
-            >
-              Sub Category
-            </Text>
-            <Text
-              style={{ color: COLOR.Text_Color, fontSize: 11, marginTop: 5 }}
-            >
-              Heading
-            </Text>
-            <Text
-              style={{ color: COLOR.Text_Color, fontSize: 11, marginTop: 5 }}
-            >
-              Service Cost
-            </Text>
-            <Text
-              style={{ color: COLOR.Text_Color, fontSize: 11, marginTop: 5 }}
-            >
-              Total
-            </Text>
+      <View>
+        <Text style={styles.serviveText}>{item.serviceItem.serviceName}</Text>
+        <Text style={styles.DetailText}>{item.serviceItem.serviceDetails}</Text>
+        <View style={styles.gapstyle}>
+          <View>
+            <Text style={styles.leftTextStyle}>Service time</Text>
+            <Text style={styles.leftTextStyle}>Category</Text>
+            <Text style={styles.leftTextStyle}>Service Cost</Text>
+            <Text style={styles.leftTextStyle}>Total</Text>
           </View>
 
-          <View style={{ flexDirection: "column" }}>
+          <View>
             <Text
               style={{
                 color: COLOR.Text_Color,
                 fontSize: 11,
-                fontWeight: "500",
+                fontWeight: "400",
                 marginTop: 5,
               }}
             >
@@ -166,26 +120,7 @@ const BookedService = () => {
             >
               :
             </Text>
-            <Text
-              style={{
-                color: COLOR.Text_Color,
-                fontSize: 11,
-                fontWeight: "500",
-                marginTop: 5,
-              }}
-            >
-              :
-            </Text>
-            <Text
-              style={{
-                color: COLOR.Text_Color,
-                fontSize: 11,
-                fontWeight: "500",
-                marginTop: 5,
-              }}
-            >
-              :
-            </Text>
+
             <Text
               style={{
                 color: COLOR.Text_Color,
@@ -207,7 +142,7 @@ const BookedService = () => {
                 marginTop: 5,
               }}
             >
-              {item.duration}
+              {item.serviceItem.serviceDuration}
             </Text>
             <Text
               style={{
@@ -217,7 +152,18 @@ const BookedService = () => {
                 marginTop: 5,
               }}
             >
-              {item.minCat}
+              {item.serviceItem.serviceCategory.CategoryName}
+            </Text>
+
+            <Text
+              style={{
+                color: COLOR.Text_Color,
+                fontSize: 11,
+                fontWeight: "500",
+                marginTop: 5,
+              }}
+            >
+              {item.serviceItem.servicePrice}
             </Text>
             <Text
               style={{
@@ -227,37 +173,7 @@ const BookedService = () => {
                 marginTop: 5,
               }}
             >
-              {item.subCat}
-            </Text>
-            <Text
-              style={{
-                color: COLOR.Text_Color,
-                fontSize: 11,
-                fontWeight: "500",
-                marginTop: 5,
-              }}
-            >
-              {item.heading}
-            </Text>
-            <Text
-              style={{
-                color: COLOR.Text_Color,
-                fontSize: 11,
-                fontWeight: "500",
-                marginTop: 5,
-              }}
-            >
-              {item.service_price}
-            </Text>
-            <Text
-              style={{
-                color: COLOR.Text_Color,
-                fontSize: 11,
-                fontWeight: "500",
-                marginTop: 5,
-              }}
-            >
-              {item.total}
+              {item.serviceItem.servicePrice}
             </Text>
           </View>
         </View>
@@ -316,8 +232,28 @@ const styles = StyleSheet.create({
   scrollstyle: { paddingTop: 5, paddingHorizontal: 15 },
   headingText: {
     color: COLOR.Text_Color,
-    fontSize: 13,
+    fontSize: 18,
     fontWeight: "500",
     paddingTop: 15,
+    textAlign: "center",
   },
+  serviveText: {
+    color: COLOR.Text_Color,
+    fontSize: 15,
+    marginTop: 10,
+    fontWeight: "500",
+  },
+  DetailText: {
+    color: COLOR.grey,
+    fontSize: 12,
+    marginTop: 5,
+    letterSpacing: 0.5,
+  },
+  gapstyle: {
+    justifyContent: "space-between",
+    flexDirection: "row",
+    marginTop: 10,
+    marginHorizontal: "4%",
+  },
+  leftTextStyle: { color: COLOR.Text_Color, fontSize: 11, marginTop: 5 },
 });
