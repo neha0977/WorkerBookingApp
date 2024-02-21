@@ -33,7 +33,7 @@ const HomeProvider = ({navigation}) => {
     }
     for (let i = 1; i <= 7; i++) {
       timeList.push({
-        time: i + ":00 PM",
+        time: i + ":00 PM", 
       });
       timeList.push({
         time: i + ":30 PM",
