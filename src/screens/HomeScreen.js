@@ -19,6 +19,7 @@ import CommonHeader from "../components/common/CommonHeader";
 import HomeHeader from "../components/common/HomeHeader";
 import { getCategories } from "../utils/databaseHelper/FireBase";
 import firestore from "@react-native-firebase/firestore";
+
 import defaultImage from "../assets/AppLogo/logo.png";
 const { width } = Dimensions.get("window");
 
@@ -76,6 +77,8 @@ const HomeScreen = ({ navigation }) => {
 
     return () => clearInterval(intervalId);
   }, [currentIndex, imageList.length]);
+
+  
 
   useEffect(() => {
     // FechCategory();

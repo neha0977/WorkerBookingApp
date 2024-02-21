@@ -35,7 +35,7 @@ const SplashScreen = () => {
         }
       } else {
         // No user is logged in
-        navigation.navigate("UserTypeScreen");
+        navigation.navigate("SignInScreen");
       }
     });
 

@@ -45,16 +45,17 @@ const AppNavigator = () => {
           name="OnboardingScreen"
           component={OnboardingScreen}
         />
+           <Stack.Screen
+          options={{ headerShows: false }}
+          name="SignInScreen"
+          component={SignInScreen}
+        />
         <Stack.Screen
           name="UserTypeScreen"
           component={UserTypeScreen}
           options={{ headerShows: false }}
         />
-        <Stack.Screen
-          options={{ headerShows: false }}
-          name="SignInScreen"
-          component={SignInScreen}
-        />
+     
         <Stack.Screen
           options={{ headerShows: false }}
           name="SignUpScreen"

@@ -79,42 +79,23 @@ const ProfileScreen = () => {
               marginTop: 15,
             }}
           >
-            {/* <Text style={{ color: COLOR.white, fontSize: 15 }}>NEHA</Text> */}
             <Text
-              style={{ color: COLOR.New_button, fontSize: 15, marginTop: 5 }}
-            >
+              style={{ color: COLOR.New_button, fontSize: 15, marginTop: 5 }} >
               {user}
             </Text>
           </View>
         </View>
 
         <View style={{ marginTop: 10, marginHorizontal: 10 }}>
+        
           <TouchableOpacity
             style={{
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-between",
-            }} onPress={() => navigation.navigate("BookingHistory")}>
-            <Text
-              style={{
-                color: COLOR.New_Primary,
-                fontSize: 14,
-                marginLeft: SIZES.base,
-                fontWeight: 500,
-              }} >  Booking history </Text>
-            <MaterialCommunityIcons
-              name="chevron-right"
-              style={{ fontSize: 20, color: COLOR.black, marginLeft: 2 }}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginVertical: 10,
+             marginTop:10
             }}
-            onPress={() => navigation.navigate("BookedService")}
+            onPress={() => navigation.navigate("BookingHistory")}
           >
             <Text
               style={{
@@ -122,10 +103,29 @@ const ProfileScreen = () => {
                 fontSize: 14,
                 marginLeft: SIZES.base,
                 fontWeight: 500,
-              }}
-            >
-              Booked Service
+              }}  >
+             Booking history
             </Text>
+            <MaterialCommunityIcons
+              name="chevron-right"
+              style={{ fontSize: 20, color: COLOR.black, marginLeft: 2 }}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginVertical: 10,
+            }}   onPress={() => navigation.navigate("BookedService")} >
+            <Text
+              style={{
+                color: COLOR.New_Primary,
+                fontSize: 14,
+                marginLeft: SIZES.base,
+                fontWeight: 500,
+              }} >  Ongoing services </Text>
             <MaterialCommunityIcons
               name="chevron-right"
               style={{ fontSize: 20, color: COLOR.black, marginLeft: 2 }}
@@ -195,7 +195,7 @@ const ProfileScreen = () => {
                 fontWeight: 500,
               }}
             >
-              Log Out
+              Log out
             </Text>
             <MaterialCommunityIcons
               name="chevron-right"
