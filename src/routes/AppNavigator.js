@@ -27,6 +27,8 @@ import AddressListScreen from "../screens/AddressListScreen";
 import UserTypeScreen from "../screens/UserTypeScreen";
 import HomeProvider from "../screens/providerScreens/HomeProvider";
 import BookedSucesssfullyScreen from "../screens/BookedSucesssfullyScreen";
+import providerSignUp from "../screens/providerScreens/ProviderSignUp";
+import ProviderSignUp from "../screens/providerScreens/ProviderSignUp";
 const AppNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
@@ -141,6 +143,11 @@ const AppNavigator = () => {
           options={{ headerShows: false }}
           name="BookedSucesssfullyScreen"
           component={BookedSucesssfullyScreen}
+        />
+          <Stack.Screen
+          options={{ headerShows: false }}
+          name="ProviderSignUp"
+          component={ProviderSignUp}
         />
       </Stack.Navigator>
     </NavigationContainer>
