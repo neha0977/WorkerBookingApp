@@ -1,4 +1,4 @@
-import { Image, SafeAreaView } from "react-native";
+import { Image, SafeAreaView, Alert } from "react-native";
 import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { STYLES } from "../utils/commonstyles/Style";
@@ -6,65 +6,51 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IMAGES, getImageFromURL } from "../resources/images";
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
+
 const SplashScreen = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    // addData();
-  }, []);
-  useEffect(() => {
     const unsubscribe = auth().onAuthStateChanged(async (user) => {
       if (user) {
-        const userDoc = await firestore()
-          .collection("users")
-          .doc(user.uid)
-          .get();
-        if (userDoc.exists) {
-          const userData = userDoc.data();
-          if (userData && userData.type) {
-            if (userData.type === "Provider") {
-              navigation.navigate("HomeProvider");
+        console.log(user.providerData,"neha")
+        try {
+          const userDoc = await firestore()
+            .collection("users")
+            .doc(user.uid)
+            .get();
+          if (userDoc.exists) {
+            const userData = userDoc.data();
+            if (userData && userData.type) {
+              if (userData.type === "Provider") {
+                navigation.navigate("HomeProvider");
+              } else {
+                navigation.navigate("HomeScreen");
+              }
             } else {
-              navigation.navigate("HomeScreen");
+              // User type not defined
+              navigateToUserTypeScreen();
             }
           } else {
-            console.error("User type not defined for user");
+            // User document not found
+            navigateToUserTypeScreen();
           }
-        } else {
-          console.error("User document not found");
+        } catch (error) {
+          console.error("Error fetching user document:", error);
+          // Handle error fetching user document
+          Alert.alert("Error", "An error occurred while fetching user data.");
         }
       } else {
         // No user is logged in
-        navigation.navigate("SignInScreen");
+        navigateToUserTypeScreen();
       }
     });
 
     return unsubscribe;
   }, []);
 
-  const addData = async () => {
-    const userid = await AsyncStorage.getItem("userid");
-    const providerid = await AsyncStorage.getItem("providerid");
-    console.log(userid, providerid);
-
-    setTimeout(() => {
-      if (userid != null) {
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "HomeScreen" }],
-        });
-      } else if (providerid !== null) {
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "HomeProvider" }],
-        });
-      } else {
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "UserTypeScreen" }],
-        });
-      }
-    }, 2000);
+  const navigateToUserTypeScreen = () => {
+    navigation.navigate("UserTypeScreen");
   };
 
   return (

@@ -95,6 +95,7 @@ const BookingScreen = ({ navigation }) => {
         seletedTime,
         selectedStartDate,
         SuggestionNote,
+        timestamp : firestore.FieldValue.serverTimestamp(),
       });
       ToastAndroid.show("Service added successfully!", ToastAndroid.SHORT);
       navigation.navigate("BookedSucesssfullyScreen", {

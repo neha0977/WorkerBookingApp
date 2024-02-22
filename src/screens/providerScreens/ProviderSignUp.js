@@ -1,21 +1,24 @@
-import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  SafeAreaView,
-  Keyboard,
-  ScrollView,
-  Alert,
   StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  TouchableOpacity,
+  ScrollView,
+  Keyboard,
+  Alert,
 } from "react-native";
-import CommonButton from "../components/common/CommonButton";
-import CommonTextInput from "../components/common/CommonTextInput";
-import Loader from "../components/common/Loader";
-import { useNavigation } from "@react-navigation/native";
-import { COLOR } from "../utils/commonstyles/Color";
-import { signUp } from "../utils/databaseHelper/FireBase";
-import { STYLES } from "../utils/commonstyles/Style";
-const SignUpScreen = ({ route }) => {
+import React, { useEffect, useState } from "react";
+import CommonButton from "../../components/common/CommonButton";
+import CommonTextInput from "../../components/common/CommonTextInput";
+import Loader from "../../components/common/Loader";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { COLOR } from "../../utils/commonstyles/Color";
+import { STYLES } from "../../utils/commonstyles/Style";
+import DropDownPicker from "react-native-dropdown-picker";
+import firestore from "@react-native-firebase/firestore";
+import { signUp } from "../../utils/databaseHelper/FireBase";
+const ProviderSignUp = ({ route }) => {
   console.log("route.params.type", route.params.type);
   const navigation = useNavigation();
   const [inputs, setInputs] = React.useState({
@@ -24,9 +27,35 @@ const SignUpScreen = ({ route }) => {
     phone: "",
     password: "",
     fullAddress: "",
-  });      
+    designation: "",
+    experience: "",
+  });
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([]);
+  //lsit of categories
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchCategories = async () => {
+        const snapshot = await firestore().collection("categories").get();
+        const categories = snapshot.docs.map((doc) => {
+          const docData = doc.data();
+          const value = docData.CategoryName || doc.id;
+          const valueId = doc.id;
+          return {
+            label: value,
+            value: valueId,
+          };
+        });
+        setItems(categories);
+        console.log(items, "Category");
+      };
+      fetchCategories();
+    }, [])
+  );
+  //validation with text input feilds
   const validate = () => {
     Keyboard.dismiss();
     let isValid = true;
@@ -54,49 +83,73 @@ const SignUpScreen = ({ route }) => {
       handleError("Min password length of 5", "password");
       isValid = false;
     }
+    if (!inputs.fullAddress) {
+      handleError("Please input fullAddress", "fullAddress");
+      isValid = false;
+    }
+    if (!inputs.designation) {
+      handleError("Please input designation", "designation");
+      isValid = false;
+    }
+    if (!inputs.experience) {
+      handleError("Please input experience", "experience");
+      isValid = false;
+    }
     if (isValid) {
-      register();
+      registerProvider();
     }
   };
-  const register = async () => {
-    const userSignUpResult = await signUp(inputs, "User");
+  const registerProvider = async () => {
+    const providerSignUpResult = await signUp(inputs, "Provider", value, items);
 
     // Check the result
-    if (userSignUpResult.success) {
+    if (providerSignUpResult.success) {
       setTimeout(() => {
         navigation.reset({
           index: 0,
           routes: [{ name: "SignInScreen" }],
         });
       }, 500);
-      console.log("User registration successful:", userSignUpResult.user);
-    } else {
-      console.error("User registration failed:", userSignUpResult.error);
-    }
 
+      console.log(
+        "Provider registration successful:",
+        providerSignUpResult.user
+      );
+    } else {
+      console.error(
+        "Provider registration failed:",
+        providerSignUpResult.error
+      );
+    }
     // setLoading(true);
+
     // setTimeout(() => {
     //   try {
     //     setLoading(false);
-    //     const signUpResult = signUp(inputs, route.params.type, navigation);
+    //     const selectedLabel = items.find((item) => item.value === value)?.label;
+
+    //     const signUpResult = signUp(
+    //       inputs,
+    //       route.params.type,
+    //       value,
+    //       selectedLabel
+    //     )
+    //     console.log(signUpResult,"nehga")
     //     if (signUpResult.success) {
     //       navigation.reset({
     //         index: 0,
-    //         routes: [{ name: "SignInScreen" }, { type: "User" }],
+    //         routes: [{ name: "SignInScreen" }, { type: "Provider" }],
     //       });
+
     //       console.log("Sign-up successful!");
-    //       // Perform actions like navigation, displaying messages, etc.
     //     } else {
-    //       // Sign-up failed, handle the error
     //       console.error("Sign-up failed:", signUpResult.error);
-    //       // Perform actions like displaying error messages, retrying sign-up, etc.
     //     }
     //   } catch (error) {
     //     Alert.alert("Error", "Something went wrong");
     //   }
     // }, 3000);
   };
-
   const handleOnchange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
   };
@@ -105,7 +158,7 @@ const SignUpScreen = ({ route }) => {
     setErrors((prevState) => ({ ...prevState, [input]: error }));
   };
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{ backgroundColor: COLOR.New_Primary, flex: 1 }}>
       <Loader visible={loading} />
       <ScrollView contentContainerStyle={styles.ScrollStyle}>
         <Text style={styles.MainText}>Register</Text>
@@ -153,7 +206,65 @@ const SignUpScreen = ({ route }) => {
             placeholder="Enter your full address"
             error={errors.fullAddress}
           />
-          <CommonButton title="Register" onPress={validate} />
+
+          <CommonTextInput
+            onChangeText={(text) => handleOnchange(text, "designation")}
+            onFocus={() => handleError(null, "designation")}
+            iconName="office-building-outline"
+            label="Designation"
+            placeholder="Enter your designation"
+            error={errors.designation}
+          />
+          <View style={{ marginVertical: 1, marginBottom: 15, zIndex: 1000 }}>
+            <Text
+              style={{
+                fontSize: 14,
+                color: COLOR.New_button,
+                marginBottom: 10,
+              }}
+            >
+              {" "}
+              Category :{" "}
+            </Text>
+            <DropDownPicker
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                width: "100%",
+                minHeight: 40,
+                borderRadius: 5,
+                borderWidth: 0.5,
+                borderColor: "#dadae8",
+                backgroundColor: COLOR.light,
+              }}
+              open={open}
+              value={value}
+              items={items}
+              theme="LIGHT"
+              mode="BADGE"
+              textStyle={{
+                fontSize: 14,
+                color: COLOR.New_Primary,
+                padding: 4,
+              }}
+              setOpen={setOpen}
+              setValue={setValue}
+              setItems={setItems}
+              placeholder={"Please select category"}
+            />
+          </View>
+
+          <CommonTextInput
+            onChangeText={(text) => handleOnchange(text, "experience")}
+            onFocus={() => handleError(null, "experience")}
+            iconName="office-building-outline"
+            label="Experience"
+            placeholder="Enter your total work experience"
+            error={errors.experience}
+          />
+
+          <CommonButton title="Register" onPress={() => validate()} />
           <View style={styles.alreadyTextView}>
             <Text
               onPress={() => navigation.navigate("SignInScreen")}
@@ -179,7 +290,8 @@ const SignUpScreen = ({ route }) => {
   );
 };
 
-export default SignUpScreen;
+export default ProviderSignUp;
+
 const styles = StyleSheet.create({
   container: { backgroundColor: COLOR.New_Primary, flex: 1 },
   ScrollStyle: { paddingTop: 50, paddingHorizontal: 20 },

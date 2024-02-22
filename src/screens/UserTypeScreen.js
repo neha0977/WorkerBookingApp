@@ -20,7 +20,7 @@ const UserTypeScreen = () => {
         <CommonButton
           title="Service provider"
           onPress={() =>
-            navigation.navigate("SignUpScreen", { type: "Provider" })
+            navigation.navigate("ProviderSignUp", { type: "Provider" })
           }
         />
         <CommonButton
