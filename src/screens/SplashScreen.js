@@ -13,7 +13,7 @@ const SplashScreen = () => {
   useEffect(() => {
     const unsubscribe = auth().onAuthStateChanged(async (user) => {
       if (user) {
-        console.log(user.providerData,"neha")
+        console.log(user,"neha")
         try {
           const userDoc = await firestore()
             .collection("users")

@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -6,67 +7,77 @@ import {
   Image,
   FlatList,
   Dimensions,
-  ImageBackground,
   TouchableOpacity,
-  ToastAndroid,
   StyleSheet,
 } from "react-native";
-import React, { useState, useEffect } from "react";
 import CommonHeader from "../components/common/CommonHeader";
 import { COLOR } from "../utils/commonstyles/Color";
-const { width } = Dimensions.get("window");
-import firestore from "@react-native-firebase/firestore";
-import auth from "@react-native-firebase/auth";
-const ServiceCartScreen = ({ route, navigation }) => {
-  const [itemList, setitemList] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
-  useEffect(() => {
-    getBookedServices();
-  }, []);
-  useEffect(() => {
-    calculateTotalPrice();
-  }, [itemList]);
-  const calculateTotalPrice = () => {
-    let totalPrice = 0;
-    itemList.forEach((item) => {
-      totalPrice += parseFloat(item.serviceItem.servicePrice);
-    });
-    setTotalPrice(totalPrice);
-  };
-  const getBookedServices = async () => {
-    const Userid = auth().currentUser.uid;
-    try {
-      const categoryId = route.params.id;
-      const snapshot = await firestore()
-        .collection("serviceBooking")
-        .where("userID", "==", Userid)
-        .get();
 
-      if (!snapshot.empty) {
-        const servicesList = [];
-        snapshot.forEach((doc) => {
-          servicesList.push({ id: doc.id, ...doc.data() });
-        });
-        setitemList(servicesList);
-        console.log("servicesList", servicesList);
-      } else {
-        console.log("No matching documents.");
-        setitemList([]);
+const { width } = Dimensions.get("window");
+
+const ServiceCartScreen = ({ route, navigation }) => {
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [cartItems, setCartItems] = useState(
+    route.params.cartItems.map((item) => ({ ...item, quantity: 1 }))
+  );
+  useEffect(() => {
+    // Calculate total price when cart items change
+    calculateTotalPrice();
+  }, [cartItems]);
+
+  // Function to calculate total price
+  const calculateTotalPrice = () => {
+    let total = 0;
+    cartItems.forEach((item) => {
+      total += parseFloat(item.servicePrice) * item.quantity;
+    });
+    setTotalPrice(total);
+  };
+  const incrementQuantity = (itemId) => {
+    const updatedCartItems = cartItems.map((item) => {
+      if (item.id === itemId) {
+        return { ...item, quantity: item.quantity + 1 };
       }
-    } catch (error) {
-      console.error("Error fetching services by category ID:", error);
-    }
+      return item;
+    });
+    setCartItems(updatedCartItems);
   };
+
+  // const decrementQuantity = (itemId) => {
+  //   const updatedCartItems = cartItems.map((item) => {
+  //     if (item.id === itemId && item.quantity > 1) {
+  //       return { ...item, quantity: item.quantity - 1 };
+  //     } else if (item.id === itemId && item.quantity === 1) {
+  //       removeFromServiceCart(itemId);
+  //     }
+  //     return item;
+  //   });
+  //   setCartItems(updatedCartItems);
+  // };
+  const decrementQuantity = (itemId) => {
+    const updatedCartItems = cartItems.map((item) => {
+      if (item.id === itemId && item.quantity > 1) {
+        return { ...item, quantity: item.quantity - 1 };
+      } else if (item.id === itemId && item.quantity === 1) {
+        // If the quantity is 1, remove the item from the cart
+        removeFromServiceCart(itemId); // Call function to remove item
+        return null; // Return null to remove the item from updatedCartItems
+      }
+      return item;
+    });
+  
+    // Filter out null items to remove them from updatedCartItems
+    const filteredCartItems = updatedCartItems.filter((item) => item !== null);
+  
+    // Update the cart items state with filtered items
+    setCartItems(filteredCartItems);
+  };
+
   const removeFromServiceCart = async (itemId) => {
-    try {
-      const docRef = firestore().collection("serviceBooking").doc(itemId);
-      await docRef.delete();
-      console.log("Service successfully deleted!");
-      getBookedServices();
-    } catch (error) {
-      console.error("Error removing document: ", error);
-    }
+    const updatedCartItems = cartItems.filter((item) => item.id !== itemId);
+    setCartItems(updatedCartItems);
   };
+
   const renderItem = ({ item }) => {
     console.log("item", item);
     return (
@@ -74,54 +85,50 @@ const ServiceCartScreen = ({ route, navigation }) => {
         <View style={styles.listItemView}>
           <View style={styles.renderView}>
             <Image
-              src={item.serviceItem.serviceImage}
+              source={{ uri: item.serviceImage }}
               style={styles.imageStyle}
             />
             <View style={styles.nameView}>
-              <Text style={styles.itemName}>
-                {item.serviceItem.serviceName}
-              </Text>
-              <Text style={styles.itemDetails}>
-                {item.serviceItem.serviceDetails}
-              </Text>
+              <Text style={styles.itemName}>{item.serviceName}</Text>
+              <Text style={styles.itemDetails}>{item.serviceDetails}</Text>
               <Text style={styles.itemCategory}>
-                {item.serviceItem.serviceCategory.CategoryName}
+                {item.serviceCategory.CategoryName}
               </Text>
               <View style={{ marginTop: 2, flexDirection: "row" }}>
-                <Text style={styles.itemPrice}>
-                  {item.serviceItem.servicePrice}
-                </Text>
+                <Text style={styles.itemPrice}>{item.servicePrice}</Text>
                 <Text style={styles.lineStyle}>|</Text>
-                <Text style={styles.itemTime}>
-                  {item.serviceItem.serviceDuration}
-                </Text>
+                <Text style={styles.itemTime}>{item.serviceDuration}</Text>
               </View>
               <Text style={styles.serviceCharge}>Service Charge: 10</Text>
             </View>
           </View>
           {/* //Remove button */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.removeBtnView}
             onPress={() => removeFromServiceCart(item.id)}
           >
             <Text style={styles.removeText}>REMOVE</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <View style={styles.quantityContainer}>
+            <TouchableOpacity onPress={() => decrementQuantity(item.id)}>
+              <Text style={styles.quantityButton}>-</Text>
+            </TouchableOpacity>
+            <Text style={styles.quantity}>{item.quantity}</Text>
+            <TouchableOpacity onPress={() => incrementQuantity(item.id)}>
+              <Text style={styles.quantityButton}>+</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );
   };
 
-  const handleRemoveItem = (itemId) => {
-    setServicePackages((prevPackages) =>
-      prevPackages.filter((item) => item.id !== itemId)
-    );
-  };
   return (
     <SafeAreaView style={styles.container}>
       <CommonHeader title="Service cart" />
       <ScrollView>
         <FlatList
-          data={itemList}
+          data={cartItems}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
           ListEmptyComponent={() => (
@@ -154,9 +161,12 @@ const ServiceCartScreen = ({ route, navigation }) => {
           <Text style={styles.priceText}>Total: ${totalPrice.toFixed(2)}</Text>
           <TouchableOpacity
             style={styles.slotBtnView}
-            onPress={() => {
-              navigation.navigate("BookingScreen");
-            }}
+            onPress={() =>
+              navigation.navigate("BookingScreen", {
+                cartItems: cartItems || [],
+                totalPrice: totalPrice,
+              })
+            }
           >
             <Text style={styles.slotBtnTxt}>Select Slot</Text>
           </TouchableOpacity>
@@ -288,5 +298,18 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 16,
     fontWeight: "bold",
+  },
+  quantityContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  quantityButton: {
+    fontSize: 20,
+    paddingHorizontal: 8,
+    color: COLOR.black,
+  },
+  quantity: {
+    fontSize: 16,
+    marginHorizontal: 8,
   },
 });
