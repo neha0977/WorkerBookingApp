@@ -125,7 +125,7 @@ const ProfileScreen = () => {
                 fontSize: 14,
                 marginLeft: SIZES.base,
                 fontWeight: 500,
-              }} >  Ongoing services </Text>
+              }} >Ongoing services </Text>
             <MaterialCommunityIcons
               name="chevron-right"
               style={{ fontSize: 20, color: COLOR.black, marginLeft: 2 }}

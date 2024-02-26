@@ -101,7 +101,7 @@ const ProviderSignUp = ({ route }) => {
   };
   const registerProvider = async () => {
     const providerSignUpResult = await signUp(inputs, "Provider", value, items);
-
+    setLoading(true);
     // Check the result
     if (providerSignUpResult.success) {
       setTimeout(() => {
@@ -110,19 +110,20 @@ const ProviderSignUp = ({ route }) => {
           routes: [{ name: "SignInScreen" }],
         });
       }, 500);
-
+      setLoading(false);
       console.log(
         "Provider registration successful:",
         providerSignUpResult.user
       );
     } else {
+      setLoading(false);
       console.error(
         "Provider registration failed:",
         providerSignUpResult.error
       );
     }
+    
     // setLoading(true);
-
     // setTimeout(() => {
     //   try {
     //     setLoading(false);

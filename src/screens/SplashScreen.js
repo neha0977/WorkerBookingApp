@@ -23,7 +23,7 @@ const SplashScreen = () => {
             const userData = userDoc.data();
             if (userData && userData.type) {
               if (userData.type === "Provider") {
-                navigation.navigate("HomeProvider");
+                navigation.navigate("ProviderDashboard");
               } else {
                 navigation.navigate("HomeScreen");
               }

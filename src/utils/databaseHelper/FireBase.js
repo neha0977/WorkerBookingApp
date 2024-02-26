@@ -23,7 +23,7 @@ export const signIn = async (input, navigation, type) => {
         const userType = userData.type;
         console.log(userType, "///");
         if (userType === "Provider") {
-          navigation.navigate("HomeProvider");
+          navigation.navigate("ProviderDashboard");
         } else {
           navigation.navigate("HomeScreen");
         }
