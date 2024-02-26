@@ -18,7 +18,7 @@ const { width } = Dimensions.get("window");
 const ServiceCartScreen = ({ route, navigation }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [cartItems, setCartItems] = useState(
-    route.params.cartItems.map((item) => ({ ...item, quantity: 1 }))
+    route.params.cartItems
   );
   useEffect(() => {
     // Calculate total price when cart items change
@@ -29,48 +29,9 @@ const ServiceCartScreen = ({ route, navigation }) => {
   const calculateTotalPrice = () => {
     let total = 0;
     cartItems.forEach((item) => {
-      total += parseFloat(item.servicePrice) * item.quantity;
+      total += parseFloat(item.servicePrice) + 10;
     });
     setTotalPrice(total);
-  };
-  const incrementQuantity = (itemId) => {
-    const updatedCartItems = cartItems.map((item) => {
-      if (item.id === itemId) {
-        return { ...item, quantity: item.quantity + 1 };
-      }
-      return item;
-    });
-    setCartItems(updatedCartItems);
-  };
-
-  // const decrementQuantity = (itemId) => {
-  //   const updatedCartItems = cartItems.map((item) => {
-  //     if (item.id === itemId && item.quantity > 1) {
-  //       return { ...item, quantity: item.quantity - 1 };
-  //     } else if (item.id === itemId && item.quantity === 1) {
-  //       removeFromServiceCart(itemId);
-  //     }
-  //     return item;
-  //   });
-  //   setCartItems(updatedCartItems);
-  // };
-  const decrementQuantity = (itemId) => {
-    const updatedCartItems = cartItems.map((item) => {
-      if (item.id === itemId && item.quantity > 1) {
-        return { ...item, quantity: item.quantity - 1 };
-      } else if (item.id === itemId && item.quantity === 1) {
-        // If the quantity is 1, remove the item from the cart
-        removeFromServiceCart(itemId); // Call function to remove item
-        return null; // Return null to remove the item from updatedCartItems
-      }
-      return item;
-    });
-  
-    // Filter out null items to remove them from updatedCartItems
-    const filteredCartItems = updatedCartItems.filter((item) => item !== null);
-  
-    // Update the cart items state with filtered items
-    setCartItems(filteredCartItems);
   };
 
   const removeFromServiceCart = async (itemId) => {
@@ -109,15 +70,6 @@ const ServiceCartScreen = ({ route, navigation }) => {
           >
             <Text style={styles.removeText}>REMOVE</Text>
           </TouchableOpacity> */}
-          <View style={styles.quantityContainer}>
-            <TouchableOpacity onPress={() => decrementQuantity(item.id)}>
-              <Text style={styles.quantityButton}>-</Text>
-            </TouchableOpacity>
-            <Text style={styles.quantity}>{item.quantity}</Text>
-            <TouchableOpacity onPress={() => incrementQuantity(item.id)}>
-              <Text style={styles.quantityButton}>+</Text>
-            </TouchableOpacity>
-          </View>
         </View>
       </View>
     );
@@ -287,7 +239,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   slotBtnTxt: {
-    color: COLOR.black,
+    color: COLOR.New_button,
     fontSize: 12,
     paddingHorizontal: 5,
     fontWeight: "500",

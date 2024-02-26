@@ -1,5 +1,5 @@
 // auth.js
-import { Alert, ToastAndroid } from "react-native";
+import {  ToastAndroid } from "react-native";
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -173,7 +173,7 @@ export const signUp = async (input, loginType, value, items) => {
 
   try {
     const { fullname, email, phone, password, fullAddress } = input;
-
+    console.log("data", value, items);
     // Create user account with email and password
     const authResult = await auth().createUserWithEmailAndPassword(
       email.trim(),

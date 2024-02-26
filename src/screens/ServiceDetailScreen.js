@@ -8,37 +8,23 @@ import {
   FlatList,
   Dimensions,
   TouchableOpacity,
-  Button,
   StyleSheet,
   ToastAndroid,
-  Alert,
 } from "react-native";
 import firestore from "@react-native-firebase/firestore";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import CommonHeader from "../components/common/CommonHeader";
 import { STYLES } from "../utils/commonstyles/Style";
 import { COLOR } from "../utils/commonstyles/Color";
-import auth from "@react-native-firebase/auth";
-import { CONSTANTS } from "../utils/constants/StaticContent";
 const { width } = Dimensions.get("window");
 
 const ServiceDetailScreen = ({ navigation, route }) => {
   const [cartItems, setCartItems] = useState([]);
-  const [itemQuantities, setItemQuantities] = useState({});
   const [totalPrice, setTotalPrice] = useState(0);
   const [servicePackages, setServicePackages] = useState([]);
-  const [quantity, setQuantity] = useState(0);
-  const [showQuantityItemIds, setShowQuantityItemIds] = useState([]);
-  const [selectedServices, setSelectedServices] = useState([]);
-  useEffect(() => {
-    if (route.params && route.params.updatedTotalPrice) {
-      setTotalPrice(route.params.updatedTotalPrice);
-    }
-  }, [route.params]);
-
   useEffect(() => {
     getServices();
   }, []);
+
   const getServices = async () => {
     try {
       const categoryId = route.params.id;
@@ -61,146 +47,63 @@ const ServiceDetailScreen = ({ navigation, route }) => {
       console.error("Error fetching services by category ID:", error);
     }
   };
-  useEffect(() => {
-    const fetchQuantity = async () => {
-      try {
-        const documentSnapshot = await firestore()
-          .collection("services")
-          .doc(servicePackages.id)
-          .get();
-        const data = documentSnapshot.data();
-        if (data) {
-          setQuantity(data.quantity || 0);
-        }
-      } catch (error) {
-        console.error("Error fetching quantity: ", error);
-      }
-    };
 
-    fetchQuantity();
-
-    // Cleanup function
-    return () => {
-      // Cleanup code if needed
-    };
-  }, [servicePackages.id]);
-
-  // const handleAddService = (serviceItem) => {
-  //   setCartItems((prevCartItems) => [...prevCartItems, serviceItem]);
-  //   console.log(cartItems, "cartI");
-  //   setTotalPrice(
-  //     (prevTotalPrice) => prevTotalPrice + parseFloat(serviceItem.servicePrice)
-  //   );
-  //   ToastAndroid.show("Service added successfully!", ToastAndroid.SHORT);
-  // };
-  const handleAddService = async (serviceItem) => {
-    const userid = AsyncStorage.getItem("userid");
-    const userID = auth().currentUser.uid;
-    console.log("serviceId", serviceItem, userid, userID);
-
-    const itemIndex = cartItems.findIndex((item) => item.id === serviceItem.id);
-    if (itemIndex > -1) {
-      // Item exists, update the quantity
-      const newCartItems = cartItems.map((item, index) => {
-        if (index === itemIndex) {
-          return { ...item, quantity: item.quantity + 1 }; // Increase quantity
-        }
-        return item;
-      });
-      setCartItems(newCartItems);
-      // Update total price
-      setTotalPrice(
-        (prevTotalPrice) =>
-          prevTotalPrice + parseFloat(serviceItem.servicePrice)
-      );
+  const handleAddService = (serviceItem) => {
+    const existingServiceIndex = cartItems.findIndex(
+      (item) => item.id === serviceItem.id
+    );
+    if (existingServiceIndex !== -1) {
+      // If the service exists, update its quantity
+      const updatedCartItems = [...cartItems];
+      updatedCartItems[existingServiceIndex].quantity += 1;
+      setCartItems(updatedCartItems);
     } else {
-      // Item does not exist, add as new item
-      const newItem = { ...serviceItem, quantity: 1 };
-      setCartItems((prevCartItems) => [...prevCartItems, newItem]);
+      // If the service is not in the cart, add it with quantity 1
+      setCartItems((prevCartItems) => [
+        ...prevCartItems,
+        { ...serviceItem, quantity: 1 },
+      ]);
+    }
+    // Update total price
+    setTotalPrice(
+      (prevTotalPrice) => prevTotalPrice + parseFloat(serviceItem.servicePrice)
+    );
+    ToastAndroid.show("Service added successfully!", ToastAndroid.SHORT);
+  };
+
+  const handleRemoveService = (serviceItem) => {
+    // Check if the service exists in the cart
+    const existingServiceIndex = cartItems.findIndex(
+      (item) => item.id === serviceItem.id
+    );
+
+    if (existingServiceIndex !== -1) {
+      // If the service exists, decrease its quantity
+      const updatedCartItems = [...cartItems];
+      if (updatedCartItems[existingServiceIndex].quantity === 1) {
+        // If quantity is 1, remove the service from cart
+        updatedCartItems.splice(existingServiceIndex, 1);
+      } else {
+        // If quantity is greater than 1, decrease the quantity
+        updatedCartItems[existingServiceIndex].quantity -= 1;
+      }
+      setCartItems(updatedCartItems);
       // Update total price
       setTotalPrice(
         (prevTotalPrice) =>
-          prevTotalPrice + parseFloat(serviceItem.servicePrice)
+          prevTotalPrice - parseFloat(serviceItem.servicePrice)
       );
+
+      ToastAndroid.show("Service removed successfully!", ToastAndroid.SHORT);
     }
-
-    try {
-      await firestore()
-        .collection("serviceBooking")
-        .doc(userID)
-        .set(
-          {
-            quantity: 1,
-            serviceItem,
-            userID,
-            rating: "",
-            review: "",
-            bookingCount: "",
-          },
-          { merge: true }
-        );
-
-      // Update cartItems using functional form of setState
-      // setCartItems((prevCartItems) => [...prevCartItems, serviceItem]);
-
-      // Calculate totalPrice using functional form of setState
-      // setTotalPrice(
-      //   (prevTotalPrice) =>
-      //     prevTotalPrice + parseFloat(serviceItem.servicePrice)
-      // );
-
-      ToastAndroid.show("Service added successfully!", ToastAndroid.SHORT);
-    } catch (error) {
-      console.error("Error adding service: ", error);
-    }
-  };
-
-  const QuantityAdjuster = ({ item, onIncrease, onDecrease }) => (
-    <View style={{ flexDirection: "row", alignItems: "center" }}>
-      <TouchableOpacity
-        onPress={() => onDecrease(item)}
-        style={styles.adjusterButton}
-      >
-        <Text>-</Text>
-      </TouchableOpacity>
-      <Text style={{ marginHorizontal: 8 }}>{item.quantity}</Text>
-      <TouchableOpacity
-        onPress={() => onIncrease(item)}
-        style={styles.adjusterButton}
-      >
-        <Text>+</Text>
-      </TouchableOpacity>
-    </View>
-  );
-
-  const handleIncreaseQuantity = (item) => {
-    setCartItems((prevCartItems) =>
-      prevCartItems.map((ci) =>
-        ci.id === item.id ? { ...ci, quantity: ci.quantity + 1 } : ci
-      )
-    );
-    setTotalPrice(
-      (prevTotalPrice) => prevTotalPrice + parseFloat(item.servicePrice)
-    );
-  };
-
-  const handleDecreaseQuantity = (item) => {
-    setCartItems(
-      (prevCartItems) =>
-        prevCartItems
-          .map((ci) =>
-            ci.id === item.id
-              ? { ...ci, quantity: Math.max(0, ci.quantity - 1) }
-              : ci
-          )
-          .filter((ci) => ci.quantity > 0) // Optionally remove the item if quantity is 0
-    );
-    setTotalPrice(
-      (prevTotalPrice) => prevTotalPrice - parseFloat(item.servicePrice)
-    );
   };
 
   const renderItem = ({ item }) => {
+    console.log(item,"itwm")
+    const existingServiceIndex = cartItems.findIndex(
+      (cartItem) => cartItem.id === item.id
+    );
+    console.log("existingServiceIndex",existingServiceIndex)
     return (
       <View
         style={{
@@ -246,7 +149,6 @@ const ServiceDetailScreen = ({ navigation, route }) => {
                 color: COLOR.Text_Color,
               }}
             >
-              {" "}
               {item.serviceCategory.CategoryName}
             </Text>
 
@@ -287,6 +189,7 @@ const ServiceDetailScreen = ({ navigation, route }) => {
             flexDirection: "column",
             marginLeft: 10,
             justifyContent: "space-between",
+
           }}
         >
           {/* {cartItems.some((cartItem) => cartItem.id === item.id) ? (
@@ -417,7 +320,6 @@ const ServiceDetailScreen = ({ navigation, route }) => {
             }}
           >
             {route.params.description}
-            {/* {CONSTANTS.dummy_txt} */}
           </Text>
 
           <Text
@@ -485,16 +387,20 @@ const ServiceDetailScreen = ({ navigation, route }) => {
               alignSelf: "center",
             }}
             onPress={() => {
-              if (totalPrice !== 0)
+              if (totalPrice !== 0) {
+                const uniqueCartItems = Array.from(
+                  new Set(cartItems.map((item) => item.id))
+                ).map((id) => cartItems.find((item) => item.id === id));
                 navigation.navigate("ServiceCartScreen", {
-                  cartItems: cartItems || [],
+                  cartItems: uniqueCartItems || [],
                   totalPrice: totalPrice,
                 });
-              else
+              } else {
                 ToastAndroid.show(
                   "Please add services first",
                   ToastAndroid.SHORT
                 );
+              }
             }}
           >
             <Text
@@ -550,10 +456,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginTop: 5,
+    borderWidth:0.5,
+    borderColor:COLOR.black,
+    borderRadius:5,
+    paddingHorizontal:5
+
   },
   quantityText: {
     marginHorizontal: 10,
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight:"500",
+    color:COLOR.black
   },
   emptyText: {
     textAlign: "center",

@@ -32,7 +32,6 @@ const BookingScreen = ({ navigation, route }) => {
   }, []);
 
   const onDateChange = (date) => {
-    // Format a date
     const formattedDate = moment(date).format("DD-MM-YYYY");
     console.log(formattedDate);
     setSelectedStartDate(formattedDate);
@@ -58,6 +57,7 @@ const BookingScreen = ({ navigation, route }) => {
     }
     setTimeList(timeList);
   };
+
   const handleProced = async () => {
     const userName = auth().currentUser.displayName;
     const userId = auth().currentUser.uid;
@@ -80,41 +80,41 @@ const BookingScreen = ({ navigation, route }) => {
         SuggestionNote: SuggestionNote || "",
       },
     }));
-  
+
     if (!seletedTime || !selectedStartDate) {
       ToastAndroid.show("Please select date and time", ToastAndroid.SHORT);
       return;
     }
-  
+
     try {
-      // Check if a booking exists for the current user ID
       const bookingSnapshot = await firestore()
         .collection("serviceBooking")
         .doc(userId)
         .get();
-  
+
       if (bookingSnapshot.exists) {
-        // If a booking exists, update the existing document
-        await firestore().collection("serviceBooking").doc(userId).update({
-          userName,
-          userId,
-          serviceItems: firestore.FieldValue.arrayUnion(...separatedData), // Append new service items
-          timestamp: firestore.FieldValue.serverTimestamp(),
-        });
-  
+        await firestore()
+          .collection("serviceBooking")
+          .doc(userId)
+          .update({
+            userName,
+            userId,
+            serviceItems: firestore.FieldValue.arrayUnion(...separatedData),
+            timestamp: firestore.FieldValue.serverTimestamp(),
+          });
+
         ToastAndroid.show("Service updated successfully!", ToastAndroid.SHORT);
       } else {
-        // If no booking exists, create a new document
         await firestore().collection("serviceBooking").doc(userId).set({
           userName,
           userId,
           serviceItems: separatedData,
           timestamp: firestore.FieldValue.serverTimestamp(),
         });
-  
+
         ToastAndroid.show("Service added successfully!", ToastAndroid.SHORT);
       }
-  
+
       navigation.navigate("BookedSucesssfullyScreen", {
         status: "success",
       });
@@ -125,76 +125,6 @@ const BookingScreen = ({ navigation, route }) => {
       });
     }
   };
-  
-  // const handleProced = async () => {
-  //   const userName = auth().currentUser.displayName;
-  //   const userId = auth().currentUser.uid;
-  //   const data = route.params.cartItems;
-  //   const separatedData = data.map((item) => ({
-  //     category: {
-  //       id: item.serviceCategory.CategoryId,
-  //       name: item.serviceCategory.CategoryName,
-  //     },
-  //     service: {
-  //       id: item.id,
-  //       name: item.serviceName,
-  //       description: item.serviceDetails,
-  //       price: item.servicePrice,
-  //       quantity: item.quantity,
-  //       totalAmount: route.params.totalPrice,
-  //       status: "Pending",
-  //       seletedTime: seletedTime,
-  //       selectedStartDate: selectedStartDate,
-  //       SuggestionNote: SuggestionNote || "",
-  //     },
-  //   }));
-
-  //   if (!seletedTime || !selectedStartDate) {
-  //     ToastAndroid.show("Please select date and time", ToastAndroid.SHORT);
-  //     return;
-  //   }
-
-  //   try {
-  //     // Check if a booking exists for the current user ID
-  //     const bookingSnapshot = await firestore()
-  //       .collection("serviceBooking")
-  //       .doc(userId)
-  //       .get();
-
-  //     if (bookingSnapshot.exists) {
-  //       // If a booking exists, update the existing document
-  //       await firestore().collection("serviceBooking").doc(userId).update({
-  //         userName,
-  //         userId,
-  //         serviceItems: separatedData,
-  //         timestamp: firestore.FieldValue.serverTimestamp(),
-  //       });
-
-  //       ToastAndroid.show("Service updated successfully!", ToastAndroid.SHORT);
-  //     } else {
-  //       // If no booking exists, create a new document
-  //       await firestore().collection("serviceBooking").doc(userId).set({
-  //         userName,
-  //         userId,
-  //         serviceItems: separatedData,
-  //         timestamp: firestore.FieldValue.serverTimestamp(),
-  //       });
-
-  //       ToastAndroid.show("Service added successfully!", ToastAndroid.SHORT);
-  //     }
-
-  //     navigation.navigate("BookedSucesssfullyScreen", {
-  //       status: "success",
-  //     });
-  //   } catch (error) {
-  //     console.error("Error adding/updating service: ", error);
-  //     navigation.navigate("BookedSucesssfullyScreen", {
-  //       status: "failed",
-  //     });
-  //   }
-  // };
-
-  
   //cancel booking
   const cancelBooking = async () => {
     try {
@@ -238,7 +168,7 @@ const BookingScreen = ({ navigation, route }) => {
               style={styles.changeBtnView}
               onPress={() => {
                 Alert.alert("Chnaged");
-                // navigation.navigate("AddressScreen");
+                // navigation.navigate("AddressListScreen");
               }}
             >
               <Text style={styles.chnageText}> CHANGE</Text>
