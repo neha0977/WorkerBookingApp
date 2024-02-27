@@ -274,7 +274,7 @@ export const getUserData = async (userId, navigation) => {
       }
     });
     //  console.log("snapshot", snapshot);
-    //return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   } catch (error) {
     console.error("Error fetching appointments:", error);
     throw error;

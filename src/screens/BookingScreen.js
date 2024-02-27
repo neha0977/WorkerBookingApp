@@ -26,10 +26,28 @@ const BookingScreen = ({ navigation, route }) => {
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [bookingStatus, setBookingStatus] = useState("Pending");
   const [bookingId, setBookingId] = useState(null);
+  const [userAdd, setuserAdd] = useState("");
   useEffect(() => {
     console.log(route.params.cartItems, "data");
     getTime();
-  }, []);
+    getusers();
+  }, [navigation]);
+  const getusers = async () => {
+    const Userid = auth().currentUser.uid;
+    try {
+      const snapshot = await firestore()
+        .collection("users")
+        .where("userId", "==", Userid)
+        .get();
+
+      console.log(snapshot._docs[0]._data, "snapshot");
+      setuserAdd(snapshot._docs[0]._data);
+      console.log(userAdd, "nee");
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      throw error;
+    }
+  };
 
   const onDateChange = (date) => {
     const formattedDate = moment(date).format("DD-MM-YYYY");
@@ -57,11 +75,17 @@ const BookingScreen = ({ navigation, route }) => {
     }
     setTimeList(timeList);
   };
-
   const handleProced = async () => {
     const userName = auth().currentUser.displayName;
     const userId = auth().currentUser.uid;
     const data = route.params.cartItems;
+
+    // Check if data is an array before using map()
+    if (!Array.isArray(data)) {
+      console.error("Data is not an array:", data);
+      return;
+    }
+
     const separatedData = data.map((item) => ({
       category: {
         id: item.serviceCategory.CategoryId,
@@ -125,6 +149,74 @@ const BookingScreen = ({ navigation, route }) => {
       });
     }
   };
+
+  // const handleProced = async () => {
+  //   const userName = auth().currentUser.displayName;
+  //   const userId = auth().currentUser.uid;
+  //   const data = route.params.cartItems;
+  //   const separatedData = data.map((item) => ({
+  //     category: {
+  //       id: item.serviceCategory.CategoryId,
+  //       name: item.serviceCategory.CategoryName,
+  //     },
+  //     service: {
+  //       id: item.id,
+  //       name: item.serviceName,
+  //       description: item.serviceDetails,
+  //       price: item.servicePrice,
+  //       quantity: item.quantity,
+  //       totalAmount: route.params.totalPrice,
+  //       status: "Pending",
+  //       seletedTime: seletedTime,
+  //       selectedStartDate: selectedStartDate,
+  //       SuggestionNote: SuggestionNote || "",
+  //     },
+  //   }));
+
+  //   if (!seletedTime || !selectedStartDate) {
+  //     ToastAndroid.show("Please select date and time", ToastAndroid.SHORT);
+  //     return;
+  //   }
+
+  //   try {
+  //     const bookingSnapshot = await firestore()
+  //       .collection("serviceBooking")
+  //       .doc(userId)
+  //       .get();
+
+  //     if (bookingSnapshot.exists) {
+  //       await firestore()
+  //         .collection("serviceBooking")
+  //         .doc(userId)
+  //         .update({
+  //           userName,
+  //           userId,
+  //           serviceItems: firestore.FieldValue.arrayUnion(...separatedData),
+  //           timestamp: firestore.FieldValue.serverTimestamp(),
+  //         });
+
+  //       ToastAndroid.show("Service updated successfully!", ToastAndroid.SHORT);
+  //     } else {
+  //       await firestore().collection("serviceBooking").doc(userId).set({
+  //         userName,
+  //         userId,
+  //         serviceItems: separatedData,
+  //         timestamp: firestore.FieldValue.serverTimestamp(),
+  //       });
+
+  //       ToastAndroid.show("Service added successfully!", ToastAndroid.SHORT);
+  //     }
+
+  //     navigation.navigate("BookedSucesssfullyScreen", {
+  //       status: "success",
+  //     });
+  //   } catch (error) {
+  //     console.error("Error adding/updating service: ", error);
+  //     navigation.navigate("BookedSucesssfullyScreen", {
+  //       status: "failed",
+  //     });
+  //   }
+  // };
   //cancel booking
   const cancelBooking = async () => {
     try {
@@ -167,16 +259,25 @@ const BookingScreen = ({ navigation, route }) => {
             <TouchableOpacity
               style={styles.changeBtnView}
               onPress={() => {
-                Alert.alert("Chnaged");
-                // navigation.navigate("AddressListScreen");
+                //Alert.alert("Chnaged");
+                navigation.navigate("AddressListScreen");
               }}
             >
               <Text style={styles.chnageText}> CHANGE</Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.addressText}>
+          {/* <Text style={styles.addressText}>
             J-38, 3rd floor, Noida sector 63, Uttar Pradesh, India{" "}
-          </Text>
+          </Text> */}
+          {route.params.selectedAddress === undefined ? (
+            <Text style={styles.addressText}>{userAdd.fullAddress}</Text>
+          ) : (
+            <Text style={styles.addressText}>
+              {route.params.selectedAddress.area},{" "}
+              {route.params.selectedAddress.city},{" "}
+              {route.params.selectedAddress.pin}
+            </Text>
+          )}
         </View>
         <View style={styles.Line} />
         {/* calender sectioon */}

@@ -10,28 +10,39 @@ import {
 import React, { useState, useEffect } from "react";
 import CommonHeader from "../components/common/CommonHeader";
 import { COLOR } from "../utils/commonstyles/Color";
-import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 const AddressListScreen = ({ navigation, route }) => {
   const [addresses, setAddresses] = useState([]);
+  const [seletedAddress, setSeletedAddress] = useState();
   useEffect(() => {
-    getAllAddress();
-  }, [navigation]);
+    const unsubscribe = firestore()
+      .collection("addresses")
+      .onSnapshot((snapshot) => {
+        const addressesData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setAddresses(addressesData[0].addresses);
+        console.log("addressesData", addressesData);
+      });
 
-  const getAllAddress = async () => {
-    const Userid = auth().currentUser.uid;
-    try {
-      const snapshot = await firestore()
-        .collection("addresses")
-        .where("userId", "==", Userid)
-        .get();
-      setAddresses(snapshot._docs);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-      throw error;
+    return () => unsubscribe();
+  }, []);
+
+  const handleAddNewAddress = () => {
+    navigation.navigate("AddressScreen");
+  };
+  const handleContinue = () => {
+    if (seletedAddress) {
+      navigation.navigate("BookingScreen", {
+        selectedAddress: seletedAddress,
+      });
+    } else {
+      // Show an error message or handle the case where no address is selected
     }
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <CommonHeader title={"Address List"} />
@@ -40,38 +51,61 @@ const AddressListScreen = ({ navigation, route }) => {
           data={addresses}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => {
-            console.log(item);
+            console.log(item, "item");
             return (
-              <View style={styles.listItem}>
+              <TouchableOpacity
+                style={
+                  seletedAddress === item ? styles.listSelItem : styles.listItem
+                }
+                onPress={() => {
+                  setSeletedAddress(item);
+                }}
+              >
                 <View style={styles.ListItemMain}>
-                  <View style={styles.iconView}>
+                  <View
+                    style={
+                      seletedAddress === item
+                        ? styles.iconSelView
+                        : styles.iconView
+                    }
+                  >
                     <MaterialCommunityIcons
                       name={
                         item.addressType == "home" ? "home" : "office-building"
                       }
-                      style={styles.iconStyle}
+                      style={
+                        seletedAddress === item
+                          ? styles.iconSelStyle
+                          : styles.iconStyle
+                      }
                     />
                   </View>
                   <View style={styles.textView}>
                     <Text style={styles.itemTexts}>
-                      {item._data.fullAddress.houseNumber},{" "}
-                      {item._data.fullAddress.buildingName},{" "}
-                      {item._data.fullAddress.area},{" "}
-                      {item._data.fullAddress.city}
+                      {item.houseNumber}, {item.buildingName}, {item.area},{" "}
+                      {item.city}
                     </Text>
                   </View>
                 </View>
-              </View>
+              </TouchableOpacity>
             );
           }}
         />
       </View>
       <TouchableOpacity
         style={styles.addAddressBtn}
-        onPress={() => navigation.navigate("AddressScreen")}
+        onPress={() => handleAddNewAddress()}
       >
         <Text style={styles.addAddressText}>Add new address</Text>
       </TouchableOpacity>
+      <View style={styles.bottom}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => handleContinue()}
+        >
+          <Text style={styles.buttonText}>Continue</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -89,6 +123,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.6,
     marginHorizontal: 10,
     padding: 5,
+    marginTop: 15,
   },
   addAddressText: {
     color: COLOR.black,
@@ -110,6 +145,20 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 15,
   },
+  listSelItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 15,
+    margin: 10,
+    backgroundColor: COLOR.white,
+    borderColor: "#e3e3e3",
+    elevation: 5,
+    alignItems: "center",
+    borderRadius: 10,
+    marginTop: 15,
+    borderColor: COLOR.New_button,
+    borderWidth: 1,
+  },
   ListItemMain: {
     flexDirection: "row",
     width: "100%",
@@ -117,6 +166,14 @@ const styles = StyleSheet.create({
   iconView: {
     borderRadius: 99,
     backgroundColor: "#e3e3e3",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 50,
+    width: 50,
+  },
+  iconSelView: {
+    borderRadius: 99,
+    backgroundColor: COLOR.New_button,
     alignItems: "center",
     justifyContent: "center",
     height: 50,
@@ -134,6 +191,30 @@ const styles = StyleSheet.create({
   },
   iconStyle: {
     color: COLOR.New_Primary,
-    fontSize: 22,
+    fontSize: 25,
+  },
+  iconSelStyle: {
+    color: COLOR.white,
+    fontSize: 25,
+  },
+  bottom: {
+    flex: 1,
+    justifyContent: "flex-end",
+  },
+  button: {
+    width: "100%",
+    height: 50,
+    backgroundColor: COLOR.New_button,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  buttonText: {
+    fontSize: 18,
+    color: "white",
+    fontWeight: "500",
+  },
+  text: {
+    margin: 20,
+    color: "black",
   },
 });

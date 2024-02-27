@@ -192,29 +192,42 @@ const ServiceDetailScreen = ({ navigation, route }) => {
 
           }}
         >
-          {/* {cartItems.some((cartItem) => cartItem.id === item.id) ? (
-          <View>
-            <Button title="-" onPress={() => decreaseQuantity(item.id)} />
-            <Text>
-              {cartItems.find((cartItem) => cartItem.id === item.id).quantity}
-            </Text>
-            <Button title="+" onPress={() => increaseQuantity(item.id)} />
-          </View>
-        ) : (
-          <Button title="add to cart" onPress={() => addToCart(item.id)} />
-        )} */}
-          {/* { */}
-          {cartItems.find((ci) => ci.id === item.id) ? (
-            <QuantityAdjuster
-              item={item}
-              onIncrease={handleIncreaseQuantity}
-              onDecrease={handleDecreaseQuantity}
-            />
+          {existingServiceIndex !== -1 ? (
+            <View style={styles.quantityContainer}>
+              <TouchableOpacity onPress={() => handleRemoveService(item)}>
+                <Text style={{color:COLOR.black,fontWeight:'500',fontSize:20}}>-</Text>
+              </TouchableOpacity>
+              <Text style={styles.quantityText}>
+                {cartItems[existingServiceIndex].quantity}
+              </Text>
+              <TouchableOpacity onPress={() => handleAddService(item)}>
+                <Text style={{color:COLOR.black,fontWeight:'500',fontSize:20}}>+</Text>
+              </TouchableOpacity>
+            </View>
           ) : (
-            <TouchableOpacity onPress={() => handleAddService(item)}>
-              <Text>ADD</Text>
+            <TouchableOpacity
+              style={{
+                padding: 2,
+                borderRadius: 4,
+                borderColor: COLOR.New_Primary,
+                borderWidth: 1,
+              }}
+              onPress={() => handleAddService(item)}
+            >
+              <Text
+                style={{
+                  color: COLOR.New_Primary,
+                  fontSize: 12,
+                  alignSelf: "center",
+                  paddingHorizontal: 5,
+                  fontWeight: "500",
+                }}
+              >
+                ADD
+              </Text>
             </TouchableOpacity>
           )}
+
           <Text
             style={{
               fontSize: 15,

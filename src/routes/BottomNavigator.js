@@ -6,6 +6,7 @@ import SearchScreen from "../screens/SearchScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import { COLOR } from "../utils/commonstyles/Color";
 import HomeScreen from "../screens/HomeScreen";
+import BookedHistory from "../screens/BookedHistory";
 const Tab = createMaterialBottomTabNavigator();
 const BottomNavigator = () => {
   return (
@@ -26,6 +27,21 @@ const BottomNavigator = () => {
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="home"
+              color={COLOR.New_button}
+              size={26}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        //   tabBarColor="blue"
+        name="BookedHistory"
+        component={BookedHistory}
+        options={{
+          tabBarLabel: "Booked",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name="calendar-range"
               color={COLOR.New_button}
               size={26}
             />

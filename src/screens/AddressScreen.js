@@ -65,7 +65,7 @@ const AddressScreen = ({ navigation }) => {
     }
 
     if (isValid) {
-      saveAddress();
+      handleProced();
     }
   };
 
@@ -74,7 +74,7 @@ const AddressScreen = ({ navigation }) => {
     setLoading(true);
     const userName = auth().currentUser.displayName;
     const userId = auth().currentUser.uid;
-    
+
     try {
       await firestore().collection("addresses").doc(userId).set({
         userName,
@@ -84,6 +84,7 @@ const AddressScreen = ({ navigation }) => {
       });
       setLoading(false);
       ToastAndroid.show("Address Save successfully!", ToastAndroid.SHORT);
+      navigation.goBack();
       setFullAddress({
         city: "",
         area: "",
@@ -94,6 +95,55 @@ const AddressScreen = ({ navigation }) => {
     } catch (error) {
       setLoading(false);
       console.log(error);
+    }
+  };
+  const handleProced = async () => {
+    const userName = auth().currentUser.displayName;
+    const userId = auth().currentUser.uid;
+
+    if (!addressType) {
+      ToastAndroid.show("Please select address type", ToastAndroid.SHORT);
+      return;
+    }
+
+    try {
+      const addressData = {
+        ...fullAddress,
+        addressType: addressType,
+      };
+
+      const addressSnapshot = await firestore()
+        .collection("addresses")
+        .doc(userId)
+        .get();
+
+      if (addressSnapshot.exists) {
+        await firestore()
+          .collection("addresses")
+          .doc(userId)
+          .update({
+            userName,
+            userId,
+            addresses: firestore.FieldValue.arrayUnion(addressData),
+            timestamp: firestore.FieldValue.serverTimestamp(),
+          });
+        ToastAndroid.show("Address updated successfully!", ToastAndroid.SHORT);
+      } else {
+        await firestore()
+          .collection("addresses")
+          .doc(userId)
+          .set({
+            userName,
+            userId,
+            addresses: [addressData],
+            timestamp: firestore.FieldValue.serverTimestamp(),
+          });
+        ToastAndroid.show("Address added successfully!", ToastAndroid.SHORT);
+      }
+
+      navigation.goBack();
+    } catch (error) {
+      console.error("Error adding/updating address: ", error);
     }
   };
 
@@ -160,7 +210,7 @@ const AddressScreen = ({ navigation }) => {
           placeholder="Enter pin "
           error={errors.pin}
         />
-        <View style={{ flexDirection: "row", justifyContent:'space-evenly' }}>
+        <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
           <TouchableOpacity
             onPress={() => setAddressType("home")}
             style={{ flexDirection: "row" }}
@@ -207,7 +257,6 @@ const AddressScreen = ({ navigation }) => {
             >
               Office
             </Text>
-            
           </TouchableOpacity>
         </View>
         {/* common button */}
