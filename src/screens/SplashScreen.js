@@ -26,7 +26,7 @@ const SplashScreen = () => {
                 setLoading(false);
                 navigation.reset({
                   index: 0,
-                  routes: [{ name: "ProviderDashboard" }],
+                  routes: [{ name: "HomeProvider" }],
                 });
                 //navigation.navigate("ProviderDashboard");
               } else {
@@ -59,7 +59,9 @@ const SplashScreen = () => {
   }, []);
 
   const navigateToUserTypeScreen = () => {
-    //.navigate("UserTypeScreen");
+    //navigate("UserTypeScreen"); 
+    // 08 AM - 09:00 PM 
+    //
     navigation.reset({
       index: 0,
       routes: [{ name: "UserTypeScreen" }],

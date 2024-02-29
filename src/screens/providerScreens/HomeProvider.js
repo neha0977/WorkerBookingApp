@@ -1,177 +1,3 @@
-// import {
-//   FlatList,
-//   KeyboardAvoidingView,
-//   SafeAreaView,
-//   StyleSheet,
-//   Text,
-//   TextInput,
-//   TouchableOpacity,
-//   View,
-//   Alert
-// } from "react-native";
-// import React, { useEffect, useState } from "react";
-// import CommonHeader from "../../components/common/CommonHeader";
-// import { COLOR } from "../../utils/commonstyles/Color";
-// import { signOut } from "../../utils/databaseHelper/FireBase";
-// const HomeProvider = ({navigation}) => {
-//   const [timeList, setTimeList] = useState([]);
-//   const [seletedTime, setSeletedTime] = useState();
-//   const [note, setNote] = useState("");
-//   useEffect(() => {
-//     getTime();
-//   }, []);
-
-//   const getTime = () => {
-//     const timeList = [];
-//     for (let i = 8; i <= 12; i++) {
-//       timeList.push({
-//         time: i + ":00 AM",
-//       });
-//       timeList.push({
-//         time: i + ":30 AM",
-//       });
-//     }
-//     for (let i = 1; i <= 7; i++) {
-//       timeList.push({
-//         time: i + ":00 PM", 
-//       });
-//       timeList.push({
-//         time: i + ":30 PM",
-//       });
-//     }
-//     setTimeList(timeList);
-//   };
-//   const signOutUser = () => {
-//     Alert.alert(
-//       "Logout",
-//       "are you sure you want to logout?",
-//       [
-//         {
-//           text: "cancel",
-//           onPress: () => console.log("Cancel Pressed"),
-//           style: "cancel",
-//         },
-//         {
-//           text: "yes",
-//           onPress: () => {
-//             signOut(navigation);
-//           },
-//         },
-//       ],
-//       { cancelable: false }
-//     );
-//   };
-//   return (
-//     <SafeAreaView>
-//       <CommonHeader title={"Provider Home"} />
-//       <KeyboardAvoidingView>
-//         <View>
-//           <FlatList
-//             data={timeList}
-//             horizontal={true}
-//             showsHorizontalScrollIndicator={false}
-//             renderItem={({ item, index }) => (
-//               <TouchableOpacity
-//                 style={{ marginRight: 10 }}
-//                 onPress={() => {
-//                   setSeletedTime(item.time);
-//                 }}
-//               >
-//                 <Text
-//                   style={[
-//                     seletedTime == item.time
-//                       ? styles.selectedTime
-//                       : styles.unSelectedtime,
-//                   ]}
-//                 >
-//                   {" "}
-//                   {item.time}
-//                 </Text>
-//               </TouchableOpacity>
-//             )}
-//           />
-//         </View>
-//         {/* note section */}
-//         <View style={{ paddingTop: 20 }}>
-//           <Text> Any Suggestion Note</Text>
-//           <TextInput
-//             placeholder="Note"
-//             style={styles.noteTextArea}
-//             multiline={true}
-//             numberOfLines={4}
-//             onChange={(note) => setNote(note)}
-//           />
-//         </View>
-//         {/* confirmaton button */}
-//         <TouchableOpacity style={{ marginTop: 15 }}>
-//           <Text style={styles.confirmButton}>Confirm & Book</Text>
-//         </TouchableOpacity>
-//         <TouchableOpacity
-//             style={{
-//               flexDirection: "row",
-//               alignItems: "center",
-//               justifyContent: "space-between",
-//             }}
-//             onPress={() => signOutUser()}
-//           >
-//             <Text
-//               style={{
-//                 color: COLOR.New_Primary,
-//                 fontSize: 14,
-//                // marginLeft: SIZES.base,
-//                 fontWeight: 500,
-//               }}
-//             >
-//               Log Out
-//             </Text>
-       
-//           </TouchableOpacity>
-
-//       </KeyboardAvoidingView>
-//     </SafeAreaView>
-//   );
-// };
-
-// export default HomeProvider;
-
-// const styles = StyleSheet.create({
-//   selectedTime: {
-//     padding: 10,
-//     borderWidth: 1,
-//     borderColor: COLOR.New_button,
-//     borderRadius: 99,
-//     paddingHorizontal: 18,
-//     color: COLOR.white,
-//     backgroundColor: COLOR.New_button,
-//   },
-//   unSelectedtime: {
-//     padding: 10,
-//     borderWidth: 1,
-//     borderColor: COLOR.New_button,
-//     borderRadius: 99,
-//     paddingHorizontal: 18,
-//     color: COLOR.black,
-//   },
-//   noteTextArea: {
-//     borderWidth: 1,
-//     borderRadius: 15,
-//     textAlignVertical: "top",
-//     padding: 20,
-//     fontSize: 16,
-//     borderColor: COLOR.Primary_Color,
-//   },
-//   confirmButton: {
-//     textAlign: "center",
-//     fontSize: 17,
-//     backgroundColor: COLOR.Primary_Color,
-//     color: COLOR.white,
-//     padding: 13,
-//     borderRadius: 99,
-//     elevation: 2,
-//   },
-// });
-
-
 import {
   FlatList,
   SafeAreaView,
@@ -195,6 +21,10 @@ import auth from "@react-native-firebase/auth";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
 const HomeProvider = ({ navigation, route }) => {
+  // const [selectedDates, setSelectedDates] = useState([]);
+  const [selectedDates, setSelectedDates] = useState([
+    moment().format("DD-MM-YYYY") // Format today's date and add it to the initial array
+  ]);
   const [timeList, setTimeList] = useState([]);
   const [seletedTime, setSeletedTime] = useState();
   const [SuggestionNote, setSuggestionNote] = useState("");
@@ -225,10 +55,26 @@ const HomeProvider = ({ navigation, route }) => {
       throw error;
     }
   };
+  // const onDateChange = (date) => {
+  //   const formattedDate = moment(date).format("DD-MM-YYYY");
+  //   console.log(formattedDate);
+  //   setSelectedStartDate(formattedDate);
+  // };
+
   const onDateChange = (date) => {
-    const formattedDate = moment(date).format("DD-MM-YYYY");
-    console.log(formattedDate);
-    setSelectedStartDate(formattedDate);
+    const formattedDate = moment.utc(date).format("DD-MM-YYYY");
+
+    // Check if the selected date is already in the selectedDates array
+    const index = selectedDates.indexOf(formattedDate);
+    if (index > -1) {
+      // If the date is already selected, remove it from the array
+      setSelectedDates(selectedDates.filter(d => d !== formattedDate));
+      console.log(selectedDates,"IFF CONDITION")
+    } else {
+      // If the date is not selected, add it to the array
+      setSelectedDates([...selectedDates, formattedDate]);
+      console.log(selectedDates,"ELSE CONDITION")
+    }
   };
 
   const getTime = () => {
@@ -252,73 +98,74 @@ const HomeProvider = ({ navigation, route }) => {
     const userName = auth().currentUser.displayName;
     const userId = auth().currentUser.uid;
     const data = route.params.cartItems;
-    const separatedData = data.map((item) => ({
-      category: {
-        id: item.serviceCategory.CategoryId,
-        name: item.serviceCategory.CategoryName,
-      },
-      service: {
-        id: item.id,
-        name: item.serviceName,
-        description: item.serviceDetails,
-        price: item.servicePrice,
-        quantity: item.quantity,
-        totalAmount: route.params.totalPrice,
-        status: "Pending",
-        seletedTime: seletedTime,
-        selectedStartDate: selectedStartDate,
-        SuggestionNote: SuggestionNote || "",
-      },
-    }));
+    // const separatedData = data.map((item) => ({
+    //   category: {
+    //     id: item.serviceCategory.CategoryId,
+    //     name: item.serviceCategory.CategoryName,
+    //   },
+    //   service: {
+    //     id: item.id,
+    //     name: item.serviceName,
+    //     description: item.serviceDetails,
+    //     price: item.servicePrice,
+    //     quantity: item.quantity,
+    //     totalAmount: route.params.totalPrice,
+    //     status: "Pending",
+    //     seletedTime: seletedTime,
+    //     selectedStartDate: selectedStartDate,
+    //     SuggestionNote: SuggestionNote || "",
+    //   },
+    // }));
+    console.log(seletedTime,"FFFGHH")
 
-    if (!seletedTime || !selectedStartDate) {
+    if (!seletedTime ) {
       ToastAndroid.show("Please select date and time", ToastAndroid.SHORT);
       return;
     }
 
-    try {
-      const bookingSnapshot = await firestore()
-        .collection("serviceBooking")
-        .doc(userId)
-        .get();
+    // try {
+    //   const bookingSnapshot = await firestore()
+    //     .collection("serviceBooking")
+    //     .doc(userId)
+    //     .get();
 
-      if (bookingSnapshot.exists) {
-        await firestore()
-          .collection("serviceBooking")
-          .doc(userId)
-          .update({
-            userName,
-            userId,
-            address: userAdd ? userAdd[0] : route.params.selectedAddress,
-            serviceItems: firestore.FieldValue.arrayUnion(...separatedData),
-            timestamp: firestore.FieldValue.serverTimestamp(),
-          });
+    //   if (bookingSnapshot.exists) {
+    //     await firestore()
+    //       .collection("serviceBooking")
+    //       .doc(userId)
+    //       .update({
+    //         userName,
+    //         userId,
+    //         address: userAdd ? userAdd[0] : route.params.selectedAddress,
+    //         serviceItems: firestore.FieldValue.arrayUnion(...separatedData),
+    //         timestamp: firestore.FieldValue.serverTimestamp(),
+    //       });
 
-        ToastAndroid.show("Service updated successfully!", ToastAndroid.SHORT);
-      } else {
-        await firestore()
-          .collection("serviceBooking")
-          .doc(userId)
-          .set({
-            userName,
-            userId,
-            address: userAdd ? userAdd[0] : route.params.selectedAddress,
-            serviceItems: separatedData,
-            timestamp: firestore.FieldValue.serverTimestamp(),
-          });
+    //     ToastAndroid.show("Service updated successfully!", ToastAndroid.SHORT);
+    //   } else {
+    //     await firestore()
+    //       .collection("serviceBooking")
+    //       .doc(userId)
+    //       .set({
+    //         userName,
+    //         userId,
+    //         address: userAdd ? userAdd[0] : route.params.selectedAddress,
+    //         serviceItems: separatedData,
+    //         timestamp: firestore.FieldValue.serverTimestamp(),
+    //       });
 
-        ToastAndroid.show("Service added successfully!", ToastAndroid.SHORT);
-      }
+    //     ToastAndroid.show("Service added successfully!", ToastAndroid.SHORT);
+    //   }
 
-      navigation.navigate("BookedSucesssfullyScreen", {
-        status: "success",
-      });
-    } catch (error) {
-      console.error("Error adding/updating service: ", error);
-      navigation.navigate("BookedSucesssfullyScreen", {
-        status: "failed",
-      });
-    }
+    //   navigation.navigate("BookedSucesssfullyScreen", {
+    //     status: "success",
+    //   });
+    // } catch (error) {
+    //   console.error("Error adding/updating service: ", error);
+    //   navigation.navigate("BookedSucesssfullyScreen", {
+    //     status: "failed",
+    //   });
+    // }
   };
   //cancel booking
   const cancelBooking = async () => {
@@ -346,48 +193,11 @@ const HomeProvider = ({ navigation, route }) => {
   };
   return (
     <SafeAreaView style={styles.conatiner}>
-      <CommonHeader title={"Booking"} />
+      <CommonHeader title={"Choose time & date slot"} />
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* address section */}
-        <View style={{ margin: 10 }}>
-          <View style={styles.addressView}>
-            <View style={{ flexDirection: "row" }}>
-              <MaterialCommunityIcons
-                name="map-marker"
-                color={"black"}
-                size={20}
-              />
-              <Text style={styles.serviceAtText}>Service at</Text>
-            </View>
-            <TouchableOpacity
-              style={styles.changeBtnView}
-              onPress={() => {
-                Alert.alert("Chnaged");
-                //navigation.navigate("AddressListScreen");
-              }}
-            >
-              <Text style={styles.chnageText}> CHANGE</Text>
-            </TouchableOpacity>
-          </View>
-          {/* <Text style={styles.addressText}>
-            J-38, 3rd floor, Noida sector 63, Uttar Pradesh, India{" "}
-          </Text> */}
-          {userAdd && (
-            <Text style={styles.addressText}>
-              {/* {userAdd[0].area}, {userAdd[0].city}, {userAdd[0].pin} */}
-              {userAdd.fullAddress}
-            </Text>
-          )}
-          {route.params.selectedAddress !== undefined && (
-            <Text style={styles.addressText}>
-              {route.params.selectedAddress.area},{" "}
-              {route.params.selectedAddress.city},{" "}
-              {route.params.selectedAddress.pin}
-            </Text>
-          )}
-        </View>
-        <View style={styles.Line} />
+       
         {/* calender sectioon */}
+        <Text style={styles.heading}> Select date</Text>
         <View style={styles.calenderContainer}>
           <CalendarPicker
             onDateChange={onDateChange}
@@ -397,10 +207,10 @@ const HomeProvider = ({ navigation, route }) => {
             todayBackgroundColor={COLOR.New_button}
             todayTextStyle={{ color: COLOR.white }}
             selectedDayTextColor={COLOR.white}
-            selectedDayColor={COLOR.New_button}
+            selectedDayColor={COLOR.New_Primary}
           />
         </View>
-        <Text style={styles.heading}> Select Date</Text>
+        <Text style={styles.heading}> Select time</Text>
         <KeyboardAvoidingView>
           {/* date */}
           <FlatList
@@ -464,7 +274,7 @@ const HomeProvider = ({ navigation, route }) => {
             style={{ marginTop: 15, marginBottom: 20 }}
             onPress={() => handleProced()}
           >
-            <Text style={styles.confirmButton}>Confirm & Book</Text>
+            <Text style={styles.confirmButton}>Confirm</Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>
       </ScrollView>
@@ -474,13 +284,13 @@ const HomeProvider = ({ navigation, route }) => {
 
 export default HomeProvider;
 const styles = StyleSheet.create({
-  conatiner: { backgroundColor: COLOR.white, flex: 1 },
+  conatiner: { backgroundColor: COLOR.New_Primary, flex: 1 },
   addressView: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
-  serviceAtText: { fontWeight: "bold", color: COLOR.black, fontSize: 18 },
+  serviceAtText: { fontWeight: "bold", color: COLOR.New_button, fontSize: 18 },
   changeBtnView: {
     padding: 2,
     borderRadius: 4,
@@ -497,7 +307,7 @@ const styles = StyleSheet.create({
   },
   addressText: {
     maxWidth: "50%",
-    color: COLOR.black,
+    color: COLOR.New_button,
     marginTop: 5,
     lineHeight: 25,
     marginStart: 5,
@@ -508,7 +318,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 15,
-    color: COLOR.black,
+    color: COLOR.New_button,
     fontWeight: "500",
     margin: 10,
   },
@@ -528,7 +338,7 @@ const styles = StyleSheet.create({
     borderColor: COLOR.New_button,
     borderRadius: 99,
     paddingHorizontal: 15,
-    color: COLOR.black,
+    color: COLOR.New_button,
     marginStart: 15,
   },
   noteTextArea: {
@@ -545,8 +355,8 @@ const styles = StyleSheet.create({
     fontSize: 17,
     backgroundColor: COLOR.New_button,
     color: COLOR.white,
-    padding: 13,
-    borderRadius: 10,
+    padding: 11,
+    borderRadius: 9,
     elevation: 2,
     marginHorizontal: 20,
   },
