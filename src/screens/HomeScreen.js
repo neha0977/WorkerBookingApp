@@ -78,8 +78,6 @@ const HomeScreen = ({ navigation }) => {
     return () => clearInterval(intervalId);
   }, [currentIndex, imageList.length]);
 
-  
-
   useEffect(() => {
     // FechCategory();
     getCategories();
@@ -127,12 +125,7 @@ const HomeScreen = ({ navigation }) => {
 
   const hideBottomSheet = () => {
     setIsBottomSheetVisible(false);
-    // setSelectedItem(null);
-    // setserviceName("");
-    // setserviceCat("");
-    // setservicePrice("");
-    // setserviceDuration("");
-    // setServiceDetails("");
+    
   };
   const getRandomColor = () => {
     const letters = "0123456789ABCDEF";
@@ -230,8 +223,7 @@ const HomeScreen = ({ navigation }) => {
                   }}
                   onPress={() => {
                     showBottomSheet();
-                  }}
-                >
+                  }} >
                   <Image
                     source={
                       item._data.CategoryImage
