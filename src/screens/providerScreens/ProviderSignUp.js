@@ -19,7 +19,6 @@ import DropDownPicker from "react-native-dropdown-picker";
 import firestore from "@react-native-firebase/firestore";
 import { signUp } from "../../utils/databaseHelper/FireBase";
 const ProviderSignUp = ({ route }) => {
-  console.log("route.params.type", route.params.type);
   const navigation = useNavigation();
   const [inputs, setInputs] = React.useState({
     email: "",
@@ -75,6 +74,9 @@ const ProviderSignUp = ({ route }) => {
     if (!inputs.phone) {
       handleError("Please input phone number", "phone");
       isValid = false;
+    } else if (!/^[6-9]\d{9}$/.test(inputs.phone)) {
+      handleError("Please input a valid phone number", "phone");
+      isValid = false;
     }
     if (!inputs.password) {
       handleError("Please input password", "password");
@@ -100,11 +102,18 @@ const ProviderSignUp = ({ route }) => {
     }
   };
   const registerProvider = async () => {
-    const providerSignUpResult = await signUp(inputs, "Provider", value, items);
     setLoading(true);
-    // Check the result
+    const selectedLabel = items.find((item) => item.value === value)?.label;
+    console.log(selectedLabel, "nnnn");
+    const providerSignUpResult = await signUp(
+      inputs,
+      "Provider",
+      value,
+      selectedLabel
+    );
     if (providerSignUpResult.success) {
       setTimeout(() => {
+        setLoading(false);
         navigation.reset({
           index: 0,
           routes: [{ name: "SignInScreen" }],
@@ -122,7 +131,7 @@ const ProviderSignUp = ({ route }) => {
         providerSignUpResult.error
       );
     }
-    
+
     // setLoading(true);
     // setTimeout(() => {
     //   try {
@@ -180,6 +189,7 @@ const ProviderSignUp = ({ route }) => {
             label="Email"
             placeholder="Enter your email address"
             error={errors.email}
+            keyboardType={"email-address"}
           />
           <CommonTextInput
             keyboardType="numeric"
@@ -189,6 +199,7 @@ const ProviderSignUp = ({ route }) => {
             label="Phone Number"
             placeholder="Enter your phone no"
             error={errors.phone}
+            maxLength={10}
           />
           <CommonTextInput
             onChangeText={(text) => handleOnchange(text, "password")}
@@ -202,7 +213,7 @@ const ProviderSignUp = ({ route }) => {
           <CommonTextInput
             onChangeText={(text) => handleOnchange(text, "fullAddress")}
             onFocus={() => handleError(null, "fullAddress")}
-            iconName="account-outline"
+            iconName="map-marker-radius-outline"
             label="Address"
             placeholder="Enter your full address"
             error={errors.fullAddress}
@@ -275,7 +286,9 @@ const ProviderSignUp = ({ route }) => {
               Already have an account ?{" "}
             </Text>
             <Text
-              onPress={() => navigation.navigate("SignInScreen")}
+              onPress={() =>
+                navigation.navigate("SignInScreen", { type: "Provider" })
+              }
               style={[
                 STYLES.btbLogText,
                 { marginLeft: 5, color: COLOR.New_button, fontWeight: "500" },

@@ -31,6 +31,7 @@ import providerSignUp from "../screens/providerScreens/ProviderSignUp";
 import ProviderSignUp from "../screens/providerScreens/ProviderSignUp";
 import ProviderDashboard from "../screens/providerScreens/ProviderDashboard";
 import ProviderProfile from "../screens/providerScreens/ProviderProfile";
+import BookedHistory from "../screens/BookedHistory";
 
 const AppNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -162,6 +163,11 @@ const AppNavigator = () => {
           options={{ headerShows: false }}
           name="ProviderSignUp"
           component={ProviderSignUp}
+        />
+         <Stack.Screen
+          options={{ headerShows: false }}
+          name="BookedHistory"
+          component={BookedHistory}
         />
       </Stack.Navigator>
     </NavigationContainer>

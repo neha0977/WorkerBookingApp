@@ -18,6 +18,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import CalendarPicker from "react-native-calendar-picker";
 import moment from "moment";
 import auth from "@react-native-firebase/auth";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
 const BookingScreen = ({ navigation, route }) => {
   const [timeList, setTimeList] = useState([]);
@@ -26,38 +27,53 @@ const BookingScreen = ({ navigation, route }) => {
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [bookingStatus, setBookingStatus] = useState("Pending");
   const [bookingId, setBookingId] = useState(null);
-  useEffect(() => {
-    console.log(route.params.cartItems, "data");
-    getTime();
-  }, []);
+  const [userAdd, setuserAdd] = useState("");
+  const isfocuced = useIsFocused();
 
+  useEffect(() => {
+    getTime();
+    getusers();
+  }, [isfocuced]);
+  const getusers = async () => {
+    const Userid = auth().currentUser.uid;
+    try {
+      const snapshot = await firestore()
+        .collection("users")
+        .where("userId", "==", Userid)
+        .get();
+      const data = snapshot._docs;
+      data.map((data) => {
+        console.log(data._data, "adddress data");
+        setuserAdd(data._data);
+      });
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      throw error;
+    }
+  };
   const onDateChange = (date) => {
-    // Format a date
     const formattedDate = moment(date).format("DD-MM-YYYY");
     console.log(formattedDate);
     setSelectedStartDate(formattedDate);
   };
 
   const getTime = () => {
-    const timeList = [];
-    for (let i = 8; i <= 12; i++) {
-      timeList.push({
-        time: i + ":00 AM",
-      });
-      timeList.push({
-        time: i + ":30 AM",
-      });
-    }
-    for (let i = 1; i <= 7; i++) {
-      timeList.push({
-        time: i + ":00 PM",
-      });
-      timeList.push({
-        time: i + ":30 PM",
+    const currentTime = moment(); // Get current time
+    const timeSlots = [];
+
+    for (let i = 8; i <= 22; i++) {
+      const time = moment().hour(i).minute(0);
+      // Check if the time is before the current time
+      const isPastTime = time.isBefore(currentTime);
+      timeSlots.push({
+        time: time.format("hh:mm A"),
+        disabled: isPastTime, // Add a 'disabled' property
       });
     }
-    setTimeList(timeList);
+
+    setTimeList(timeSlots);
   };
+
   const handleProced = async () => {
     const userName = auth().currentUser.displayName;
     const userId = auth().currentUser.uid;
@@ -80,41 +96,46 @@ const BookingScreen = ({ navigation, route }) => {
         SuggestionNote: SuggestionNote || "",
       },
     }));
-  
+
     if (!seletedTime || !selectedStartDate) {
       ToastAndroid.show("Please select date and time", ToastAndroid.SHORT);
       return;
     }
-  
+
     try {
-      // Check if a booking exists for the current user ID
       const bookingSnapshot = await firestore()
         .collection("serviceBooking")
         .doc(userId)
         .get();
-  
+
       if (bookingSnapshot.exists) {
-        // If a booking exists, update the existing document
-        await firestore().collection("serviceBooking").doc(userId).update({
-          userName,
-          userId,
-          serviceItems: firestore.FieldValue.arrayUnion(...separatedData), // Append new service items
-          timestamp: firestore.FieldValue.serverTimestamp(),
-        });
-  
+        await firestore()
+          .collection("serviceBooking")
+          .doc(userId)
+          .update({
+            userName,
+            userId,
+            address: userAdd ? userAdd[0] : route.params.selectedAddress,
+            serviceItems: firestore.FieldValue.arrayUnion(...separatedData),
+            timestamp: firestore.FieldValue.serverTimestamp(),
+          });
+
         ToastAndroid.show("Service updated successfully!", ToastAndroid.SHORT);
       } else {
-        // If no booking exists, create a new document
-        await firestore().collection("serviceBooking").doc(userId).set({
-          userName,
-          userId,
-          serviceItems: separatedData,
-          timestamp: firestore.FieldValue.serverTimestamp(),
-        });
-  
+        await firestore()
+          .collection("serviceBooking")
+          .doc(userId)
+          .set({
+            userName,
+            userId,
+            address: userAdd ? userAdd[0] : route.params.selectedAddress,
+            serviceItems: separatedData,
+            timestamp: firestore.FieldValue.serverTimestamp(),
+          });
+
         ToastAndroid.show("Service added successfully!", ToastAndroid.SHORT);
       }
-  
+
       navigation.navigate("BookedSucesssfullyScreen", {
         status: "success",
       });
@@ -125,76 +146,6 @@ const BookingScreen = ({ navigation, route }) => {
       });
     }
   };
-  
-  // const handleProced = async () => {
-  //   const userName = auth().currentUser.displayName;
-  //   const userId = auth().currentUser.uid;
-  //   const data = route.params.cartItems;
-  //   const separatedData = data.map((item) => ({
-  //     category: {
-  //       id: item.serviceCategory.CategoryId,
-  //       name: item.serviceCategory.CategoryName,
-  //     },
-  //     service: {
-  //       id: item.id,
-  //       name: item.serviceName,
-  //       description: item.serviceDetails,
-  //       price: item.servicePrice,
-  //       quantity: item.quantity,
-  //       totalAmount: route.params.totalPrice,
-  //       status: "Pending",
-  //       seletedTime: seletedTime,
-  //       selectedStartDate: selectedStartDate,
-  //       SuggestionNote: SuggestionNote || "",
-  //     },
-  //   }));
-
-  //   if (!seletedTime || !selectedStartDate) {
-  //     ToastAndroid.show("Please select date and time", ToastAndroid.SHORT);
-  //     return;
-  //   }
-
-  //   try {
-  //     // Check if a booking exists for the current user ID
-  //     const bookingSnapshot = await firestore()
-  //       .collection("serviceBooking")
-  //       .doc(userId)
-  //       .get();
-
-  //     if (bookingSnapshot.exists) {
-  //       // If a booking exists, update the existing document
-  //       await firestore().collection("serviceBooking").doc(userId).update({
-  //         userName,
-  //         userId,
-  //         serviceItems: separatedData,
-  //         timestamp: firestore.FieldValue.serverTimestamp(),
-  //       });
-
-  //       ToastAndroid.show("Service updated successfully!", ToastAndroid.SHORT);
-  //     } else {
-  //       // If no booking exists, create a new document
-  //       await firestore().collection("serviceBooking").doc(userId).set({
-  //         userName,
-  //         userId,
-  //         serviceItems: separatedData,
-  //         timestamp: firestore.FieldValue.serverTimestamp(),
-  //       });
-
-  //       ToastAndroid.show("Service added successfully!", ToastAndroid.SHORT);
-  //     }
-
-  //     navigation.navigate("BookedSucesssfullyScreen", {
-  //       status: "success",
-  //     });
-  //   } catch (error) {
-  //     console.error("Error adding/updating service: ", error);
-  //     navigation.navigate("BookedSucesssfullyScreen", {
-  //       status: "failed",
-  //     });
-  //   }
-  // };
-
-  
   //cancel booking
   const cancelBooking = async () => {
     try {
@@ -238,15 +189,28 @@ const BookingScreen = ({ navigation, route }) => {
               style={styles.changeBtnView}
               onPress={() => {
                 Alert.alert("Chnaged");
-                // navigation.navigate("AddressScreen");
+                //navigation.navigate("AddressListScreen");
               }}
             >
               <Text style={styles.chnageText}> CHANGE</Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.addressText}>
+          {/* <Text style={styles.addressText}>
             J-38, 3rd floor, Noida sector 63, Uttar Pradesh, India{" "}
-          </Text>
+          </Text> */}
+          {userAdd && (
+            <Text style={styles.addressText}>
+              {/* {userAdd[0].area}, {userAdd[0].city}, {userAdd[0].pin} */}
+              {userAdd.fullAddress}
+            </Text>
+          )}
+          {route.params.selectedAddress !== undefined && (
+            <Text style={styles.addressText}>
+              {route.params.selectedAddress.area},{" "}
+              {route.params.selectedAddress.city},{" "}
+              {route.params.selectedAddress.pin}
+            </Text>
+          )}
         </View>
         <View style={styles.Line} />
         {/* calender sectioon */}
@@ -270,20 +234,40 @@ const BookingScreen = ({ navigation, route }) => {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             renderItem={({ item, index }) => (
+              // <TouchableOpacity
+              //   style={{ marginRight: 5 }}
+              //   onPress={() => {
+              //     setSeletedTime(item.time);
+              //   }}
+              // >
+              //   <Text
+              //     style={[
+              //       seletedTime == item.time
+              //         ? styles.selectedTime
+              //         : styles.unSelectedtime,
+              //     ]}
+              //   >
+              //     {" "}
+              //     {item.time}
+              //   </Text>
+              // </TouchableOpacity>
               <TouchableOpacity
-                style={{ marginRight: 5 }}
+                style={[
+                  styles.timeButton,
+                  item.disabled && styles.disabledTimeButton, 
+                ]}
                 onPress={() => {
-                  setSeletedTime(item.time);
+                  if (!item.disabled) {
+                    setSeletedTime(item.time);
+                  }
                 }}
               >
                 <Text
                   style={[
-                    seletedTime == item.time
-                      ? styles.selectedTime
-                      : styles.unSelectedtime,
+                    styles.timeButtonText,
+                    item.disabled && styles.disabledTimeText,
                   ]}
                 >
-                  {" "}
                   {item.time}
                 </Text>
               </TouchableOpacity>
@@ -398,5 +382,22 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     marginHorizontal: 25,
     marginTop: 8,
+  },
+  timeButton: {
+    padding: 5,
+    borderWidth: 1,
+    borderColor: COLOR.New_button,
+    borderRadius: 99,
+    paddingHorizontal: 15,
+    marginStart: 10,
+  },
+  timeButtonText: {
+    color: COLOR.black,
+  },
+  disabledTimeButton: {
+    backgroundColor: "#ccc", // Gray background for disabled time slots
+  },
+  disabledTimeText: {
+    color: "#999", // Gray text color for disabled time slots
   },
 });

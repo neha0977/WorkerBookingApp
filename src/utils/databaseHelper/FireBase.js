@@ -1,9 +1,9 @@
 // auth.js
-import { Alert, ToastAndroid } from "react-native";
+import { ToastAndroid } from "react-native";
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import messaging from "@react-native-firebase/messaging";
 export const signIn = async (input, navigation, type) => {
   console.log("input", input);
   let { email, password } = input;
@@ -57,122 +57,12 @@ export const signIn = async (input, navigation, type) => {
     }
   }
 };
-
-// export const signIn = async (input, navigation, type) => {
-//   console.log("input", input);
-//   let { email, password } = input;
-//   console.log(email, password);
-//   try {
-//     const userCredential = await auth().signInWithEmailAndPassword(
-//       email,
-//       password
-//     );
-//     const user = userCredential.user;
-
-//     try {
-//       const doc = await firestore().collection("users").doc(user.uid).get();
-
-//       if (doc.exists) {
-//         const userData = doc.data();
-//         const userType = userData.type;
-//         console.log(userType, "///");
-//         if (userType === "Provider") {
-//           navigation.navigate("HomeProvider");
-//         } else {
-//           navigation.navigate("HomeScreen");
-//         }
-//       } else {
-//         console.error("No such document!");
-//       }
-//     } catch (error) {
-//       console.error("Error getting user profile:", error);
-//     }
-//   } catch (error) {
-//     if (error.code === "auth/invalid-email")
-//       ToastAndroid.show("That email address is invalid!", ToastAndroid.SHORT);
-//     else if (error.code === "auth/user-not-found")
-//       ToastAndroid.show("No User Found", ToastAndroid.SHORT);
-//     else {
-//       ToastAndroid.show(
-//         "Please check your email id or password",
-//         ToastAndroid.SHORT
-//       );
-//     }
-//   }
-// };
-
-// export const signUp = async (input, navigation, loginType, value, items) => {
-//   console.log("loginType", loginType, "working");
-//   if (loginType == "Provider") {
-//     console.log("inputs", input, navigation, loginType, value, items);
-//   } else {
-//     let { fullname, email, phone, password, fullAddress } = input;
-//     console.log("inputs", fullname, email, phone, password, fullAddress);
-//   }
-
-//   try {
-//     const authResult = await auth().createUserWithEmailAndPassword(
-//       email.trim(),
-//       password
-//     );
-//     const user = authResult.user;
-//     await user.updateProfile({
-//       displayName: fullname,
-//       userType: (loginType = "Provider" ? "Provider" : "User"),
-//     });
-//     const uid = authResult.user.uid;
-//     await firestore()
-//       .collection("users")
-//       .doc(uid)
-//       .set(
-//         (loginType = "Provider"
-//           ? {
-//               input,
-//               type: loginType,
-//               categoryType: items,
-//               categoryID: value,
-//               userId: uid,
-//             }
-//           : {
-//               Name: fullname,
-//               MobileNumber: phone,
-//               emailAddress: email,
-//               Password: password,
-//               type: loginType,
-//               profileImg: "",
-//               userId: uid,
-//               fullAddress: fullAddress,
-//             })
-//       );
-
-//     ToastAndroid.show("Signed up successfully!", ToastAndroid.SHORT);
-//     setTimeout(() => {
-//       navigation.reset({
-//         index: 0,
-//         routes: [{ name: "SignInScreen" }],
-//       });
-//     }, 1000);
-//   } catch (err) {
-//     if (err.code === "auth/email-already-in-use") {
-//       ToastAndroid.show(
-//         "That email address is already in use!",
-//         ToastAndroid.SHORT
-//       );
-//     } else if (err.code === "auth/invalid-email") {
-//       // Changed to else if
-//       ToastAndroid.show("That email address is invalid!", ToastAndroid.SHORT);
-//     } else {
-//       // Handle other errors
-//       console.error("Error signing up: ", err.message);
-//     }
-//   }
-// };
-
 export const signUp = async (input, loginType, value, items) => {
-  console.log("loginType", loginType, "working");
-
   try {
     const { fullname, email, phone, password, fullAddress } = input;
+
+    // Retrieve FCM token
+    const fcmToken = await messaging().getToken();
 
     // Create user account with email and password
     const authResult = await auth().createUserWithEmailAndPassword(
@@ -196,6 +86,7 @@ export const signUp = async (input, loginType, value, items) => {
       fullAddress,
       type: loginType,
       userId: user.uid,
+      fcmToken: fcmToken,
     };
 
     // If the login type is Provider, add additional fields
@@ -216,7 +107,6 @@ export const signUp = async (input, loginType, value, items) => {
     // Return a success indication
     return { success: true, user: userData };
   } catch (error) {
-    // Handle sign-up errors
     if (error.code === "auth/email-already-in-use") {
       ToastAndroid.show(
         "That email address is already in use!",
@@ -227,14 +117,74 @@ export const signUp = async (input, loginType, value, items) => {
     } else {
       console.error("Error signing up: ", error.message);
     }
-
-    // Log the error for debugging
-    console.error("Sign-up error:", error);
-
-    // Return a failure indication
     return { success: false, error: error.message };
   }
 };
+
+// export const signUp = async (input, loginType, value, items, fcmToken) => {
+//   console.log("loginType", loginType, "working");
+//   console.log("fcmToken", fcmToken);
+
+//   //getFCMToken();
+//   try {
+//     const { fullname, email, phone, password, fullAddress } = input;
+//     console.log("data", value, items);
+//     // Create user account with email and password
+//     const authResult = await auth().createUserWithEmailAndPassword(
+//       email.trim(),
+//       password
+//     );
+//     const user = authResult.user;
+
+//     // Set user display name
+//     await user.updateProfile({
+//       displayName: fullname,
+//       phoneNumber: phone,
+//       address: fullAddress,
+//     });
+
+//     // Define user data based on login type
+//     const userData = {
+//       fullname,
+//       email,
+//       phone,
+//       fullAddress,
+//       type: loginType,
+//       userId: user.uid,
+//       fcmToken: fcmToken,
+//     };
+
+//     // If the login type is Provider, add additional fields
+//     if (loginType === "Provider") {
+//       const { designation, experience } = input;
+//       userData.designation = designation;
+//       userData.skill = items;
+//       userData.skillID = value;
+//       userData.experience = experience;
+//     }
+
+//     // Store user data in Firestore
+//     await firestore().collection("users").doc(user.uid).set(userData);
+
+//     // Show success message
+//     ToastAndroid.show("Signed up successfully!", ToastAndroid.SHORT);
+
+//     // Return a success indication
+//     return { success: true, user: userData };
+//   } catch (error) {
+//     if (error.code === "auth/email-already-in-use") {
+//       ToastAndroid.show(
+//         "That email address is already in use!",
+//         ToastAndroid.SHORT
+//       );
+//     } else if (error.code === "auth/invalid-email") {
+//       ToastAndroid.show("That email address is invalid!", ToastAndroid.SHORT);
+//     } else {
+//       console.error("Error signing up: ", error.message);
+//     }
+//     return { success: false, error: error.message };
+//   }
+// };
 
 export const signOut = async (navigation) => {
   AsyncStorage.clear()
@@ -274,7 +224,7 @@ export const getUserData = async (userId, navigation) => {
       }
     });
     //  console.log("snapshot", snapshot);
-    //return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   } catch (error) {
     console.error("Error fetching appointments:", error);
     throw error;

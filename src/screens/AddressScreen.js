@@ -2,12 +2,11 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  View,
   Keyboard,
   ScrollView,
-  FlatList,
-  Button,
+  View,
   TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
 import React, { useState } from "react";
 import CommonHeader from "../components/common/CommonHeader";
@@ -15,6 +14,10 @@ import CommonTextInput from "../components/common/CommonTextInput";
 import { COLOR } from "../utils/commonstyles/Color";
 import { CONSTANTS } from "../utils/constants/StaticContent";
 import CommonButton from "../components/common/CommonButton";
+import Loader from "../components/common/Loader";
+import auth from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 const AddressScreen = ({ navigation }) => {
   const [errors, setErrors] = React.useState({});
   const [fullAddress, setFullAddress] = useState({
@@ -25,30 +28,8 @@ const AddressScreen = ({ navigation }) => {
     pin: "",
   });
   const [addresses, setAddresses] = useState([]);
-  const addAddress = () => {
-    console.log("HIII");
-    if (
-      fullAddress.area.trim() !== "" &&
-      fullAddress.city.trim() !== "" &&
-      fullAddress.buildingName.trim() !== "" &&
-      fullAddress.houseNumber.trim() !== "" &&
-      fullAddress.pin.trim() !== ""
-    ) {
-      console.log(addresses, fullAddress);
-      setAddresses([...addresses, { ...fullAddress }]);
-      navigation.navigate("AddressListScreen", {
-        addresses:addresses,
-        onRemoveAddress: removeAddress,
-      });
-      setFullAddress({
-        city: "",
-        area: "",
-        pincode: "",
-        houseNumber: "",
-        building: "",
-      });
-    }
-  };
+  const [loading, setLoading] = React.useState(false);
+  const [addressType, setAddressType] = useState(null);
 
   const removeAddress = React.useCallback(
     (index) => {
@@ -82,22 +63,97 @@ const AddressScreen = ({ navigation }) => {
       handleError(CONSTANTS.enter_password, "pin");
       isValid = false;
     }
+
     if (isValid) {
-      login();
+      saveAddress();
+    }
+  };
+  const saveAddress = async () => {
+    setLoading(true);
+    const userId = auth().currentUser.uid;
+
+    try {
+      const addressData = {
+        ...fullAddress,
+        addressType: addressType,
+      };
+
+      const userRef = firestore().collection("users").doc(userId);
+
+      await firestore().runTransaction(async (transaction) => {
+        const userDoc = await transaction.get(userRef);
+        let existingAddresses = userDoc.data().fullAddress || []; // Existing addresses from the user's document
+
+        // Combine existing addresses with the new address
+        let updatedAddresses = [...existingAddresses, addressData];
+
+        transaction.update(userRef, { fullAddress: updatedAddresses });
+      });
+
+      setLoading(false);
+      ToastAndroid.show("Address saved successfully!", ToastAndroid.SHORT);
+      navigation.goBack();
+      setFullAddress({
+        city: "",
+        area: "",
+        pin: "",
+        houseNumber: "",
+        buildingName: "",
+      });
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
     }
   };
 
-  //login user function
-  const login = () => {
-    setLoading(true);
-    setTimeout(() => {
-      try {
-        setLoading(false);
-        signIn(inputs, navigation);
-      } catch (error) {
-        Alert.alert("Error", CONSTANTS.something_wrong);
+  const handleProced = async () => {
+    const userName = auth().currentUser.displayName;
+    const userId = auth().currentUser.uid;
+
+    if (!addressType) {
+      ToastAndroid.show("Please select address type", ToastAndroid.SHORT);
+      return;
+    }
+
+    try {
+      const addressData = {
+        ...fullAddress,
+        addressType: addressType,
+      };
+
+      const addressSnapshot = await firestore()
+        .collection("addresses")
+        .doc(userId)
+        .get();
+
+      if (addressSnapshot.exists) {
+        await firestore()
+          .collection("addresses")
+          .doc(userId)
+          .update({
+            userName,
+            userId,
+            addresses: firestore.FieldValue.arrayUnion(addressData),
+            timestamp: firestore.FieldValue.serverTimestamp(),
+          });
+        ToastAndroid.show("Address updated successfully!", ToastAndroid.SHORT);
+      } else {
+        await firestore()
+          .collection("addresses")
+          .doc(userId)
+          .set({
+            userName,
+            userId,
+            addresses: [addressData],
+            timestamp: firestore.FieldValue.serverTimestamp(),
+          });
+        ToastAndroid.show("Address added successfully!", ToastAndroid.SHORT);
       }
-    }, 3000);
+
+      navigation.goBack();
+    } catch (error) {
+      console.error("Error adding/updating address: ", error);
+    }
   };
 
   // handle validation function
@@ -110,22 +166,15 @@ const AddressScreen = ({ navigation }) => {
     setErrors((prevState) => ({ ...prevState, [input]: error }));
   };
   return (
-    <SafeAreaView style={{ backgroundColor: COLOR.white, flex: 1 }}>
+    <SafeAreaView style={styles.container}>
       <CommonHeader title={"Address"} />
 
-      <ScrollView style={{ margin: 20 }} showsVerticalScrollIndicator={false}>
-        <Text
-          style={{
-            color: COLOR.black,
-            fontSize: 40,
-            fontWeight: "bold",
-          }}
-        >
-          Address Book
-        </Text>
-        <Text style={{ color: COLOR.grey, fontSize: 18, marginVertical: 10 }}>
-          Enter Your new address
-        </Text>
+      <ScrollView
+        style={styles.scrollStyle}
+        showsVerticalScrollIndicator={false}
+      >
+        <Text style={styles.mainText}>Address Book</Text>
+        <Text style={styles.subText}>Enter Your new address</Text>
         <CommonTextInput
           onChangeText={(text) => handleOnchange(text, "area")}
           onFocus={() => handleError(null, "email")}
@@ -170,42 +219,72 @@ const AddressScreen = ({ navigation }) => {
           placeholder="Enter pin "
           error={errors.pin}
         />
-
-        {/* <CommonButton title={"save"} onPress={addAddress} /> */}
-        <TouchableOpacity
-          onPress={() => addAddress()}
-          activeOpacity={0.7}
-          style={{
-            height: 45,
-            width: "100%",
-            backgroundColor: COLOR.Primary_Color,
-            marginVertical: 20,
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 10,
-            elevation: 5,
-          }}
-        >
-          <Text
-            style={{ color: COLOR.white, fontWeight: "bold", fontSize: 15 }}
+        <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
+          <TouchableOpacity
+            onPress={() => setAddressType("home")}
+            style={{ flexDirection: "row" }}
           >
-            save
-          </Text>
-          {/* <Button
-            title="View Addresses"
-            onPress={() =>
-              navigation.navigate("AddressListScreen", {
-                addresses,
-                removeAddress,
-              })
-            }
-          /> */}
-        </TouchableOpacity>
+            <MaterialCommunityIcons
+              name={
+                addressType === "home"
+                  ? "checkbox-blank-circle"
+                  : "checkbox-blank-circle-outline"
+              }
+              style={{
+                color: COLOR.New_Primary,
+                fontSize: 22,
+                marginRight: 10,
+              }}
+            />
+            <Text
+              style={{
+                marginRight: 20,
+                color: addressType === "home" ? "blue" : "black",
+              }}
+            >
+              Home
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setAddressType("office")}
+            style={{ flexDirection: "row" }}
+          >
+            <MaterialCommunityIcons
+              name={
+                addressType === "office"
+                  ? "checkbox-blank-circle"
+                  : "checkbox-blank-circle-outline"
+              }
+              style={{
+                color: COLOR.New_Primary,
+                fontSize: 22,
+                marginRight: 10,
+              }}
+            />
+            <Text
+              style={{ color: addressType === "office" ? "blue" : "black" }}
+            >
+              Office
+            </Text>
+          </TouchableOpacity>
+        </View>
+        {/* common button */}
+        <CommonButton title={"Save"} onPress={() => validate()} />
       </ScrollView>
+      <Loader visible={loading} />
     </SafeAreaView>
   );
 };
 
 export default AddressScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: { backgroundColor: COLOR.white, flex: 1 },
+  scrollStyle: { margin: 20 },
+  mainText: {
+    color: COLOR.black,
+    fontSize: 40,
+    fontWeight: "bold",
+  },
+  subText: { color: COLOR.grey, fontSize: 18, marginVertical: 10 },
+});
