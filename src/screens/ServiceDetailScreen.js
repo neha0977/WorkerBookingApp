@@ -99,11 +99,11 @@ const ServiceDetailScreen = ({ navigation, route }) => {
   };
 
   const renderItem = ({ item }) => {
-    console.log(item,"itwm")
+    console.log(item, "itwm");
     const existingServiceIndex = cartItems.findIndex(
       (cartItem) => cartItem.id === item.id
     );
-    console.log("existingServiceIndex",existingServiceIndex)
+    console.log("existingServiceIndex", existingServiceIndex);
     return (
       <View
         style={{
@@ -189,19 +189,34 @@ const ServiceDetailScreen = ({ navigation, route }) => {
             flexDirection: "column",
             marginLeft: 10,
             justifyContent: "space-between",
-
           }}
         >
           {existingServiceIndex !== -1 ? (
             <View style={styles.quantityContainer}>
               <TouchableOpacity onPress={() => handleRemoveService(item)}>
-                <Text style={{color:COLOR.black,fontWeight:'500',fontSize:20}}>-</Text>
+                <Text
+                  style={{
+                    color: COLOR.black,
+                    fontWeight: "500",
+                    fontSize: 20,
+                  }}
+                >
+                  -
+                </Text>
               </TouchableOpacity>
               <Text style={styles.quantityText}>
                 {cartItems[existingServiceIndex].quantity}
               </Text>
               <TouchableOpacity onPress={() => handleAddService(item)}>
-                <Text style={{color:COLOR.black,fontWeight:'500',fontSize:20}}>+</Text>
+                <Text
+                  style={{
+                    color: COLOR.black,
+                    fontWeight: "500",
+                    fontSize: 20,
+                  }}
+                >
+                  +
+                </Text>
               </TouchableOpacity>
             </View>
           ) : (
@@ -236,7 +251,7 @@ const ServiceDetailScreen = ({ navigation, route }) => {
               alignSelf: "center",
             }}
           >
-            {item.servicePrice}
+            ${item.servicePrice}
           </Text>
         </View>
       </View>
@@ -387,7 +402,7 @@ const ServiceDetailScreen = ({ navigation, route }) => {
               paddingLeft: 20,
             }}
           >
-            ${totalPrice}
+            Total: ${totalPrice.toFixed(2)}
           </Text>
 
           <TouchableOpacity
@@ -469,17 +484,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginTop: 5,
-    borderWidth:0.5,
-    borderColor:COLOR.black,
-    borderRadius:5,
-    paddingHorizontal:5
-
+    borderWidth: 0.5,
+    borderColor: COLOR.black,
+    borderRadius: 5,
+    paddingHorizontal: 5,
   },
   quantityText: {
     marginHorizontal: 10,
     fontSize: 18,
-    fontWeight:"500",
-    color:COLOR.black
+    fontWeight: "500",
+    color: COLOR.black,
   },
   emptyText: {
     textAlign: "center",

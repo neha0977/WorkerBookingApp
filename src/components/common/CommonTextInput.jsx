@@ -50,7 +50,7 @@ const CommonTextInput = ({
         {password && (
           <MaterialCommunityIcons
             onPress={() => setHidePassword(!hidePassword)}
-            name={hidePassword ? "eye-outline" : "eye-off-outline"}
+            name={hidePassword ? "eye-off-outline" : "eye-outline"}
             style={{ color: COLOR.New_Primary, fontSize: 22 }}
           />
           // <Icon
@@ -74,7 +74,7 @@ const style = StyleSheet.create({
     marginVertical: 1,
     fontSize: 14,
     color: COLOR.New_button,
-    marginBottom:10
+    marginBottom: 10,
   },
   inputContainer: {
     height: 40,
@@ -82,7 +82,7 @@ const style = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 15,
     borderWidth: 0.5,
-    borderRadius:7
+    borderRadius: 7,
   },
 });
 

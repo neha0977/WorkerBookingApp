@@ -65,38 +65,47 @@ const AddressScreen = ({ navigation }) => {
     }
 
     if (isValid) {
-      handleProced();
+      saveAddress();
     }
   };
-
-  //login user function
   const saveAddress = async () => {
     setLoading(true);
-    const userName = auth().currentUser.displayName;
     const userId = auth().currentUser.uid;
 
     try {
-      await firestore().collection("addresses").doc(userId).set({
-        userName,
-        userId,
-        fullAddress,
+      const addressData = {
+        ...fullAddress,
         addressType: addressType,
+      };
+
+      const userRef = firestore().collection("users").doc(userId);
+
+      await firestore().runTransaction(async (transaction) => {
+        const userDoc = await transaction.get(userRef);
+        let existingAddresses = userDoc.data().fullAddress || []; // Existing addresses from the user's document
+
+        // Combine existing addresses with the new address
+        let updatedAddresses = [...existingAddresses, addressData];
+
+        transaction.update(userRef, { fullAddress: updatedAddresses });
       });
+
       setLoading(false);
-      ToastAndroid.show("Address Save successfully!", ToastAndroid.SHORT);
+      ToastAndroid.show("Address saved successfully!", ToastAndroid.SHORT);
       navigation.goBack();
       setFullAddress({
         city: "",
         area: "",
-        pincode: "",
+        pin: "",
         houseNumber: "",
-        building: "",
+        buildingName: "",
       });
     } catch (error) {
       setLoading(false);
       console.log(error);
     }
   };
+
   const handleProced = async () => {
     const userName = auth().currentUser.displayName;
     const userId = auth().currentUser.uid;

@@ -17,9 +17,8 @@ const { width } = Dimensions.get("window");
 
 const ServiceCartScreen = ({ route, navigation }) => {
   const [totalPrice, setTotalPrice] = useState(0);
-  const [cartItems, setCartItems] = useState(
-    route.params.cartItems
-  );
+  const [cartItems, setCartItems] = useState(route.params.cartItems);
+  console.log(" route.params.cartItems", route.params.cartItems);
   useEffect(() => {
     // Calculate total price when cart items change
     calculateTotalPrice();
@@ -29,10 +28,11 @@ const ServiceCartScreen = ({ route, navigation }) => {
   const calculateTotalPrice = () => {
     let total = 0;
     cartItems.forEach((item) => {
-      total += parseFloat(item.servicePrice) + 10;
+      total += (parseFloat(item.servicePrice) + 10) * item.quantity; // Multiply price by quantity
     });
     setTotalPrice(total);
   };
+  
 
   const removeFromServiceCart = async (itemId) => {
     const updatedCartItems = cartItems.filter((item) => item.id !== itemId);
@@ -60,16 +60,34 @@ const ServiceCartScreen = ({ route, navigation }) => {
                 <Text style={styles.lineStyle}>|</Text>
                 <Text style={styles.itemTime}>{item.serviceDuration}</Text>
               </View>
-              <Text style={styles.serviceCharge}>Service Charge: 10</Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems:'center',
+                  
+                }}
+              >
+                <Text style={styles.serviceCharge}>Service Charge: 10</Text>
+                <Text
+                  style={[
+                    styles.serviceCharge,
+                    { color: COLOR.black, fontSize: 12 },
+                  ]}
+                >
+                  Quantity: {item.quantity}
+                </Text>
+              </View>
             </View>
           </View>
+
           {/* //Remove button */}
-          {/* <TouchableOpacity
+          <TouchableOpacity
             style={styles.removeBtnView}
             onPress={() => removeFromServiceCart(item.id)}
           >
             <Text style={styles.removeText}>REMOVE</Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
         </View>
       </View>
     );

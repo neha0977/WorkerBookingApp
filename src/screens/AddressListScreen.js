@@ -12,19 +12,18 @@ import CommonHeader from "../components/common/CommonHeader";
 import { COLOR } from "../utils/commonstyles/Color";
 import firestore from "@react-native-firebase/firestore";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import auth from "@react-native-firebase/auth";
 const AddressListScreen = ({ navigation, route }) => {
   const [addresses, setAddresses] = useState([]);
   const [seletedAddress, setSeletedAddress] = useState();
   useEffect(() => {
+    const userId = auth().currentUser.uid;
     const unsubscribe = firestore()
-      .collection("addresses")
+      .collection("users")
+      .doc(userId)
       .onSnapshot((snapshot) => {
-        const addressesData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setAddresses(addressesData[0].addresses);
-        console.log("addressesData", addressesData);
+        setAddresses(snapshot._data.fullAddress);
+        console.log("addresssnapshotesData", snapshot._data.fullAddress);
       });
 
     return () => unsubscribe();

@@ -78,8 +78,6 @@ const HomeScreen = ({ navigation }) => {
     return () => clearInterval(intervalId);
   }, [currentIndex, imageList.length]);
 
-  
-
   useEffect(() => {
     // FechCategory();
     getCategories();
@@ -229,7 +227,11 @@ const HomeScreen = ({ navigation }) => {
                     elevation: 5,
                   }}
                   onPress={() => {
-                    showBottomSheet();
+                    navigation.navigate("ServiceDetailScreen", {
+                      id: item._data.categoryId,
+                      description: item._data.CategoryDescription,
+                      catName: item._data.CategoryName,
+                    });
                   }}
                 >
                   <Image
@@ -323,7 +325,7 @@ const HomeScreen = ({ navigation }) => {
                 keyExtractor={(item, index) => index}
                 renderItem={({ item }) => {
                   return (
-                    <View
+                    <TouchableOpacity
                       style={{
                         flex: 1,
                         margin: 5,
@@ -337,6 +339,13 @@ const HomeScreen = ({ navigation }) => {
                         elevation: 3,
                         backgroundColor: "white",
                       }}
+                      // onPress={() => {
+                      //   navigation.navigate("ServiceDetailScreen", {
+                      //     id: item._data.categoryId,
+                      //     description: item._data.CategoryDescription,
+                      //     catName: item._data.CategoryName,
+                      //   });
+                      // }}
                     >
                       <View
                         style={{
@@ -383,7 +392,7 @@ const HomeScreen = ({ navigation }) => {
                       >
                         {item._data.serviceCategory.CategoryName}
                       </Text>
-                    </View>
+                    </TouchableOpacity>
                   );
                 }}
               />
@@ -497,27 +506,29 @@ const HomeScreen = ({ navigation }) => {
                             catName: item._data.CategoryName,
                           });
                           hideBottomSheet();
-                        }}>
-                          <Image
-                            source={
-                              item._data.CategoryImage
-                                ? { uri: item._data.CategoryImage }
-                                : defaultImage
-                            }
-                            resizeMode={"contain"}
-                            style={{
-                              width: "70%",
-                              height: "70%",
-                            }}
-                          />
-                          <Text
-                            style={{
-                              textAlign: "center",
-                              color: COLOR.New_Primary,
-                              fontSize: 11,
-                            }}>
-                            {item._data.CategoryName}
-                          </Text>
+                        }}
+                      >
+                        <Image
+                          source={
+                            item._data.CategoryImage
+                              ? { uri: item._data.CategoryImage }
+                              : defaultImage
+                          }
+                          resizeMode={"contain"}
+                          style={{
+                            width: "70%",
+                            height: "70%",
+                          }}
+                        />
+                        <Text
+                          style={{
+                            textAlign: "center",
+                            color: COLOR.New_Primary,
+                            fontSize: 11,
+                          }}
+                        >
+                          {item._data.CategoryName}
+                        </Text>
                       </TouchableOpacity>
                     );
                   }}

@@ -40,6 +40,13 @@ const FirstRoute = ({ bookings }) => (
         data={bookings}
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderBookingItem}
+        ListEmptyComponent={() => (
+          <Text style={styles.emptyText}>No Booking found</Text>
+        )}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: bookings.length > 0 ? "flex-start" : "center",
+        }}
       />
     </View>
   </SafeAreaView>
@@ -52,6 +59,13 @@ const SecondRoute = ({ bookings }) => (
         data={bookings}
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderBookingItem}
+        ListEmptyComponent={() => (
+          <Text style={styles.emptyText}>No Booking found</Text>
+        )}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: bookings.length > 0 ? "flex-start" : "center",
+        }}
       />
     </View>
   </SafeAreaView>
@@ -61,25 +75,11 @@ const ThirdRoute = () => (
   <View style={{ flex: 1, backgroundColor: "#2196f3" }} />
 );
 
-// const renderScene = ({ route, bookings }) => {
-//   switch (route.key) {
-//     case "Upcoming":
-//       return <FirstRoute bookings={bookings} />;
-//     case "Past":
-//       return <SecondRoute />;
-//     case "Cancelled":
-//       return <ThirdRoute />;
-//     default:
-//       return null;
-//   }
-// };
-
 const renderScene = ({ route, bookings }) => {
   const today = moment().startOf("day");
   console.log("today", today);
   switch (route.key) {
     case "Upcoming":
-      // Filter upcoming bookings (today or future dates)
       const upcomingBookings = bookings.filter((item) => {
         console.log("item", item);
         const bookingDate = moment(
@@ -114,17 +114,37 @@ const renderScene = ({ route, bookings }) => {
 const BookedHistory = () => {
   const layout = useWindowDimensions();
   const [bookings, setBookings] = useState([]);
+  //   useEffect(() => {
+  //     const Userid = auth().currentUser.uid;
+  //     const unsubscribe = firestore()
+  //       .collection("serviceBooking")
+  //       .where("userId", "==", Userid)
+  //       .onSnapshot((snapshot) => {
+  //         const bookingData = snapshot.docs.map((doc) => ({
+  //           id: doc.id,
+  //           ...doc.data(),
+  //         }));
+  //         console.log("bookingData", bookingData);
+  //         setBookings(bookingData[0].serviceItems);
+  //       });
+
+  //     return () => unsubscribe();
+  //   }, []);
   useEffect(() => {
     const Userid = auth().currentUser.uid;
     const unsubscribe = firestore()
       .collection("serviceBooking")
       .where("userId", "==", Userid)
       .onSnapshot((snapshot) => {
-        const bookingData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setBookings(bookingData[0].serviceItems);
+        if (snapshot.docs.length > 0) {
+          const bookingData = snapshot.docs[0].data().serviceItems;
+          console.log("bookingData", bookingData);
+          setBookings(bookingData);
+        } else {
+          // Handle case when there are no documents in the collection
+          console.log("No bookings found.");
+          setBookings([]); // Set bookings to an empty array
+        }
       });
 
     return () => unsubscribe();
@@ -206,5 +226,11 @@ const styles = StyleSheet.create({
     color: "#316115",
     fontWeight: "400",
     fontSize: 15,
+  },
+  emptyText: {
+    textAlign: "center",
+    marginTop: 20,
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });

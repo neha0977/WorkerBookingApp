@@ -1,19 +1,19 @@
 import { Image, SafeAreaView, Alert } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { STYLES } from "../utils/commonstyles/Style";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IMAGES, getImageFromURL } from "../resources/images";
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
-
+import Loader from "../components/common/Loader";
 const SplashScreen = () => {
   const navigation = useNavigation();
-
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const unsubscribe = auth().onAuthStateChanged(async (user) => {
       if (user) {
-        console.log(user,"neha")
+        console.log(user, "neha");
         try {
           const userDoc = await firestore()
             .collection("users")
@@ -23,9 +23,18 @@ const SplashScreen = () => {
             const userData = userDoc.data();
             if (userData && userData.type) {
               if (userData.type === "Provider") {
-                navigation.navigate("ProviderDashboard");
+                setLoading(false);
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: "ProviderDashboard" }],
+                });
+                //navigation.navigate("ProviderDashboard");
               } else {
-                navigation.navigate("HomeScreen");
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: "HomeScreen" }],
+                });
+                //navigation.navigate("HomeScreen");
               }
             } else {
               // User type not defined
@@ -50,12 +59,17 @@ const SplashScreen = () => {
   }, []);
 
   const navigateToUserTypeScreen = () => {
-    navigation.navigate("UserTypeScreen");
+    //.navigate("UserTypeScreen");
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "UserTypeScreen" }],
+    });
   };
 
   return (
     <SafeAreaView style={[STYLES.container, { alignItems: "center" }]}>
       <Image source={getImageFromURL(IMAGES.LOGO)} style={STYLES.AppLogo} />
+      <Loader visible={loading} />
     </SafeAreaView>
   );
 };

@@ -16,7 +16,6 @@ import { COLOR } from "../utils/commonstyles/Color";
 import { signUp } from "../utils/databaseHelper/FireBase";
 import { STYLES } from "../utils/commonstyles/Style";
 const SignUpScreen = ({ route }) => {
-  console.log("route.params.type", route.params.type);
   const navigation = useNavigation();
   const [inputs, setInputs] = React.useState({
     email: "",
@@ -24,7 +23,7 @@ const SignUpScreen = ({ route }) => {
     phone: "",
     password: "",
     fullAddress: "",
-  });      
+  });
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);
   const validate = () => {
@@ -46,6 +45,9 @@ const SignUpScreen = ({ route }) => {
     if (!inputs.phone) {
       handleError("Please input phone number", "phone");
       isValid = false;
+    } else if (!/^[6-9]\d{9}$/.test(inputs.phone)) {
+      handleError("Please input a valid phone number", "phone");
+      isValid = false;
     }
     if (!inputs.password) {
       handleError("Please input password", "password");
@@ -59,16 +61,17 @@ const SignUpScreen = ({ route }) => {
     }
   };
   const register = async () => {
+    setLoading(true);
     const userSignUpResult = await signUp(inputs, "User");
-
-    // Check the result
     if (userSignUpResult.success) {
       setTimeout(() => {
+        setLoading(false);
         navigation.reset({
           index: 0,
           routes: [{ name: "SignInScreen" }],
         });
       }, 500);
+
       console.log("User registration successful:", userSignUpResult.user);
     } else {
       console.error("User registration failed:", userSignUpResult.error);
@@ -126,6 +129,7 @@ const SignUpScreen = ({ route }) => {
             label="Email"
             placeholder="Enter your email address"
             error={errors.email}
+            keyboardType={"email-address"}
           />
           <CommonTextInput
             keyboardType="numeric"
@@ -135,6 +139,7 @@ const SignUpScreen = ({ route }) => {
             label="Phone Number"
             placeholder="Enter your phone no"
             error={errors.phone}
+            maxLength={10}
           />
           <CommonTextInput
             onChangeText={(text) => handleOnchange(text, "password")}
@@ -143,12 +148,11 @@ const SignUpScreen = ({ route }) => {
             label="Password"
             placeholder="Enter your password"
             error={errors.password}
-            password
           />
           <CommonTextInput
             onChangeText={(text) => handleOnchange(text, "fullAddress")}
             onFocus={() => handleError(null, "fullAddress")}
-            iconName="account-outline"
+            iconName="map-marker-radius-outline"
             label="Address"
             placeholder="Enter your full address"
             error={errors.fullAddress}
@@ -163,7 +167,9 @@ const SignUpScreen = ({ route }) => {
               Already have an account ?{" "}
             </Text>
             <Text
-              onPress={() => navigation.navigate("SignInScreen")}
+              onPress={() =>
+                navigation.navigate("SignInScreen", { type: "User" })
+              }
               style={[
                 STYLES.btbLogText,
                 { marginLeft: 5, color: COLOR.New_button, fontWeight: "500" },

@@ -7,7 +7,7 @@ import {
   Alert,
   Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CommonTextInput from "../components/common/CommonTextInput";
 import CommonButton from "../components/common/CommonButton";
 import { COLOR } from "../utils/commonstyles/Color";
@@ -17,11 +17,17 @@ import { signIn } from "../utils/databaseHelper/FireBase";
 import { CONSTANTS } from "../utils/constants/StaticContent";
 import { STYLES } from "../utils/commonstyles/Style";
 
-const SignInScreen = () => {
+const SignInScreen = ({ route }) => {
   const navigation = useNavigation();
   const [inputs, setInputs] = React.useState({ email: "", password: "" });
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);
+  const [TYPE, setTYPE] = useState("");
+  useEffect(() => {
+    const TYPE = route.params.type;
+    console.log("TYPE", TYPE);
+    setTYPE(route.params.type);
+  }, []);
 
   //validate user input function
   const validate = async () => {
@@ -85,6 +91,7 @@ const SignInScreen = () => {
             label="Email"
             placeholder={CONSTANTS.place_email}
             error={errors.email}
+            keyboardType={"email-address"}
           />
           <CommonTextInput
             onChangeText={(text) => handleOnchange(text, "password")}
@@ -100,18 +107,24 @@ const SignInScreen = () => {
             style={[
               STYLES.btbLogText,
               { color: COLOR.New_button, fontWeight: "500", fontSize: 12 },
-            ]}>
+            ]}
+          >
             Forgot Password ?
           </Text>
           <CommonButton title={CONSTANTS.log_in} onPress={validate} />
           <View style={{ flexDirection: "row", justifyContent: "center" }}>
-            <Text
-              onPress={() => navigation.navigate("UserTypeScreen")}
-              style={[STYLES.btbLogText, { fontWeight: "regular" }]} >
+            <Text style={[STYLES.btbLogText, { fontWeight: "regular" }]}>
               Don't have account?
             </Text>
             <Text
-              onPress={() => navigation.navigate("UserTypeScreen")}
+              onPress={() => {
+                console.log("route.params.type", route.params.type);
+                if (route.params.type === "User") {
+                  navigation.navigate("SignUpScreen");
+                } else if (route.params.type === "Provider") {
+                  navigation.navigate("ProviderSignUp");
+                }
+              }}
               style={[
                 STYLES.btbLogText,
                 {

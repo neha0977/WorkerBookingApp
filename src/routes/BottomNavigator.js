@@ -7,6 +7,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import { COLOR } from "../utils/commonstyles/Color";
 import HomeScreen from "../screens/HomeScreen";
 import BookedHistory from "../screens/BookedHistory";
+import ServiceCartScreen from "../screens/ServiceCartScreen";
 const Tab = createMaterialBottomTabNavigator();
 const BottomNavigator = () => {
   return (
@@ -33,8 +34,22 @@ const BottomNavigator = () => {
           ),
         }}
       />
+
       <Tab.Screen
-        //   tabBarColor="blue"
+        name="SearchScreen"
+        component={SearchScreen}
+        options={{
+          tabBarLabel: "Search",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name="card-search-outline"
+              color={COLOR.New_button}
+              size={26}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
         name="BookedHistory"
         component={BookedHistory}
         options={{
@@ -49,13 +64,13 @@ const BottomNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="SearchScreen"
-        component={SearchScreen}
+        name="ServiceCartScreen"
+        component={ServiceCartScreen}
         options={{
-          tabBarLabel: "Search",
+          tabBarLabel: "Cart",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
-              name="card-search-outline"
+              name="cart"
               color={COLOR.New_button}
               size={26}
             />
